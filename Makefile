@@ -15,6 +15,7 @@ SRC_NAME =	main.c \
 			parsing.c \
 			parsing_measure_map.c \
 			debug.c \
+			init.c \
 			memory.c \
 			key_handling.c \
 
@@ -52,7 +53,6 @@ endif
 ifeq ($(MAKECMDGOALS),testinc)
 	CFLAGS += -g -D TESTING
 endif
-
 
 all: $(NAME)
 

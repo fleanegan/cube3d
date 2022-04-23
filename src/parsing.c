@@ -64,12 +64,16 @@ int	parse_line(char *line, t_map *map, int y_act)
 	while (split_line[x_act])
 	{
 		point_tmp = &map->grid[x_act][y_act];
+		zero_init_point(point_tmp);
 		point_tmp->mat[0][0] = x_act;
 		point_tmp->mat[1][0] = y_act;
-		if (ft_strcmp(split_line[x_act], "E") == 0)
+		if (ft_strcmp(split_line[x_act], "E") == 0 \
+			|| ft_strcmp(split_line[x_act], "S") == 0 \
+			|| ft_strcmp(split_line[x_act], "W") == 0
+			|| ft_strcmp(split_line[x_act], "N") == 0)
 		{
 			map->spawn_point = point_tmp;
-			map->spawn_orientation = 'E';
+			map->spawn_orientation = split_line[x_act][0];
 			point_tmp->mat[2][0] = 0;
 		}
 		point_tmp->mat[2][0] = ft_atoi(split_line[x_act]);

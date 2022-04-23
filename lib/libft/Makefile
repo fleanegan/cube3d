@@ -83,7 +83,7 @@ RM		= rm -f
 CFLAGS	= -Wall -Wextra -Werror
 
 .c.o:
-		${CC} ${CFLAGS} -c $< -o ${<:.c=.o} -lm
+		${CC} ${CFLAGS} -g -c $< -o ${<:.c=.o} -lm
 
 ${NAME}:${OBJS} $(SRCS)
 		ar rc ${NAME} ${OBJS}

@@ -17,6 +17,9 @@
 # include "../lib/libft/get_next_line_bonus.h"
 # include "math.h"
 # include <fcntl.h>
+#define TILE_SIZE	64.0
+#define RAD2DEG 360.0/M_PI/2.0
+#define DEG2RAD M_PI/360.0*2.0
 
 typedef struct s_point
 {
@@ -32,6 +35,14 @@ typedef struct s_dimension_2d
 	int	y_max;
 	int	y_min;
 }		t_dimension_2d;
+
+typedef struct s_game_obj
+{
+	int			tile_width;
+	int			tile_height;
+	t_matrix	pos;
+	t_matrix	orientation;
+}	t_game_obj;
 
 typedef struct s_map
 {
@@ -58,6 +69,9 @@ typedef struct s_data {
 	float				y_offset;
 	float				zoom;
 }	t_data;
+
+//init
+t_game_obj		init_game_obj(t_map *map);
 
 // parsing
 t_map			*new_map(int width, int height);

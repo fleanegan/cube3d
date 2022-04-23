@@ -52,8 +52,8 @@ t_matrix	euler2rot(\
 
 int	multiply(t_matrix *a, t_matrix *b, t_matrix *result)
 {
-	int			x;
-	int			y;
+	int			i;
+	int			j;
 	int			n;
 
 	if (a->width != b->height)
@@ -61,16 +61,34 @@ int	multiply(t_matrix *a, t_matrix *b, t_matrix *result)
 	ft_bzero(result->mat, 9 * sizeof(float));
 	result->width = b->width;
 	result->height = a->height;
-	y = -1;
-	while (++y < a->width)
+	j = -1;
+	while (++j < a->width)
 	{
-		x = -1;
-		while (++x < b->height)
+		i = -1;
+		while (++i < b->height)
 		{
 			n = -1;
 			while (++n < a->width)
-				result->mat[x][y] += a->mat[x][n] * b->mat[n][y];
+				result->mat[i][j] += a->mat[i][n] * b->mat[n][j];
 		}
+	}
+	return (0);
+}
+
+int	scalar_multiply(t_matrix *a, float b, t_matrix *result)
+{
+	int			i;
+	int			j;
+
+	ft_bzero(result->mat, 9 * sizeof(float));
+	result->width = a->width;
+	result->height = a->height;
+	j = -1;
+	while (++j < a->width)
+	{
+		i = -1;
+		while (++i < a->height)
+			result->mat[i][j] = a->mat[i][j] * b;
 	}
 	return (0);
 }
