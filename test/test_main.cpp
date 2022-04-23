@@ -1,6 +1,7 @@
 #include <cstdio>
 #include "test_utils.h"
 #include "test_parsing.h"
+#include "test_distance.h"
 #include "test_init.h"
 #include "gtest/gtest.h"
 

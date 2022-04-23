@@ -16,10 +16,11 @@
 # include "../lib/mlx/mlx.h"
 # include "../lib/libft/get_next_line_bonus.h"
 # include "math.h"
+# include <stdio.h>
 # include <fcntl.h>
-#define TILE_SIZE	64.0
-#define RAD2DEG 360.0/M_PI/2.0
-#define DEG2RAD M_PI/360.0*2.0
+# define TILE_SIZE	64.0
+# define RAD2DEG 360.0/M_PI/2.0
+# define DEG2RAD M_PI/360.0*2.0
 
 typedef struct s_point
 {
@@ -35,14 +36,6 @@ typedef struct s_dimension_2d
 	int	y_max;
 	int	y_min;
 }		t_dimension_2d;
-
-typedef struct s_game_obj
-{
-	int			tile_width;
-	int			tile_height;
-	t_matrix	pos;
-	t_matrix	orientation;
-}	t_game_obj;
 
 typedef struct s_map
 {
@@ -70,15 +63,28 @@ typedef struct s_data {
 	float				zoom;
 }	t_data;
 
+typedef struct s_game_obj
+{
+	int			tile_width;
+	int			tile_height;
+	t_matrix	pos;
+	t_matrix	orientation;
+	t_map		*map;
+}	t_game_obj;
+
 //init
 t_game_obj		init_game_obj(t_map *map);
 
 // parsing
 t_map			*new_map(int width, int height);
-void			init_view(t_data *img);
 int				measure_map(const char *file_name, int *height, int *width);
 t_map			*parse_map(const char *string);
 int				parse_line(char *line, t_map *map, int y_act);
+
+// raycasting
+int 			generate_direction_vector(\
+				t_game_obj *game_obj, t_matrix *result);
+float			calc_distance_to_wall(t_matrix *dir, t_game_obj *game_obj);
 
 // drawing
 void			turn_all_pixels_black(t_data *img);

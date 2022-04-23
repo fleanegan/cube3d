@@ -5,8 +5,10 @@ t_game_obj init_player_pose(t_map *map, t_game_obj *result);
 t_game_obj	init_game_obj(t_map *map)
 {
 	t_game_obj	result;
+
 	ft_bzero(&result, sizeof(t_game_obj));
 	result = init_player_pose(map, &result);
+	result.map = map;
 	return (result);
 }
 

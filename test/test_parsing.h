@@ -150,7 +150,7 @@ TEST(test_parsing, parse_map_two_by_two)
 
 TEST(test_parsing, set_spawn_point)
 {
-	t_map *map = parse_map("test/assets/dummy_map_minimal_nord");
+	t_map *map = parse_map("test/assets/dummy_map_minimal_north");
 
 	EXPECT_EQ(map->spawn_point, &map->grid[1][1]);
 	free_map(&map);

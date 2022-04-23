@@ -13,6 +13,7 @@ SRC_NAME =	main.c \
 			draw_line.c \
 			draw.c \
 			parsing.c \
+			raycasting.c \
 			parsing_measure_map.c \
 			debug.c \
 			init.c \
