@@ -36,8 +36,10 @@ typedef struct s_dimension_2d
 typedef struct s_map
 {
 	t_matrix	**grid;
+	t_matrix	*spawn_point;
 	int			width;
 	int			height;
+	char		spawn_orientation;
 }		t_map;
 
 typedef struct s_data {
@@ -60,7 +62,7 @@ typedef struct s_data {
 // parsing
 t_map			*new_map(int width, int height);
 void			init_view(t_data *img);
-int				measure_map(const char *file_name, int *width, int *height);
+int				measure_map(const char *file_name, int *height, int *width);
 t_map			*parse_map(const char *string);
 int				parse_line(char *line, t_map *map, int y_act);
 

@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include "../inc/cube3d.h"
 
 void	set_point(t_point *pt, double x, double y, double z)

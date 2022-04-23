@@ -16,22 +16,22 @@ static int	initialize(const char *file_name, int *width, int *height, int *fd);
 int			calc_width(char *line);
 int			prepare_exit(int fd, int status);
 
-int	measure_map(const char *file_name, int *width, int *height)
+int	measure_map(const char *file_name, int *height, int *width)
 {
 	int		fd;
 	char	*line;
-	int		tmp_width;
+	int		tmp_height;
 
-	if (initialize(file_name, width, height, &fd))
+	if (initialize(file_name, height, width, &fd))
 		return (-1);
 	while (gnl(fd, &line))
 	{
-		tmp_width = calc_width(line);
+		tmp_height = calc_width(line);
 		free(line);
-		if (tmp_width < 0 || (*width != 0 && tmp_width != *width))
+		if (tmp_height < 0 || (*height != 0 && tmp_height != *height))
 			return (prepare_exit(fd, -1));
-		*width = tmp_width;
-		(*height)++;
+		*height = tmp_height;
+		(*width)++;
 	}
 	return (prepare_exit(fd, 0));
 }

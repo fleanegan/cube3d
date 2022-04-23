@@ -20,7 +20,7 @@ SRC_NAME =	main.c \
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 
-TEST_SRC_NAME =	test_main.c \
+TEST_SRC_NAME =	test_main.cpp \
 
 TEST_HEADER_NAME =	test_utils.h \
 
@@ -35,7 +35,7 @@ TEST_HEADER = $(addprefix $(TEST_PATH), $(TEST_HEADER_NAME))
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 LIBFT_FLAGS = $(LIB_PATH)libft/libft.a -I$(LIB_PATH)/libft
-TEST_FLAGS	= -g3 -L./criterion-v2.3.3/lib -I./criterion-v2.3.3/include -lcriterion -Wl,-rpath=./criterion-v2.3.3/lib
+TEST_FLAGS	= -pthread -lgtest
 
 # Flags mlx for Linux and MacOS
 
@@ -47,10 +47,10 @@ else
 endif
 
 ifeq ($(MAKECMDGOALS),test)
-	CFLAGS += -D TESTING
+	CFLAGS += -g -D TESTING
 endif
 ifeq ($(MAKECMDGOALS),testinc)
-	CFLAGS += -D TESTING
+	CFLAGS += -g -D TESTING
 endif
 
 
@@ -63,7 +63,7 @@ PRE:
 
 $(NAME): PRE $(OBJ)
 	@echo "Build $(NAME)"
-	@$(CC) -g $(CFLAGS) $(OBJ) $(LIBFT_FLAGS) $(MLXFLAGS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT_FLAGS) $(MLXFLAGS) -o $(NAME)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@mkdir -p $(OBJ_PATH)
@@ -81,7 +81,7 @@ fclean:	clean
 
 test: PRE $(OBJ) $(SRC) $(TEST_SRC) $(TEST_HEADER)
 	@make -C $(LIB_PATH)/libft/ --no-print-directory
-	@$(CC) $(CFLAGS) -D TESTING $(TEST_FLAGS) -o $(NAME)_test $(OBJ) -I./$(SRC_PATH) $(TEST_SRC) $(LIBFT_FLAGS) -lm
+	$(CXX) -g -D TESTING -o $(NAME)_test $(OBJ) $(TEST_SRC) $(TEST_FLAGS) -I./$(SRC_PATH) $(LIBFT_FLAGS) $(TEST_FLAGS) -lm
 
 
 re:	fclean all
