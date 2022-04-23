@@ -17,6 +17,7 @@
 # include "../lib/libft/get_next_line_bonus.h"
 # include "math.h"
 # include <stdio.h>
+# include <float.h>
 # include <fcntl.h>
 # define TILE_SIZE	64.0
 # define RAD2DEG 360.0/M_PI/2.0
@@ -65,8 +66,7 @@ typedef struct s_data {
 
 typedef struct s_game_obj
 {
-	int			tile_width;
-	int			tile_height;
+	int			len_per_unit[3];
 	t_matrix	pos;
 	t_matrix	orientation;
 	t_map		*map;
@@ -83,8 +83,8 @@ int				parse_line(char *line, t_map *map, int y_act);
 
 // raycasting
 int 			generate_direction_vector(\
-				t_game_obj *game_obj, t_matrix *result);
-float			calc_distance_to_wall(t_matrix *dir, t_game_obj *game_obj);
+				t_matrix *orientation_AnnE, t_matrix *result);
+float			calc_distance_to_obstacle(t_matrix *dir, t_game_obj *game_obj);
 
 // drawing
 void			turn_all_pixels_black(t_data *img);
@@ -98,5 +98,8 @@ void			set_point(t_point *pt, double x, double y, double z);
 t_matrix ** new_grid(t_map *map);
 int				key_handler(int keycode, t_data *img);
 void			tear_down_mlx_session(t_data *img);
+
+// math extensions
+float			calc_point_distance(t_matrix *from, t_matrix *to);
 
 #endif //FDF_H

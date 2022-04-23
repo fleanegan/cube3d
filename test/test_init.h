@@ -5,7 +5,7 @@ TEST(test_init, player_pos_set_to_middle_of_tile)
 	t_map *map = parse_map("test/assets/dummy_map_minimal_north");
 
 	t_game_obj result = init_game_obj(map);
-	expect_point_eq(&result.pos, TILE_SIZE * 1.5, TILE_SIZE * 1.5, 0.);
+	expect_point_eq(&result.pos, TILE_SIZE * 1.5, TILE_SIZE * 1.5, TILE_SIZE * 0.5);
 	free_map(&map);
 }
 
