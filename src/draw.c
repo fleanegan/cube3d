@@ -16,7 +16,8 @@ void	draw_1px_to_img(t_data *data, int x, int y, int color)
 {
 	char	*dst;
 
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+	dst = data->mlx.addr \
+		+ (y * data->mlx.line_length + x * (data->mlx.bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
 }
 
@@ -26,10 +27,10 @@ void	turn_all_pixels_black(t_data *img)
 	int	y;
 
 	x = 0;
-	while (x < img->win_size.x_max)
+	while (x < img->camera.win_size.x_max)
 	{
 		y = 0;
-		while (y < img->win_size.y_max)
+		while (y < img->camera.win_size.y_max)
 		{
 			draw_1px_to_img(img, x, y, 0);
 			y++;

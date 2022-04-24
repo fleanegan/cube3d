@@ -34,24 +34,4 @@ void expect_matrix_eq(t_matrix ours, t_matrix theirs)
 	EXPECT_FLOAT_EQ(ours.mat[2][2], theirs.mat[2][2]);
 }
 
-void print_matrix(t_matrix *a)
-{
-	int					x;
-	int					y;
-
-	y = 0;
-	printf("height %d width %d\n", a->height, a->width);
-	while (y < a->height)
-	{
-		x = 0;
-		while (x < a->width)
-		{
-			printf("%f ", a->mat[y][x]);
-			x++;
-		}
-		printf("\n");
-		y++;
-	}
-}
-
 #endif	 // TEST_UTILS_H

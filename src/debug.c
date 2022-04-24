@@ -24,3 +24,23 @@ void	print_coordinates(t_point *pt)
 	ft_putnbr_fd((int)pt->z, 1);
 	ft_putstr_fd("\n", 1);
 }
+
+void print_matrix(t_matrix *a)
+{
+int					x;
+int					y;
+
+y = 0;
+printf("height %d width %d\n", a->height, a->width);
+while (y < a->height)
+{
+x = 0;
+while (x < a->width)
+{
+printf("%f ", a->mat[y][x]);
+x++;
+}
+printf("\n");
+y++;
+}
+}

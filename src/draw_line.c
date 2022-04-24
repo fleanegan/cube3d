@@ -58,8 +58,8 @@ void	draw_line(t_point p0, t_point p1, t_data *img)
 	err = (int) pd.x + (int) pd.y;
 	while (1)
 	{
-		if (p0.x < 0 || p0.y < 0 || p0.x >= img->win_size.x_max \
-			|| p0.y >= img->win_size.y_max)
+		if (p0.x < 0 || p0.y < 0 || p0.x >= img->camera.win_size.x_max \
+			|| p0.y >= img->camera.win_size.y_max)
 			return ;
 		draw_1px_to_img(img, (int) p0.x, (int) p0.y, make_color(&p0, &p1));
 		err2 = 2 * err;

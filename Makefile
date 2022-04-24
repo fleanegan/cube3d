@@ -37,7 +37,7 @@ TEST_HEADER = $(addprefix $(TEST_PATH), $(TEST_HEADER_NAME))
 # Flags
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 LIBFT_FLAGS = $(LIB_PATH)libft/libft.a -I$(LIB_PATH)/libft
 TEST_FLAGS	= -pthread -lgtest
 

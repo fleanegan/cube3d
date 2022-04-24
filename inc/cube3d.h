@@ -45,35 +45,43 @@ typedef struct s_map
 	int			width;
 	int			height;
 	char		spawn_orientation;
+	int			len_per_unit[3];
+	int 		wall_height;
 }		t_map;
 
-typedef struct s_data {
-	void				*img;
-	char				*addr;
-	void				*mlx;
-	void				*mlx_win;
-	int					bits_per_pixel;
-	int					line_length;
-	int					endian;
-	t_dimension_2d		win_size;
-	t_matrix			orientation;
-	t_map				*map;
-	float				z_scale;
-	float				x_offset;
-	float				y_offset;
-	float				zoom;
-}	t_data;
-
-typedef struct s_game_obj
+typedef struct s_camera
 {
-	int			len_per_unit[3];
+	float			distance_screen;
+	float			angle_camera;
+	t_dimension_2d	win_size;
+}	t_camera;
+
+typedef struct s_player
+{
 	t_matrix	pos;
 	t_matrix	orientation;
-	t_map		*map;
-}	t_game_obj;
+}	t_player;
+
+typedef struct s_mlx {
+	void *img;
+	char *addr;
+	void *mlx;
+	void *mlx_win;
+	int bits_per_pixel;
+	int line_length;
+	int endian;
+}	t_mlx;
+
+typedef struct s_data {
+	t_mlx			mlx;
+	t_player		player;
+	t_map			*map;
+	t_camera		camera;
+}	t_data;
 
 //init
-t_game_obj		init_game_obj(t_map *map);
+t_player		init_player(t_map *map);
+t_camera		init_camera();
 
 // parsing
 t_map			*new_map(int width, int height);
@@ -84,7 +92,8 @@ int				parse_line(char *line, t_map *map, int y_act);
 // raycasting
 int 			generate_direction_vector(\
 				t_matrix *orientation_AnnE, t_matrix *result);
-float			calc_distance_to_obstacle(t_matrix *dir, t_game_obj *game_obj);
+float calc_distance_to_obstacle(t_data *data, t_matrix *dir);
+int calc_column_dimensions(t_data *data, int step, t_point *p0, t_point *p1);
 
 // drawing
 void			turn_all_pixels_black(t_data *img);
@@ -102,4 +111,6 @@ void			tear_down_mlx_session(t_data *img);
 // math extensions
 float			calc_point_distance(t_matrix *from, t_matrix *to);
 
+//debug
+void print_matrix(t_matrix *a);
 #endif //FDF_H
