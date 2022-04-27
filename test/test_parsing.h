@@ -98,7 +98,7 @@ TEST(test_parsing, parse_map_with_one_point)
 
 TEST(test_parsing, parse_one_line_with_one_column)
 {
-	char	*line = "1";
+	char	*line = (char *) "1";
 	t_map	*map = new_map(1, 1);
 
 	parse_line(line, map, 0);
@@ -111,7 +111,7 @@ TEST(test_parsing, parse_one_line_with_one_column)
 
 TEST(test_parsing, parse_one_line_with_two_columns)
 {
-	char	*line = "1 2";
+	char	*line = (char *) "1 2";
 	t_map	*map = new_map(2, 1);
 
 	parse_line(line, map, 0);

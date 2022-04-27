@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   key_handling.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By:  <>                                        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/01 18:21:45 by                   #+#    #+#             */
-/*   Updated: 2022/02/01 18:21:45 by                  ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../inc/cube3d.h"
 
 #ifndef TESTING
@@ -47,20 +35,21 @@ void	handle_linear_key_events(int keycode, t_data *data)
 	move_forward.mat[0][0] = -10;
 	move_left.mat[1][0] = 10;
 	move_right.mat[1][0] = -10;
-	if (keycode == 65362)
+	//TODO: inversed ?
+	if (keycode == KEY_DOWN)
 		move(data, &move_backward);
-	else if (keycode == 65364)
+	else if (keycode == KEY_UP)
 		move(data, &move_forward);
-	else if (keycode == 65361)
+	else if (keycode == KEY_RIGHT)
 		move(data, &move_right);
-	else if (keycode == 65363)
+	else if (keycode == KEY_LEFT)
 		move(data, &move_left);
-	else if (keycode == 97)
+	else if (keycode == KEY_ARROW_LEFT)
 	{
 		multiply(&data->player.orientation, &rot_left, &tmp);
 		data->player.orientation = tmp;
 	}
-	else if (keycode == 100)
+	else if (keycode == KEY_ARROW_RIGHT)
 	{
 		multiply(&data->player.orientation, &rot_right, &tmp);
 		data->player.orientation = tmp;
@@ -69,16 +58,13 @@ void	handle_linear_key_events(int keycode, t_data *data)
 
 int	key_handler(int keycode, t_data *data)
 {
-
-
-
-	if (keycode == 65307 || keycode == 38)
+	//printf("keycode: %d\n", keycode);
+	if (keycode == KEY_ESC || keycode == 38) //TODO: what is 38 (define) ?
 		tear_down_mlx_session(data);
 	else
 		handle_linear_key_events(keycode, data);
 	render_frame(data);
 	return (0);
 }
-//	printf("keycode: %d\n", keycode);
 
 #endif

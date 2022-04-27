@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   FdF.h                                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By:  <>                                        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/01 14:44:09 by                   #+#    #+#             */
-/*   Updated: 2022/02/01 18:18:22 by                  ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef CUBE3D_H
 # define CUBE3D_H
 # include "../lib/libft/libft.h"
@@ -22,6 +10,16 @@
 # define TILE_SIZE	64.0
 # define RAD2DEG 360.0/M_PI/2.0
 # define DEG2RAD M_PI/360.0*2.0
+
+// key
+
+# define KEY_UP 122
+# define KEY_DOWN 115
+# define KEY_LEFT 113
+# define KEY_RIGHT 100
+# define KEY_ARROW_LEFT 65361
+# define KEY_ARROW_RIGHT 65363
+# define KEY_ESC 65307
 
 typedef struct s_point
 {
@@ -92,8 +90,8 @@ int				parse_line(char *line, t_map *map, int y_act);
 // raycasting
 int 			generate_direction_vector(\
 				t_matrix *orientation_AnnE, t_matrix *result);
-float calc_distance_to_obstacle(t_data *data, t_matrix *dir);
-int calc_column_dimensions(t_data *data, int step, t_point *p0, t_point *p1);
+float			calc_distance_to_obstacle(t_data *data, t_matrix *dir);
+int 			calc_column_dimensions(t_data *data, int step, t_point *p0, t_point *p1);
 
 // drawing
 void			turn_all_pixels_black(t_data *img);
@@ -104,7 +102,7 @@ int				render_frame(void *void_img);
 // helper functions
 void			*free_map(t_map **map);
 void			set_point(t_point *pt, double x, double y, double z);
-t_matrix ** new_grid(t_map *map);
+t_matrix 		**new_grid(t_map *map);
 int				key_handler(int keycode, t_data *img);
 void			tear_down_mlx_session(t_data *img);
 
@@ -112,5 +110,5 @@ void			tear_down_mlx_session(t_data *img);
 float			calc_point_distance(t_matrix *from, t_matrix *to);
 
 //debug
-void print_matrix(t_matrix *a);
+void 			print_matrix(t_matrix *a);
 #endif //FDF_H
