@@ -58,7 +58,7 @@ void	handle_linear_key_events(int keycode, t_data *data)
 
 int	key_handler(int keycode, t_data *data)
 {
-	//printf("keycode: %d\n", keycode);
+	printf("keycode: %d\n", keycode);
 	if (keycode == KEY_ESC || keycode == 38) //TODO: what is 38 (define) ?
 		tear_down_mlx_session(data);
 	else
@@ -67,4 +67,9 @@ int	key_handler(int keycode, t_data *data)
 	return (0);
 }
 
+int	red_cross_handler(t_data *data)
+{
+	tear_down_mlx_session(data);
+	return (0);
+}
 #endif

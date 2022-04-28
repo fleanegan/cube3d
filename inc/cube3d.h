@@ -104,6 +104,7 @@ void			*free_map(t_map **map);
 void			set_point(t_point *pt, double x, double y, double z);
 t_matrix 		**new_grid(t_map *map);
 int				key_handler(int keycode, t_data *img);
+int				red_cross_handler(t_data *data);
 void			tear_down_mlx_session(t_data *img);
 
 // math extensions
