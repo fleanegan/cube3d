@@ -29,7 +29,7 @@ t_player	init_player_pose(t_map *map, t_player *result)
 	return (*result);
 }
 
-t_camera	init_camera()
+t_camera	init_camera(void)
 {
 	t_camera	result;
 

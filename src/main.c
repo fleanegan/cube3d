@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By:  <>                                        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/01 14:44:19 by                   #+#    #+#             */
-/*   Updated: 2022/02/01 18:16:11 by                  ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../inc/cube3d.h"
 
 #ifndef TESTING
@@ -27,15 +15,16 @@ void	tear_down_mlx_session(t_data *data)
 
 int	render_frame(void *void_img)
 {
-	t_data			*data;
-
-	data = void_img;
-	turn_all_pixels_black(data);
+	int		i;
+	t_data	*data;
 	t_point	p0;
 	t_point	p1;
-	int		i;
 
 	i = 0;
+	data = void_img;
+	ft_bzero(&p0, sizeof(t_point));
+	ft_bzero(&p1, sizeof(t_point));
+	turn_all_pixels_black(data);
 	while (i < data->camera.win_size.x_max)
 	{
 		calc_column_dimensions(data, i, &p0, &p1);
@@ -54,14 +43,14 @@ int	init_mlx(t_data	*data)
 	if (! data->mlx.mlx)
 		return (1);
 	data->mlx.mlx_win = mlx_new_window(\
-		data->mlx.mlx, data->camera.win_size.x_max, data->camera.win_size.y_max, "3D");
+			data->mlx.mlx, data->camera.win_size.x_max, data->camera.win_size.y_max, "3D");
 	if (! data->mlx.mlx_win)
 	{
 		free(data->mlx.mlx);
 		return (1);
 	}
 	data->mlx.img = mlx_new_image(\
-		data->mlx.mlx, data->camera.win_size.x_max, data->camera.win_size.y_max);
+			data->mlx.mlx, data->camera.win_size.x_max, data->camera.win_size.y_max);
 	if (! data->mlx.mlx_win)
 	{
 		mlx_destroy_window(data->mlx.mlx, data->mlx.mlx_win);
@@ -70,7 +59,7 @@ int	init_mlx(t_data	*data)
 		return (1);
 	}
 	data->mlx.addr = mlx_get_data_addr(data->mlx.img, \
-	&data->mlx.bits_per_pixel, &data->mlx.line_length, &data->mlx.endian);
+			&data->mlx.bits_per_pixel, &data->mlx.line_length, &data->mlx.endian);
 	return (0);
 }
 
@@ -80,6 +69,7 @@ int	main(int argc, char **argv)
 
 	if (argc == 2)
 	{
+		ft_bzero(&data, sizeof(t_data));
 		data.map = parse_map(argv[1]);
 		if (! data.map)
 		{
@@ -89,13 +79,12 @@ int	main(int argc, char **argv)
 		data.camera = init_camera();
 		data.player = init_player(data.map);
 		if (init_mlx(&data))
-		{
-			free_map(&data.map);
-			return (1);
-		}
+			return (free_map(&data.map) == NULL);
 		ft_putendl_fd("init done", 1);
 		render_frame(&data);
-		mlx_key_hook(data.mlx.mlx_win, key_handler, &data);
+		mlx_hook(data.mlx.mlx_win, 2, 1L << 0, &handle_key_press, &data);
+		mlx_hook(data.mlx.mlx_win, 3, 1L << 1, &handle_key_release, &data);
+		mlx_hook(data.mlx.mlx_win, 33, 1L << 17, red_cross_handler, &data);
 		mlx_loop(data.mlx.mlx);
 	}
 	return (0);

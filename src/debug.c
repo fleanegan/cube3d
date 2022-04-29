@@ -15,20 +15,20 @@ void	print_coordinates(t_point *pt)
 
 void print_matrix(t_matrix *a)
 {
-int					x;
-int					y;
+	int					x;
+	int					y;
 
-y = 0;
-printf("height %d width %d\n", a->height, a->width);
-while (y < a->height)
-{
-x = 0;
-while (x < a->width)
-{
-printf("%f ", a->mat[y][x]);
-x++;
-}
-printf("\n");
-y++;
-}
+	y = 0;
+	printf("height %d width %d\n", a->height, a->width);
+	while (y < a->height)
+	{
+		x = 0;
+		while (x < a->width)
+		{
+			printf("%f ", a->mat[y][x]);
+			x++;
+		}
+		printf("\n");
+		y++;
+	}
 }
