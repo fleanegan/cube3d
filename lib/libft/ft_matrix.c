@@ -58,7 +58,7 @@ int	multiply(t_matrix *a, t_matrix *b, t_matrix *result)
 
 	if (a->width != b->height)
 		return (-1);
-	ft_bzero(result->mat, 9 * sizeof(float));
+	zero_init_rotation_matrix(result);
 	result->width = b->width;
 	result->height = a->height;
 	j = -1;

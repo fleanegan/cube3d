@@ -17,6 +17,8 @@ void	move(t_data *data, t_matrix *direction)
 void	handle_linear_key_events(int keycode, t_data *data)
 {
 	t_matrix	rot_left;
+	t_matrix	rot_down;
+	t_matrix	rot_up;
 	t_matrix	rot_right;
 	t_matrix	move_forward;
 	t_matrix	move_backward;
@@ -26,6 +28,8 @@ void	handle_linear_key_events(int keycode, t_data *data)
 
 	rot_left = euler2rot(0, 0, -5.);
 	rot_right = euler2rot(0, 0, 5.);
+	rot_up = euler2rot(0, 5, 0);
+	rot_down = euler2rot(0, -5, 0);
 	zero_init_point(&move_forward);
 	zero_init_point(&tmp);
 	zero_init_point(&move_backward);
@@ -44,6 +48,16 @@ void	handle_linear_key_events(int keycode, t_data *data)
 		move(data, &move_right);
 	else if (keycode == KEY_LEFT)
 		move(data, &move_left);
+	else if (keycode == KEY_ARROW_UP)
+	{
+		multiply(&data->player.orientation, &rot_up, &tmp);
+		data->player.orientation = tmp;
+	}
+	else if (keycode == KEY_ARROW_DOWN)
+	{
+		multiply(&data->player.orientation, &rot_down, &tmp);
+		data->player.orientation = tmp;
+	}
 	else if (keycode == KEY_ARROW_LEFT)
 	{
 		multiply(&data->player.orientation, &rot_left, &tmp);
@@ -58,7 +72,7 @@ void	handle_linear_key_events(int keycode, t_data *data)
 
 int	key_handler(int keycode, t_data *data)
 {
-	//printf("keycode: %d\n", keycode);
+	printf("keycode: %d\n", keycode);
 	if (keycode == KEY_ESC || keycode == 38) //TODO: what is 38 (define) ?
 		tear_down_mlx_session(data);
 	else

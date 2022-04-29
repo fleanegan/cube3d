@@ -19,6 +19,8 @@
 # define KEY_RIGHT 100
 # define KEY_ARROW_LEFT 65361
 # define KEY_ARROW_RIGHT 65363
+# define KEY_ARROW_UP 65362
+# define KEY_ARROW_DOWN 65364
 # define KEY_ESC 65307
 
 typedef struct s_point

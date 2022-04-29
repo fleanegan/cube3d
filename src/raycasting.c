@@ -34,7 +34,7 @@ float calc_distance_to_obstacle(t_data *data, t_matrix *dir)
 
 	axis = 0;
 	result = FLT_MAX;
-	while (axis < 3)
+	while (axis < 2)
 	{
 		if (dir->mat[axis][0] > 0)
 			normal_direction_plane = -1;
@@ -106,19 +106,24 @@ int calc_column_dimensions(t_data *data, int step, t_point *p0, t_point *p1)
 	if (generate_direction_vector(&data->player.orientation, &dir) \
 		|| multiply(&current_slice, &dir, &dir_cam_angle))
 		return (1);
-	float distance_to_wall = calc_distance_to_obstacle(data, &dir_cam_angle);
+	float	distance_to_wall = calc_distance_to_obstacle(data, &dir_cam_angle);
+	float	beta = atanf(dir_cam_angle.mat[2][0] / sqrtf(powf(dir_cam_angle.mat[0][0], 2) + powf(dir_cam_angle.mat[1][0], 2)));
+	float	scale_tilt = 1.f / cosf(beta);
+	float	offset_tilt = data->camera.distance_screen * sinf(beta);
 	distance_to_wall = distance_to_wall * cosf(fabsf(cam_angle_section) * DEG2RAD);
 	if (step == data->camera.win_size.x_max / 2) {
+		print_matrix(&dir_cam_angle);
 		printf("distance screen: %f, distance object: %f\n", data->camera.distance_screen, distance_to_wall);
-		printf("x: %f, y: %f, dir 0: %f, dir 1: %f, angle %f\n", data->player.pos.mat[0][0], data->player.pos.mat[1][0], dir.mat[0][0], dir.mat[1][0], cam_angle_section);
+		printf("scale_tilt: %f, offset_tilt: %f\n", scale_tilt, offset_tilt);
+		//printf("x: %f, y: %f, dir 0: %f, dir 1: %f, angle %f, beta: %f\n", data->player.pos.mat[0][0], data->player.pos.mat[1][0], dir.mat[0][0], dir.mat[1][0], cam_angle_section, beta * RAD2DEG);
 	}
 	//*/
 	p0->x = step;
 	p1->x = step;
-	p0->y = data->camera.win_size.y_max / 2.f + data->map->wall_height \
-				/ 2. *  data->camera.distance_screen / distance_to_wall;
-	p1->y = data->camera.win_size.y_max / 2.f - data->map->wall_height \
-				/ 2. *  data->camera.distance_screen / distance_to_wall;
+	p0->y = data->camera.win_size.y_max / 2.f + offset_tilt + data->map->wall_height \
+				/ 2. *  data->camera.distance_screen / distance_to_wall * scale_tilt;
+	p1->y = data->camera.win_size.y_max / 2.f + offset_tilt - data->map->wall_height \
+				/ 2. *  data->camera.distance_screen / distance_to_wall * scale_tilt;
 	p0->y = p0->y;
 	p1->y = p1->y;
 	if (p1->y < 0)
