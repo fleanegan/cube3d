@@ -18,7 +18,7 @@ void	move(t_data *data)
 	multiply(&data->player.orientation, &direction, &tmp);
 	data->player.pos.mat[0][0] += tmp.mat[0][0];
 	data->player.pos.mat[1][0] += tmp.mat[1][0];
-	data->player.pos.mat[2][0] += tmp.mat[2][0];
+	//data->player.pos.mat[2][0] += tmp.mat[2][0];
 }
 
 void	rotate(t_data *data)

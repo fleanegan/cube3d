@@ -8,7 +8,7 @@
 # include <float.h>
 # include <fcntl.h>
 # define TILE_SIZE	64.0
-# define DEG2RAD 0.0175f
+# define DEG2RAD 0.017453293f
 # define RAD2DEG 57.295779513f
 
 // key
@@ -116,7 +116,8 @@ int				red_cross_handler(t_data *data);
 int				generate_direction_vector(\
 				t_matrix *orientation, t_matrix *result);
 float			calc_distance_to_obstacle(t_data *data, t_matrix *dir);
-int				calc_column_dimensions(t_data *data, int step, t_point *p0, t_point *p1);
+int calc_column_dimensions(t_data *data, int step,
+						   t_dimension_2d *wall_coordinates);
 
 // drawing
 void			turn_all_pixels_black(t_data *data);

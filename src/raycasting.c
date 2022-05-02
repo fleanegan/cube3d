@@ -17,9 +17,7 @@ int	is_contact(t_matrix *intersection, \
 	int	x;
 	int	y;
 
-	if (axis == 2)
-		return (1);
-	intersection->mat[axis][0] -= normal_direction_plane;
+	intersection->mat[axis][0] -= normal_direction_plane * 10;
 	x = ((int)(intersection->mat[0][0] / data->map->len_per_unit[axis]));
 	y = ((int)(intersection->mat[1][0] / data->map->len_per_unit[axis]));
 	if (x >= data->map->width || x < 0 || y >= data->map->height || y < 0)
@@ -46,7 +44,7 @@ float calc_distance_to_obstacle(t_data *data, t_matrix *dir)
 			normal_direction_plane = 1;
 		tmp = calc_distance_to_wall_matching_normal_vector(\
 				dir, data, normal_direction_plane, axis);
-		if (tmp < result && tmp > 1.001)
+		if (tmp < result && tmp > -0.001)
 			result = tmp;
 		axis++;
 	}
@@ -71,7 +69,7 @@ float	calc_distance_to_wall_matching_normal_vector(\
 	while (1)
 	{
 		t = fabsf((float)(distance_wall - data->player.pos.mat[axis][0]) \
-		/ ((float) dir->mat[axis][0] * (float) normal_of_plane));
+		/ ((float) fabs(dir->mat[axis][0] * (float) normal_of_plane)));
 		if (is_dir_parallel_to_obstacle_surface(data, axis, t))
 			return (-1);
 		intersection = find_ray_end(dir, &data->player.pos, &intersection, t);
@@ -86,9 +84,9 @@ int	is_dir_parallel_to_obstacle_surface(\
 		t_data *data, int axis, float t)
 {
 	return ((axis == 0 && fabsf(t) > \
-				data->map->width * data->map->len_per_unit[axis]) \
+				(float) 2.f * data->map->width * (float)data->map->len_per_unit[axis]) \
 			|| (axis == 1 && fabsf(t) > \
-				data->map->height * data->map->len_per_unit[axis]));
+				(float) 2.f * data->map->height * (float)data->map->len_per_unit[axis]));
 }
 
 t_matrix	find_ray_end(\
@@ -96,40 +94,34 @@ t_matrix	find_ray_end(\
 {
 	result->mat[0][0] = base->mat[0][0] + t * dir->mat[0][0];
 	result->mat[1][0] = base->mat[1][0] + t * dir->mat[1][0];
-	//fixme
-	result->mat[2][0] = base->mat[2][0] + t * dir->mat[2][0] * 0.;
+	result->mat[2][0] = base->mat[2][0];
 	return (*result);
 }
 
-int calc_column_dimensions(t_data *data, int step, t_point *p0, t_point *p1)
+int calc_column_dimensions(t_data *data, int step, t_dimension_2d *wall_coordinates)
 {
 	t_matrix	dir_cam_angle;
 	float		cam_angle_section;
 
 	if (fill_rotation_entities(data, step, &dir_cam_angle, &cam_angle_section))
 		return (1);
-	float	distance_to_wall = calc_distance_to_obstacle(data, &dir_cam_angle) * cosf(fabsf(cam_angle_section) * DEG2RAD);
-	float	beta = atanf(dir_cam_angle.mat[2][0] / sqrtf(powf(dir_cam_angle.mat[0][0], 2) + powf(dir_cam_angle.mat[1][0], 2)));
-	float	scale_pitch = 1.f / cosf(beta);
-	float	offset_pitch = data->camera.distance_screen * sinf(beta);
-	p0->x = step;
-	p1->x = step;
-	p0->y = data->camera.win_size.y_max / 2.f + data->player.pos.mat[2][0] + offset_pitch + data->map->wall_height \
-	/ 2. * data->camera.distance_screen / distance_to_wall * scale_pitch;
-	p1->y = data->camera.win_size.y_max / 2.f + data->player.pos.mat[2][0] + offset_pitch - data->map->wall_height \
- 	/ 2. * data->camera.distance_screen / distance_to_wall * scale_pitch;
+	float	distance_player_wall_shortest = calc_distance_to_obstacle(data, &dir_cam_angle) * cosf(fabsf(cam_angle_section) * DEG2RAD);
+	float	tilt_angle = atanf((float) dir_cam_angle.mat[2][0] / sqrtf(powf((float) dir_cam_angle.mat[0][0], 2) + powf((float) dir_cam_angle.mat[1][0], 2))) * RAD2DEG;
+	float	y_uppper_limit_view = (float) (distance_player_wall_shortest * tanf((tilt_angle + data->camera.angle_camera_vertical / 2.f) * DEG2RAD) + data->player.pos.mat[2][0]);
+	float	head_room_until_wall = y_uppper_limit_view - data->map->wall_height;
+	float	k = cosf(tilt_angle * DEG2RAD) * data->camera.distance_screen / distance_player_wall_shortest;
+	float	head_room_transformed = (float) head_room_until_wall * k;
+	float	foot_room = data->camera.win_size.y_max - head_room_until_wall  * k - data->map->wall_height * k;
+	wall_coordinates->x_max = step;
+	wall_coordinates->x_min = step;
+	wall_coordinates->y_max = data->camera.win_size.y_max - head_room_transformed;
+	wall_coordinates->y_min = foot_room;
+	if (wall_coordinates->y_min < 0)
+		wall_coordinates->y_min = 0;
+	if (wall_coordinates->y_max >= data->camera.win_size.y_max)
+		wall_coordinates->y_max = data->camera.win_size.y_max;
 	if (step == data->camera.win_size.x_max / 2)
-	{
-		print_matrix(&dir_cam_angle);
-		printf("distance screen: %f, distance object: %f\n", data->camera.distance_screen, distance_to_wall);
-		printf("scale_pitch: %f, offset_pitch: %f\n", scale_pitch, offset_pitch);
-	}
-	if (p1->y < 0)
-		p1->y = 0;
-	if (p0->y < 0)
-		p0->y = data->camera.win_size.y_max;
-	//printf("y0: %f, y1: %f\n", p0->y, p1->y);
-	(void) step;
+		printf("distance: %f\n", distance_player_wall_shortest);
 	return (0);
 }
 

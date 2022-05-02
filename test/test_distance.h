@@ -58,21 +58,6 @@ TEST(test_distance, calculate_distance_to_closest_wall)
 	free_map(&data.map);
 }
 
-TEST(test_distance, looking_up_will_find_ceiling)
-{
-	t_data	data;
-	data.map = parse_map("test/assets/dummy_map_player_one_field_from_north");
-	data.player = init_player(data.map);
-	data.player.orientation = euler2rot(0., 90., 0.);
-	t_matrix	dir;
-	generate_direction_vector(&data.player.orientation, &dir);
-
-	float result = calc_distance_to_obstacle(&data, &dir);
-
-	EXPECT_FLOAT_EQ(result, TILE_SIZE * 0.5);
-	free_map(&data.map);
-}
-
 TEST(test_distance, wall_in_east)
 {
 	t_data	data;
@@ -80,7 +65,6 @@ TEST(test_distance, wall_in_east)
 	data.player = init_player(data.map);
 	t_matrix	dir;
 	generate_direction_vector(&data.player.orientation, &dir);
-	print_matrix(&dir);
 
 	float result = calc_distance_to_obstacle(&data, &dir);
 
@@ -96,10 +80,25 @@ TEST(test_distance, debug_mirror)
 	data.player.orientation = euler2rot(0., 0., 180.);
 	t_matrix	dir;
 	generate_direction_vector(&data.player.orientation, &dir);
-	print_matrix(&dir);
 
 	float result = calc_distance_to_obstacle(&data, &dir);
 
 	EXPECT_FLOAT_EQ(result, -1);
+	free_map(&data.map);
+}
+
+TEST(test_distance, facing_wall_north_far_away)
+{
+	t_data	data;
+	data.map = parse_map("test/assets/wall_far_away");
+	data.player = init_player(data.map);
+	data.player.pos.mat[0][0] = 470.f;
+	data.player.pos.mat[1][0] = 1156.f;
+	t_matrix	dir;
+	generate_direction_vector(&data.player.orientation, &dir);
+
+	float result = calc_distance_to_obstacle(&data, &dir);
+
+	EXPECT_GT(result, 0);
 	free_map(&data.map);
 }
