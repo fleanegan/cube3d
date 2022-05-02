@@ -28,7 +28,9 @@ int	render_frame(void *void_img)
 	while (i < data->camera.win_size.x_max)
 	{
 		calc_column_dimensions(data, i, &p0, &p1);
-		draw_line(p0, p1, data);
+		draw_line(p0, p1, data, 0xFFFFFF);
+		p0.y = 0.;
+		draw_line(p0, p1, data, 0xFF00FF);
 		i++;
 	}
 	printf("x: %f, y: %f\n", data->player.pos.mat[0][0], data->player.pos.mat[1][0]);

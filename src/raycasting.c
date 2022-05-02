@@ -7,6 +7,10 @@ float		calc_distance_to_wall_matching_normal_vector(t_matrix *dir, \
 int			is_dir_parallel_to_obstacle_surface(\
 		t_data *data, int axis, float t);
 
+int
+fill_rotation_entities(t_data *data, int step, t_matrix *dir_cam_angle,
+					   float *cam_angle_section);
+
 int	is_contact(t_matrix *intersection, \
 		int normal_direction_plane, int axis, t_data *data)
 {
@@ -34,7 +38,7 @@ float calc_distance_to_obstacle(t_data *data, t_matrix *dir)
 
 	axis = 0;
 	result = FLT_MAX;
-	while (axis < 3)
+	while (axis < 2)
 	{
 		if (dir->mat[axis][0] > 0)
 			normal_direction_plane = -1;
@@ -59,7 +63,6 @@ float	calc_distance_to_wall_matching_normal_vector(\
 	int			distance_wall;
 	float		t;
 
-	dir->mat[2][0] = 0;
 	zero_init_point(&intersection);
 	distance_wall = ((int)(data->player.pos.mat[axis][0] \
 				/ data->map->len_per_unit[axis])) * data->map->len_per_unit[axis];
@@ -93,47 +96,58 @@ t_matrix	find_ray_end(\
 {
 	result->mat[0][0] = base->mat[0][0] + t * dir->mat[0][0];
 	result->mat[1][0] = base->mat[1][0] + t * dir->mat[1][0];
-	result->mat[2][0] = base->mat[2][0] + t * dir->mat[2][0];
+	//fixme
+	result->mat[2][0] = base->mat[2][0] + t * dir->mat[2][0] * 0.;
 	return (*result);
 }
 
 int calc_column_dimensions(t_data *data, int step, t_point *p0, t_point *p1)
 {
-	t_matrix	dir;
 	t_matrix	dir_cam_angle;
-	t_matrix	current_slice;
 	float		cam_angle_section;
 
-	zero_init_point(&dir);
-	zero_init_point(&dir_cam_angle);
-	zero_init_point(&current_slice);
-	cam_angle_section = -1. * (data->camera.angle_camera / 2.f - (float) data->camera.angle_camera * (float) step / (float) data->camera.win_size.x_max);
-	current_slice = euler2rot(0., 0., cam_angle_section);
-	if (generate_direction_vector(&data->player.orientation, &dir) \
-			|| multiply(&current_slice, &dir, &dir_cam_angle))
+	if (fill_rotation_entities(data, step, &dir_cam_angle, &cam_angle_section))
 		return (1);
-	float	distance_to_wall = calc_distance_to_obstacle(data, &dir_cam_angle);
+	float	distance_to_wall = calc_distance_to_obstacle(data, &dir_cam_angle) * cosf(fabsf(cam_angle_section) * DEG2RAD);
 	float	beta = atanf(dir_cam_angle.mat[2][0] / sqrtf(powf(dir_cam_angle.mat[0][0], 2) + powf(dir_cam_angle.mat[1][0], 2)));
 	float	scale_pitch = 1.f / cosf(beta);
 	float	offset_pitch = data->camera.distance_screen * sinf(beta);
-	distance_to_wall = distance_to_wall * cosf(fabsf(cam_angle_section) * DEG2RAD);
+	p0->x = step;
+	p1->x = step;
+	p0->y = data->camera.win_size.y_max / 2.f + data->player.pos.mat[2][0] + offset_pitch + data->map->wall_height \
+	/ 2. * data->camera.distance_screen / distance_to_wall * scale_pitch;
+	p1->y = data->camera.win_size.y_max / 2.f + data->player.pos.mat[2][0] + offset_pitch - data->map->wall_height \
+ 	/ 2. * data->camera.distance_screen / distance_to_wall * scale_pitch;
 	if (step == data->camera.win_size.x_max / 2)
 	{
 		print_matrix(&dir_cam_angle);
 		printf("distance screen: %f, distance object: %f\n", data->camera.distance_screen, distance_to_wall);
 		printf("scale_pitch: %f, offset_pitch: %f\n", scale_pitch, offset_pitch);
 	}
-	p0->x = step;
-	p1->x = step;
-	p0->y = data->camera.win_size.y_max / 2.f + offset_pitch + data->map->wall_height \
- / 2. * data->camera.distance_screen / distance_to_wall * scale_pitch;
-	p1->y = data->camera.win_size.y_max / 2.f + offset_pitch - data->map->wall_height \
- / 2. * data->camera.distance_screen / distance_to_wall * scale_pitch;
 	if (p1->y < 0)
 		p1->y = 0;
 	if (p0->y < 0)
 		p0->y = data->camera.win_size.y_max;
 	//printf("y0: %f, y1: %f\n", p0->y, p1->y);
 	(void) step;
+	return (0);
+}
+
+int	fill_rotation_entities(\
+	t_data *data, int step, t_matrix *dir_cam_angle, float *cam_angle_section)
+{
+	t_matrix	current_slice;
+	t_matrix	dir;
+
+	zero_init_point(&dir);
+	zero_init_point(dir_cam_angle);
+	zero_init_point(&current_slice);
+	*cam_angle_section = -1.f * (data->camera.angle_camera_horizontal \
+ / 2.f - (float) data->camera.angle_camera_horizontal * (float) step \
+ / (float) data->camera.win_size.x_max);
+	current_slice = euler2rot(0., 0., *cam_angle_section);
+	if (generate_direction_vector(&data->player.orientation, &dir) \
+			|| multiply(&current_slice, &dir, dir_cam_angle))
+		return (1);
 	return (0);
 }

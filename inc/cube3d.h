@@ -8,7 +8,8 @@
 # include <float.h>
 # include <fcntl.h>
 # define TILE_SIZE	64.0
-# define DEG2RAD M_PI / 360.0 * 2.0
+# define DEG2RAD 0.0175f
+# define RAD2DEG 57.295779513f
 
 // key
 
@@ -51,7 +52,8 @@ typedef struct s_map
 typedef struct s_camera
 {
 	float			distance_screen;
-	float			angle_camera;
+	float			angle_camera_horizontal;
+	float			angle_camera_vertical;
 	t_dimension_2d	win_size;
 }	t_camera;
 
@@ -118,7 +120,7 @@ int				calc_column_dimensions(t_data *data, int step, t_point *p0, t_point *p1);
 
 // drawing
 void			turn_all_pixels_black(t_data *data);
-void			draw_line(t_point p0, t_point p1, t_data *img);
+void draw_line(t_point p0, t_point p1, t_data *img, int colour);
 void			draw_1px_to_img(t_data *data, int x, int y, int color);
 int				render_frame(void *void_img);
 

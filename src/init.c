@@ -35,9 +35,10 @@ t_camera	init_camera(void)
 
 	result.win_size.x_max = 800;
 	result.win_size.y_max = 600;
-	result.angle_camera = 60.f;
+	result.angle_camera_horizontal = 60.f;
 	result.distance_screen = \
-		tanf(result.angle_camera / 2.f * DEG2RAD) * result.win_size.x_max / 2.f;
-	printf("screen distance: %f\n", result.distance_screen);
+		result.win_size.x_max / 2.f / tanf(result.angle_camera_horizontal / 2.f * DEG2RAD);
+	result.angle_camera_vertical = 2 * atan((result.win_size.y_max / 2.f) / result.distance_screen) * 180.f / M_PI;
+	printf("screen distance: %f, vertical angle: %f, g/a: %f\n", result.distance_screen, result.angle_camera_vertical, result.win_size.y_max / 2.f / result.distance_screen);
 	return (result);
 }
