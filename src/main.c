@@ -13,22 +13,40 @@ void	tear_down_mlx_session(t_data *data)
 	exit(0);
 }
 
+void	draw_wall_segment(t_data *data, t_dimension_2d *wall_seg)
+{
+	int	i;
+
+	i = 0;
+	while (i < wall_seg->y_min && i < data->camera.win_size.y_max)
+	{
+		draw_1px_to_img(data, wall_seg->x_min, i, 0x17202a);
+		i++;
+	}
+	while (i < wall_seg->y_max && i < data->camera.win_size.y_max)
+	{
+		draw_1px_to_img(data, wall_seg->x_min, i, 0xb71c1c );
+		i++;
+	}
+	while (i < data->camera.win_size.y_max)
+	{
+		draw_1px_to_img(data, wall_seg->x_min, i,  0xf1c40f);
+		i++;
+	}
+}
+
 int	render_frame(void *void_img)
 {
-	int		i;
-	t_data	*data;
-	t_point	p0;
-	t_point	p1;
+	int				i;
+	t_data			*data;
+	t_dimension_2d	wall_dim;
 
 	i = 0;
 	data = void_img;
-	ft_bzero(&p0, sizeof(t_point));
-	ft_bzero(&p1, sizeof(t_point));
-	turn_all_pixels_black(data);
 	while (i < data->camera.win_size.x_max)
 	{
-		calc_column_dimensions(data, i, &p0, &p1);
-		draw_line(p0, p1, data);
+		raycast_one_slice(data, i, &wall_dim);
+		draw_wall_segment(data, &wall_dim);
 		i++;
 	}
 	printf("x: %f, y: %f\n", data->player.pos.mat[0][0], data->player.pos.mat[1][0]);
@@ -69,6 +87,7 @@ int	main(int argc, char **argv)
 
 	if (argc == 2)
 	{
+		ft_bzero(&data, sizeof(t_data));
 		data.map = parse_map(argv[1]);
 		if (! data.map)
 		{
@@ -78,13 +97,11 @@ int	main(int argc, char **argv)
 		data.camera = init_camera();
 		data.player = init_player(data.map);
 		if (init_mlx(&data))
-		{
-			free_map(&data.map);
-			return (1);
-		}
+			return (free_map(&data.map) == NULL);
 		ft_putendl_fd("init done", 1);
 		render_frame(&data);
-		mlx_key_hook(data.mlx.mlx_win, key_handler, &data);
+		mlx_hook(data.mlx.mlx_win, 2, 1L << 0, &handle_key_press, &data);
+		mlx_hook(data.mlx.mlx_win, 3, 1L << 1, &handle_key_release, &data);
 		mlx_hook(data.mlx.mlx_win, 33, 1L << 17, red_cross_handler, &data);
 		mlx_loop(data.mlx.mlx);
 	}

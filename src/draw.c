@@ -9,18 +9,18 @@ void	draw_1px_to_img(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-void	turn_all_pixels_black(t_data *img)
+void	turn_all_pixels_black(t_data *data)
 {
 	int	x;
 	int	y;
 
 	x = 0;
-	while (x < img->camera.win_size.x_max)
+	while (x < data->camera.win_size.x_max)
 	{
 		y = 0;
-		while (y < img->camera.win_size.y_max)
+		while (y < data->camera.win_size.y_max)
 		{
-			draw_1px_to_img(img, x, y, 0);
+			draw_1px_to_img(data, x, y, 0);
 			y++;
 		}
 		x++;

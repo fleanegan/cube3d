@@ -16,6 +16,8 @@ SRC_NAME =	main.c \
 			utils.c \
 			math_extensions.c \
 			raycasting.c \
+			movement.c \
+			calc_distance.c \
 			parsing_measure_map.c \
 			debug.c \
 			init.c \
@@ -36,7 +38,7 @@ TEST_HEADER = $(addprefix $(TEST_PATH), $(TEST_HEADER_NAME))
 
 # Flags
 
-CC = gcc
+CXX = g++
 CFLAGS = -Wall -Wextra -Werror -g
 LIBFT_FLAGS = $(LIB_PATH)libft/libft.a -I$(LIB_PATH)/libft
 TEST_FLAGS	= -pthread -lgtest
@@ -70,7 +72,7 @@ $(NAME): PRE $(OBJ)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@mkdir -p $(OBJ_PATH)
-	$(CC) $(CFLAGS) -I$(SRC_PATH) -o $@ -c $<  -lm
+	$(CC) $(CFLAGS) -I$(SRC_PATH) -o $@ -c $<
 
 clean:
 	@make clean -C $(LIB_PATH)libft/ --no-print-directory

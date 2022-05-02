@@ -15,7 +15,7 @@ float	calc_point_distance(t_matrix *from, t_matrix *to)
 	return (sqrtf(sqrd_d));
 }
 
-int	generate_direction_vector(t_matrix *orientation_AnnE, t_matrix *result)
+int	generate_direction_vector(t_matrix *orientation, t_matrix *result)
 {
 	t_matrix	dir_init;
 
@@ -23,7 +23,7 @@ int	generate_direction_vector(t_matrix *orientation_AnnE, t_matrix *result)
 	zero_init_point(&dir_init);
 	dir_init.mat[0][0] = 1;
 	dir_init.mat[1][0] = 0;
-	if (multiply(orientation_AnnE, &dir_init, result))
+	if (multiply(orientation, &dir_init, result))
 	{
 		printf("matrix multiplication failed\n");
 		return (1);
