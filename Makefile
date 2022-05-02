@@ -17,6 +17,7 @@ SRC_NAME =	main.c \
 			math_extensions.c \
 			raycasting.c \
 			movement.c \
+			calc_distance.c \
 			parsing_measure_map.c \
 			debug.c \
 			init.c \

@@ -45,7 +45,7 @@ int	render_frame(void *void_img)
 	data = void_img;
 	while (i < data->camera.win_size.x_max)
 	{
-		calc_column_dimensions(data, i, &wall_dim);
+		raycast_one_slice(data, i, &wall_dim);
 		draw_wall_segment(data, &wall_dim);
 		i++;
 	}

@@ -116,8 +116,19 @@ int				red_cross_handler(t_data *data);
 int				generate_direction_vector(\
 				t_matrix *orientation, t_matrix *result);
 float			calc_distance_to_obstacle(t_data *data, t_matrix *dir);
-int calc_column_dimensions(t_data *data, int step,
-						   t_dimension_2d *wall_coordinates);
+int raycast_one_slice(t_data *data, int step,
+					  t_dimension_2d *wall_coordinates);
+t_matrix	find_ray_end(\
+		t_matrix *dir, const t_matrix *base, t_matrix *result, float t);
+float		calc_distance_to_wall_matching_normal_vector(t_matrix *dir, \
+		t_data *data, int normal_of_plane, int axis);
+int			is_dir_parallel_to_obstacle_surface(\
+		t_data *data, int axis, float t);
+int		prepare_slice_orientation(t_data *data, int step, \
+		t_matrix *dir_cam_angle, float *cam_angle_section);
+t_dimension_2d	calc_wall_dimensions_slice(t_data *data, int step, \
+				t_matrix *dir_cam_angle, float distance_wall);
+void	clip_to_screen_limits(t_data *data, t_dimension_2d *wall_coordinates);
 
 // drawing
 void			turn_all_pixels_black(t_data *data);
