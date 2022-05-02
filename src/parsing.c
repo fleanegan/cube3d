@@ -17,10 +17,7 @@ t_map	*parse_map(const char *string)
 	if (! result || fill_map(result, fd))
 		free_map(&result);
 	close(fd);
-	result->len_per_unit[0] = TILE_SIZE;
-	result->len_per_unit[1] = TILE_SIZE;
-	result->len_per_unit[2] = TILE_SIZE;
-	result->wall_height = TILE_SIZE;
+	result->tile_size = TILE_SIZE;
 	return (result);
 }
 

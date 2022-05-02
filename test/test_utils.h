@@ -2,6 +2,7 @@
 # define TEST_UTILS_H
 
 #include "gtest/gtest.h"
+#include <iostream>
 extern "C" {
 # include <time.h>
 # include <stdlib.h>

@@ -21,6 +21,11 @@
 # define KEY_ARROW_RIGHT 65363
 # define KEY_ESC 65307
 
+# define BAD_FILE_NAME "Error\nBad file name (*.cub)\n"
+# define OPENING_FILE "Error\nOpening file fail\n"
+# define MALLOC_FAIL "Error\nMalloc fail\n"
+# define TEXTURE_ERROR "Error\nBad format for texture\n"
+
 typedef struct s_point
 {
 	double	x;
@@ -43,8 +48,13 @@ typedef struct s_map
 	int			width;
 	int			height;
 	char		spawn_orientation;
-	int			len_per_unit[3];
-	int 		wall_height;
+	int 		tile_size;
+	char		*north_texture;
+	char		*south_texture;
+	char		*west_texture;
+	char		*east_texture;
+	int			ceilling_color;
+	int			floor_color;
 }		t_map;
 
 typedef struct s_camera
@@ -85,7 +95,10 @@ t_camera		init_camera();
 t_map			*new_map(int width, int height);
 int				measure_map(const char *file_name, int *height, int *width);
 t_map			*parse_map(const char *string);
+t_map			*parse(const char *file_name);
 int				parse_line(char *line, t_map *map, int y_act);
+
+int				is_cub_file(const char *file_name);
 
 // raycasting
 int 			generate_direction_vector(\
@@ -112,4 +125,5 @@ float			calc_point_distance(t_matrix *from, t_matrix *to);
 
 //debug
 void 			print_matrix(t_matrix *a);
+void			print_map_infos(t_map *map);
 #endif //FDF_H

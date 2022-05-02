@@ -16,8 +16,8 @@ int	is_contact(t_matrix *intersection, \
 	if (axis == 2)
 		return (1);
 	intersection->mat[axis][0] -= normal_direction_plane;
-	x = ((int)(intersection->mat[0][0] / data->map->len_per_unit[axis]));
-	y = ((int)(intersection->mat[1][0] / data->map->len_per_unit[axis]));
+	x = ((int)(intersection->mat[0][0] / data->map->tile_size));
+	y = ((int)(intersection->mat[1][0] / data->map->tile_size));
 	if (x >= data->map->width || x < 0 || y >= data->map->height || y < 0)
 		return (0);
 	if (data->map->grid[x][y].mat[2][0] > 0.1)
@@ -59,9 +59,9 @@ float	calc_distance_to_wall_matching_normal_vector(\
 
 	zero_init_point(&intersection);
 	distance_wall = ((int)(data->player.pos.mat[axis][0] \
-				/ data->map->len_per_unit[axis])) * data->map->len_per_unit[axis];
+				/ data->map->tile_size)) * data->map->tile_size;
 	if (normal_of_plane < 0)
-		distance_wall += data->map->len_per_unit[axis];
+		distance_wall += data->map->tile_size;
 	while (1)
 	{
 		t = fabs((double)(distance_wall - data->player.pos.mat[axis][0]) \
@@ -72,7 +72,7 @@ float	calc_distance_to_wall_matching_normal_vector(\
 		result = calc_point_distance(&data->player.pos, &intersection);
 		if (is_contact(&intersection, normal_of_plane, axis, data))
 			return (result);
-		distance_wall -= data->map->len_per_unit[axis] * normal_of_plane;
+		distance_wall -= data->map->tile_size * normal_of_plane;
 	}
 }
 
@@ -80,9 +80,9 @@ int	is_dir_parallel_to_obstacle_surface(\
 		t_data *data, int axis, float t)
 {
 	return ((axis == 0 && fabsf(t) > \
-				data->map->width * data->map->len_per_unit[axis]) \
+				data->map->width * data->map->tile_size) \
 			|| (axis == 1 && fabsf(t) > \
-				data->map->height * data->map->len_per_unit[axis]));
+				data->map->height * data->map->tile_size));
 }
 
 t_matrix	find_ray_end(\
@@ -118,9 +118,9 @@ int calc_column_dimensions(t_data *data, int step, t_point *p0, t_point *p1)
 	//*/
 	p0->x = step;
 	p1->x = step;
-	p0->y = data->camera.win_size.y_max / 2.f + data->map->wall_height \
+	p0->y = data->camera.win_size.y_max / 2.f + data->map->tile_size \
 			/ 2. *  data->camera.distance_screen / distance_to_wall;
-	p1->y = data->camera.win_size.y_max / 2.f - data->map->wall_height \
+	p1->y = data->camera.win_size.y_max / 2.f - data->map->tile_size \
 			/ 2. *  data->camera.distance_screen / distance_to_wall;
 	p0->y = p0->y;
 	p1->y = p1->y;

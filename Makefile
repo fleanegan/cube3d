@@ -12,7 +12,7 @@ TEST_PATH = test/
 SRC_NAME =	main.c \
 			draw_line.c \
 			draw.c \
-			parsing.c \
+			new_parsing.c \
 			utils.c \
 			math_extensions.c \
 			raycasting.c \
@@ -85,7 +85,7 @@ fclean:	clean
 test: PRE $(OBJ) $(SRC) $(TEST_SRC) $(TEST_HEADER)
 	@make -C $(LIB_PATH)/libft/ --no-print-directory
 	$(CXX) -g -D TESTING -o $(NAME)_test $(OBJ) $(TEST_SRC) $(TEST_FLAGS) -I./$(SRC_PATH) $(LIBFT_FLAGS) $(TEST_FLAGS) -lm
-
+	./$(NAME)_test
 
 re:	fclean all
 
