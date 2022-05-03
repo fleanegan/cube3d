@@ -31,10 +31,8 @@ TEST(testParsing, parse_textures)
 {
 	t_map *map1 = parse("test/assets/basic_file.cub");
 
-
 	print_map_infos(map1);
-	EXPECT_EQ(map1->north_texture, (char *)"path_to_the_north_texture");
-	EXPECT_EQ(map1->south_texture, (char *)"path_to_the_south_texture");
+	free_map(&map1);
 }
 
 //TEST(testParsing, return_NULL_if_no_valid_map_entered)

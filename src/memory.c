@@ -6,7 +6,7 @@
 /*   By:  <>                                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 14:44:33 by                   #+#    #+#             */
-/*   Updated: 2022/02/01 14:44:35 by                  ###   ########.fr       */
+/*   Updated: 2022/05/03 18:19:24 by tsiguenz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,28 @@ t_map	*new_map(int width, int height)
 	return (result);
 }
 
+t_map	*init_map(void)
+{
+	t_map	*result;
+
+	result = malloc(sizeof(t_map));
+	if (result == NULL)
+		return (NULL);
+	ft_bzero(result, sizeof(t_map));
+	result->ceilling_color = COLOR_UNINITIALISED;
+	result->floor_color = COLOR_UNINITIALISED;
+	result->tile_size = TILE_SIZE;
+	return (result);
+}
+
 void	*free_map(t_map **map)
 {
-	free_2d_array((void **)(*map)->grid);
+	free((*map)->texture[TEXTURE_NO]);
+	free((*map)->texture[TEXTURE_SO]);
+	free((*map)->texture[TEXTURE_WE]);
+	free((*map)->texture[TEXTURE_EA]);
+	if ((*map)->grid != NULL)
+		free_2d_array((void **)(*map)->grid);
 	free(*map);
 	*map = NULL;
 	return (NULL);

@@ -35,18 +35,20 @@ void print_matrix(t_matrix *a)
 
 void	print_map_infos(t_map *map)
 {
+	ft_putendl_fd("\n---------------------------------------------------", 1);
+	ft_putendl_fd("Maps infos :\n", 1);
 	ft_putstr_fd("north : ", 1);
-	ft_putendl_fd(map->north_texture, 1);
+	ft_putendl_fd(map->texture[TEXTURE_NO], 1);
 	ft_putstr_fd("south : ", 1);
-	ft_putendl_fd(map->south_texture, 1);
+	ft_putendl_fd(map->texture[TEXTURE_SO], 1);
 	ft_putstr_fd("west : ", 1);
-	ft_putendl_fd(map->west_texture, 1);
+	ft_putendl_fd(map->texture[TEXTURE_WE], 1);
 	ft_putstr_fd("east : ", 1);
-	ft_putendl_fd(map->east_texture, 1);
+	ft_putendl_fd(map->texture[TEXTURE_EA], 1);
 	ft_putstr_fd("ceilling : ", 1);
 	ft_putnbr_fd(map->ceilling_color, 1);
 	ft_putendl_fd("", 1);
 	ft_putstr_fd("floor : ", 1);
 	ft_putnbr_fd(map->floor_color, 1);
-	ft_putendl_fd("", 1);
+	ft_putendl_fd("\n---------------------------------------------------\n", 1);
 }

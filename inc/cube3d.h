@@ -26,6 +26,14 @@
 # define MALLOC_FAIL "Error\nMalloc fail\n"
 # define TEXTURE_ERROR "Error\nBad format for texture\n"
 
+# define TEXTURE_NO 0
+# define TEXTURE_SO 1
+# define TEXTURE_WE 2
+# define TEXTURE_EA 3
+
+# define COLOR_OUT_OF_RANGE -2
+# define COLOR_UNINITIALISED -1
+
 typedef struct s_point
 {
 	double	x;
@@ -49,10 +57,7 @@ typedef struct s_map
 	int			height;
 	char		spawn_orientation;
 	int 		tile_size;
-	char		*north_texture;
-	char		*south_texture;
-	char		*west_texture;
-	char		*east_texture;
+	char		*texture[4];
 	int			ceilling_color;
 	int			floor_color;
 }		t_map;
@@ -89,7 +94,8 @@ typedef struct s_data {
 
 //init
 t_player		init_player(t_map *map);
-t_camera		init_camera();
+t_camera		init_camera(void);
+t_map			*init_map(void);
 
 // parsing
 t_map			*new_map(int width, int height);
@@ -97,6 +103,8 @@ int				measure_map(const char *file_name, int *height, int *width);
 t_map			*parse_map(const char *string);
 t_map			*parse(const char *file_name);
 int				parse_line(char *line, t_map *map, int y_act);
+t_map			*parse_infos(t_map *result, char *line);
+void			*error_parsing(char *str);
 
 int				is_cub_file(const char *file_name);
 
