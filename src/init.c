@@ -29,6 +29,33 @@ t_player	init_player_pose(t_map *map, t_player *result)
 	return (*result);
 }
 
+int init_textures(t_data *data)
+{
+	t_img	*result;
+	int		width;
+	int		height;
+
+	result = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/t1.xpm", &width, &height);
+	// width == result.width
+	if (result == NULL)
+		return (1);
+	for (int y = 0; y < result->height; y++)
+	{
+		for (int x = 0; x < 1 && result->width; x++)
+		{
+			char	*current;
+			int		colour;
+			current = &result->data[x * result->bpp / 8 + result->width * y * result->bpp / 8];
+			colour = current[0] << 24 | current[1] << 16 | current[2] << 8 | current[3];
+			printf("x: %d %x ", y, colour == 0);
+		}
+		puts("");
+	}
+	data->map->texture[0] = result;
+	return (0);
+	//"test/assets/e.xpm"
+}
+
 t_camera	init_camera(void)
 {
 	t_camera	result;

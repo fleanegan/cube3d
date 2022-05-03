@@ -1,6 +1,6 @@
 #include "../inc/cube3d.h"
 
-void	draw_1px_to_img(t_data *data, int x, int y, int color)
+void	draw_1px_to_img(t_data *data, int x, int y, unsigned int color)
 {
 	char	*dst;
 

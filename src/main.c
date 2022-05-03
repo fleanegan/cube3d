@@ -13,43 +13,61 @@ void	tear_down_mlx_session(t_data *data)
 	exit(0);
 }
 
-void	draw_wall_segment(t_data *data, t_dimension_2d *wall_seg)
+void	draw_wall_segment(t_data *data, t_ray *ray)
 {
 	int	i;
+	int	cnt;
 
 	i = 0;
-	while (i < wall_seg->y_min && i < data->camera.win_size.y_max)
+	cnt = 0;
+	while (i < ray->y_min_clipped_screen_coordinates && i < data->camera.win_size.y_max)
 	{
-		draw_1px_to_img(data, wall_seg->x_min, i, 0x17202a);
+		draw_1px_to_img(data, ray->x_clipped_screen_coordinates, i, 0x17202a);
 		i++;
 	}
-	while (i < wall_seg->y_max && i < data->camera.win_size.y_max)
+//	printf("ymax clipped: %d, max: %d\n", ray->y_max_clipped_screen_coordinates, ray->y_max_screen_coordinates);
+	while (i < ray->y_max_clipped_screen_coordinates && i < data->camera.win_size.y_max)
 	{
-		draw_1px_to_img(data, wall_seg->x_min, i, 0xb71c1c );
+		t_img	*tex = data->map->texture[0];
+		int	hw = ray->y_max_screen_coordinates - ray->y_min_screen_coordinates;
+		int delta_h_upper = ray->y_min_clipped_screen_coordinates - ray->y_min_screen_coordinates;
+		int	ht = ray->y_max_clipped_screen_coordinates - ray->y_min_clipped_screen_coordinates;
+		int u = (int)((float)tex->height / (float)ht * ((float)cnt));
+		int x = 0;
+		unsigned int	colour;
+		const char *current;
+		current = &tex->data[x * tex->bpp / 8 + tex->width * u * tex->bpp / 8];
+		colour = current[0] << 24 | current[1] << 16 | current[2] << 8 | current[3];
+		draw_1px_to_img(data, ray->x_clipped_screen_coordinates, i, colour);
+		if (ray->x_clipped_screen_coordinates == data->camera.win_size.x_max / 2)
+		{
+			printf("hw: %d, delta_upper: %d, u: %d, ymin: %d, ymin_clipped: %d, y_maxclipped: %d\n", hw, delta_h_upper, u, ray->y_min_screen_coordinates, ray->y_min_clipped_screen_coordinates, ray->y_max_clipped_screen_coordinates);
+		}
 		i++;
+		cnt++;
 	}
 	while (i < data->camera.win_size.y_max)
 	{
-		draw_1px_to_img(data, wall_seg->x_min, i,  0xf1c40f);
+		draw_1px_to_img(data, ray->x_clipped_screen_coordinates, i, 0xf1c40f);
 		i++;
 	}
 }
 
 int	render_frame(void *void_img)
 {
-	int				i;
-	t_data			*data;
-	t_dimension_2d	wall_dim;
+	int		i;
+	t_data	*data;
+	t_ray	ray;
 
 	i = 0;
 	data = void_img;
 	while (i < data->camera.win_size.x_max)
 	{
-		raycast_one_slice(data, i, &wall_dim);
-		draw_wall_segment(data, &wall_dim);
+		raycast_one_slice(data, i, &ray);
+		draw_wall_segment(data, &ray);
 		i++;
 	}
-	printf("x: %f, y: %f\n", data->player.pos.mat[0][0], data->player.pos.mat[1][0]);
+//	printf("x: %f, y: %f\n", data->player.pos.mat[0][0], data->player.pos.mat[1][0]);
 //	print_matrix(&data->player.orientation);
 	mlx_put_image_to_window(\
 			data->mlx.mlx, data->mlx.mlx_win, data->mlx.img, 0, 0);
@@ -99,6 +117,7 @@ int	main(int argc, char **argv)
 		data.player = init_player(data.map);
 		if (init_mlx(&data))
 			return (free_map(&data.map) == NULL);
+		init_textures(&data);
 		ft_putendl_fd("init done", 1);
 		render_frame(&data);
 		mlx_hook(data.mlx.mlx_win, 2, 1L << 0, &handle_key_press, &data);

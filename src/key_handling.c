@@ -4,7 +4,7 @@
 
 int	handle_key_press(int keycode, t_data *data)
 {
-//	printf("pressed: %d\n", keycode);
+	printf("pressed: %d\n", keycode);
 	if (keycode == KEY_ESC)
 		tear_down_mlx_session(data);
 	if (keycode == KEY_DOWN)
@@ -31,7 +31,7 @@ int	handle_key_press(int keycode, t_data *data)
 
 int	handle_key_release(int keycode, t_data *data)
 {
-//	printf("released: %d\n", keycode);
+	printf("released: %d\n", keycode);
 	if (keycode == KEY_ESC)
 		tear_down_mlx_session(data);
 	if (keycode == KEY_DOWN)

@@ -16,15 +16,15 @@ int	is_contact(t_matrix *intersection, \
 	return (0);
 }
 
-float calc_distance_to_obstacle(t_data *data, t_matrix *dir)
+t_ray calc_distance_to_obstacle(t_data *data, t_matrix *dir)
 {
 	int			normal_direction_plane;
 	int			axis;
-	float		result;
-	float		tmp;
+	t_ray		result;
+	t_ray		tmp;
 
 	axis = 0;
-	result = FLT_MAX;
+	result.distance = FLT_MAX;
 	while (axis < 2)
 	{
 		if (dir->mat[axis][0] > 0)
@@ -33,23 +33,24 @@ float calc_distance_to_obstacle(t_data *data, t_matrix *dir)
 			normal_direction_plane = 1;
 		tmp = calc_distance_to_wall_matching_normal_vector(\
 				dir, data, normal_direction_plane, axis);
-		if (tmp < result && tmp > -0.001)
+		if (tmp.distance < result.distance && tmp.distance > -0.001)
 			result = tmp;
 		axis++;
 	}
-	if (result > FLT_MAX * 0.99)
-		return (-1);
+	if (result.distance > FLT_MAX * 0.99)
+		result.distance = -1;
 	return (result);
 }
 
-float	calc_distance_to_wall_matching_normal_vector(\
+t_ray	calc_distance_to_wall_matching_normal_vector(\
 		t_matrix *dir, t_data *data, int normal_of_plane, int axis)
 {
-	float		result;
+	t_ray		result;
 	t_matrix	intersection;
 	int			distance_wall;
 	float		t;
 
+	ft_bzero(&result, sizeof(t_ray));
 	zero_init_point(&intersection);
 	distance_wall = ((int)(data->player.pos.mat[axis][0] \
 				/ data->map->len_per_unit[axis])) * data->map->len_per_unit[axis];
@@ -60,9 +61,12 @@ float	calc_distance_to_wall_matching_normal_vector(\
 		t = fabsf((float)(distance_wall - data->player.pos.mat[axis][0]) \
 		/ ((float) fabs(dir->mat[axis][0] * (float) normal_of_plane)));
 		if (is_dir_parallel_to_obstacle_surface(data, axis, t))
-			return (-1);
+		{
+			result.distance = -1;
+			return (result);
+		}
 		intersection = find_ray_end(dir, &data->player.pos, &intersection, t);
-		result = calc_point_distance(&data->player.pos, &intersection);
+		result.distance = calc_point_distance(&data->player.pos, &intersection);
 		if (is_contact(&intersection, normal_of_plane, axis, data))
 			return (result);
 		distance_wall -= data->map->len_per_unit[axis] * normal_of_plane;

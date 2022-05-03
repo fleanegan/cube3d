@@ -7,6 +7,7 @@
 # include <stdio.h>
 # include <float.h>
 # include <fcntl.h>
+# include <../lib/mlx/mlx_int.h>
 # define TILE_SIZE	64.0
 # define DEG2RAD 0.017453293f
 # define RAD2DEG 57.295779513f
@@ -45,9 +46,22 @@ typedef struct s_map
 	int			width;
 	int			height;
 	char		spawn_orientation;
+	t_img		*texture[4];
 	int			len_per_unit[3];
 	int 		wall_height;
 }		t_map;
+
+typedef struct s_ray
+{
+	int		x_intersection_world_coordinates;
+	int		y_intersection_world_coordinates;
+	int		y_max_screen_coordinates;
+	int		y_min_clipped_screen_coordinates;
+	int		y_max_clipped_screen_coordinates;
+	int		x_clipped_screen_coordinates;
+	float	distance;
+	int y_min_screen_coordinates;
+}	t_ray;
 
 typedef struct s_camera
 {
@@ -102,6 +116,7 @@ t_map			*new_map(int width, int height);
 int				measure_map(const char *file_name, int *height, int *width);
 t_map			*parse_map(const char *string);
 int				parse_line(char *line, t_map *map, int y_act);
+int				init_textures(t_data *data);
 
 // movements
 void			move(t_data *data);
@@ -115,25 +130,25 @@ int				red_cross_handler(t_data *data);
 // raycasting
 int				generate_direction_vector(\
 				t_matrix *orientation, t_matrix *result);
-float			calc_distance_to_obstacle(t_data *data, t_matrix *dir);
+t_ray calc_distance_to_obstacle(t_data *data, t_matrix *dir);
 int raycast_one_slice(t_data *data, int step,
-					  t_dimension_2d *wall_coordinates);
+					  t_ray *ray);
 t_matrix	find_ray_end(\
 		t_matrix *dir, const t_matrix *base, t_matrix *result, float t);
-float		calc_distance_to_wall_matching_normal_vector(t_matrix *dir, \
+t_ray calc_distance_to_wall_matching_normal_vector(t_matrix *dir, \
 		t_data *data, int normal_of_plane, int axis);
 int			is_dir_parallel_to_obstacle_surface(\
 		t_data *data, int axis, float t);
 int		prepare_slice_orientation(t_data *data, int step, \
 		t_matrix *slice_dir, float *cam_angle);
-t_dimension_2d	calc_wall_dimensions_slice(t_data *data, int step, \
-				t_matrix *dir_cam_angle, float distance_wall);
-void	clip_to_screen_limits(t_data *data, t_dimension_2d *wall_coordinates);
+void calc_wall_dimensions_slice(t_data *data, int step, \
+				t_matrix *dir_cam_angle, t_ray *ray);
+void	clip_to_screen_limits(t_data *data, t_ray *ray);
 
 // drawing
 void			turn_all_pixels_black(t_data *data);
 void draw_line(t_point p0, t_point p1, t_data *img, int colour);
-void			draw_1px_to_img(t_data *data, int x, int y, int color);
+void			draw_1px_to_img(t_data *data, int x, int y, unsigned int color);
 int				render_frame(void *void_img);
 
 // helper functions
