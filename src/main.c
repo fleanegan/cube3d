@@ -50,6 +50,7 @@ int	render_frame(void *void_img)
 		i++;
 	}
 	printf("x: %f, y: %f\n", data->player.pos.mat[0][0], data->player.pos.mat[1][0]);
+//	print_matrix(&data->player.orientation);
 	mlx_put_image_to_window(\
 			data->mlx.mlx, data->mlx.mlx_win, data->mlx.img, 0, 0);
 	return (0);

@@ -2,16 +2,16 @@
 
 int	raycast_one_slice(t_data *data, int step, t_dimension_2d *wall_coordinates)
 {
-	t_matrix	dir_cam_angle;
+	t_matrix	slice_dir;
 	float		cam_angle;
 	float		distance_wall;
 
-	if (prepare_slice_orientation(data, step, &dir_cam_angle, &cam_angle))
+	if (prepare_slice_orientation(data, step, &slice_dir, &cam_angle))
 		return (1);
-	distance_wall = calc_distance_to_obstacle(data, &dir_cam_angle) \
- 		* cosf(fabsf(cam_angle) * DEG2RAD);
-	*wall_coordinates = calc_wall_dimensions_slice(\
-		data, step, &dir_cam_angle, distance_wall);
+	distance_wall = calc_distance_to_obstacle(data, &slice_dir) \
+		* cosf(fabsf(cam_angle) * DEG2RAD);
+		* wall_coordinates = calc_wall_dimensions_slice(\
+			data, step, &slice_dir, distance_wall);
 	clip_to_screen_limits(data, wall_coordinates);
 	if (step == data->camera.win_size.x_max / 2)
 		printf("distance: %f\n", distance_wall);
@@ -43,20 +43,18 @@ t_dimension_2d	calc_wall_dimensions_slice(t_data *data, int step, \
 }
 
 int	prepare_slice_orientation(\
-	t_data *data, int step, t_matrix *dir_cam_angle, float *cam_angle_section)
+	t_data *data, int step, t_matrix *slice_dir, float *cam_angle)
 {
-	t_matrix	current_slice;
-	t_matrix	dir;
+	t_matrix	angle_as_rot;
+	t_matrix	orientation_slice;
 
-	zero_init_point(&dir);
-	zero_init_point(dir_cam_angle);
-	zero_init_point(&current_slice);
-	*cam_angle_section = -1.f * (data->camera.angle_camera_horizontal \
- / 2.f - (float) data->camera.angle_camera_horizontal * (float) step \
- / (float) data->camera.win_size.x_max);
-	current_slice = euler2rot(0., 0., *cam_angle_section);
-	if (generate_direction_vector(&data->player.orientation, &dir) \
-			|| multiply(&current_slice, &dir, dir_cam_angle))
+	zero_init_point(slice_dir);
+	*cam_angle = -1.f * (data->camera.angle_camera_horizontal \
+ 		/ 2.f - (float) data->camera.angle_camera_horizontal * (float) step \
+		/ (float) data->camera.win_size.x_max);
+	angle_as_rot = euler2rot(0., 0., *cam_angle);
+	multiply(&angle_as_rot, &data->player.orientation, &orientation_slice);
+	if (generate_direction_vector(&orientation_slice, slice_dir))
 		return (1);
 	return (0);
 }

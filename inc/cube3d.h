@@ -125,7 +125,7 @@ float		calc_distance_to_wall_matching_normal_vector(t_matrix *dir, \
 int			is_dir_parallel_to_obstacle_surface(\
 		t_data *data, int axis, float t);
 int		prepare_slice_orientation(t_data *data, int step, \
-		t_matrix *dir_cam_angle, float *cam_angle_section);
+		t_matrix *slice_dir, float *cam_angle);
 t_dimension_2d	calc_wall_dimensions_slice(t_data *data, int step, \
 				t_matrix *dir_cam_angle, float distance_wall);
 void	clip_to_screen_limits(t_data *data, t_dimension_2d *wall_coordinates);
@@ -139,14 +139,13 @@ int				render_frame(void *void_img);
 // helper functions
 void			*free_map(t_map **map);
 void			set_point(t_point *pt, double x, double y, double z);
+float	calc_point_distance(t_matrix *from, t_matrix *to);
+
 
 t_matrix 		**new_grid(t_map *map);
 int				key_handler(int keycode, t_data *img);
 int				red_cross_handler(t_data *data);
 void			tear_down_mlx_session(t_data *img);
-
-// math extensions
-float			calc_point_distance(t_matrix *from, t_matrix *to);
 
 //debug
 void			print_matrix(t_matrix *a);

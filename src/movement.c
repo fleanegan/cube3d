@@ -18,9 +18,9 @@ void	move(t_data *data)
 	multiply(&data->player.orientation, &direction, &tmp);
 	data->player.pos.mat[0][0] += tmp.mat[0][0];
 	data->player.pos.mat[1][0] += tmp.mat[1][0];
-	//data->player.pos.mat[2][0] += tmp.mat[2][0];
 }
 
+// multiplication is inverse for rotations around z to rotate around the global axis
 void	rotate(t_data *data)
 {
 	t_matrix	rot_left;
@@ -36,13 +36,13 @@ void	rotate(t_data *data)
 	rot_up = euler2rot(0, 5, 0);
 	rot_down = euler2rot(0, -5, 0);
 	if (data->player.movements.rot_down)
-		multiply(&data->player.orientation, &rot_down, &tmp);
+		multiply(&data->player.orientation, &rot_down , &tmp);
 	if (data->player.movements.rot_up)
 		multiply(&data->player.orientation, &rot_up, &tmp);
 	if (data->player.movements.rot_left)
-		multiply(&data->player.orientation, &rot_left, &tmp);
+		multiply(&rot_left, &data->player.orientation, &tmp);
 	if (data->player.movements.rot_right)
-		multiply(&data->player.orientation, &rot_right, &tmp);
+		multiply(&rot_right, &data->player.orientation, &tmp);
 	if (data->player.movements.rot_right != 0 \
 		|| data->player.movements.rot_left != 0 \
 		|| data->player.movements.rot_up != 0 \
