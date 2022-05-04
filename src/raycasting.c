@@ -4,12 +4,11 @@ int	raycast_one_slice(t_data *data, int step, t_ray *ray)
 {
 	t_matrix	slice_dir;
 	float		cam_angle;
-	float		distance_wall;
 
 	if (prepare_slice_orientation(data, step, &slice_dir, &cam_angle))
 		return (1);
 	*ray = calc_distance_to_obstacle(data, &slice_dir);
-	distance_wall = ray->distance \
+	ray->distance = ray->distance \
 		* cosf(fabsf(cam_angle) * DEG2RAD);
 	calc_wall_dimensions_slice(data, step, &slice_dir, ray);
 	// todo: get unclipped dimensions

@@ -56,6 +56,32 @@ int init_textures(t_data *data)
 	//"test/assets/e.xpm"
 }
 
+int	init_mlx(t_data	*data)
+{
+	data->mlx.mlx = mlx_init();
+	if (! data->mlx.mlx)
+		return (1);
+	data->mlx.mlx_win = mlx_new_window(\
+			data->mlx.mlx, data->camera.win_size.x_max, data->camera.win_size.y_max, "3D");
+	if (! data->mlx.mlx_win)
+	{
+		free(data->mlx.mlx);
+		return (1);
+	}
+	data->mlx.img = mlx_new_image(\
+			data->mlx.mlx, data->camera.win_size.x_max, data->camera.win_size.y_max);
+	if (! data->mlx.mlx_win)
+	{
+		mlx_destroy_window(data->mlx.mlx, data->mlx.mlx_win);
+		mlx_destroy_display(data->mlx.mlx);
+		free(data->mlx.mlx);
+		return (1);
+	}
+	data->mlx.addr = mlx_get_data_addr(data->mlx.img, \
+			&data->mlx.bits_per_pixel, &data->mlx.line_length, &data->mlx.endian);
+	return (0);
+}
+
 t_camera	init_camera(void)
 {
 	t_camera	result;

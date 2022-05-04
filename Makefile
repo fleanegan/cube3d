@@ -10,7 +10,7 @@ TEST_PATH = test/
 # Names
 
 SRC_NAME =	main.c \
-			draw_line.c \
+			draw_pixel.c \
 			draw.c \
 			parsing.c \
 			utils.c \

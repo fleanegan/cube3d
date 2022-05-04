@@ -60,7 +60,8 @@ typedef struct s_ray
 	int		y_max_clipped_screen_coordinates;
 	int		x_clipped_screen_coordinates;
 	float	distance;
-	int y_min_screen_coordinates;
+	int		y_min_screen_coordinates;
+	char	wall_orientation;
 }	t_ray;
 
 typedef struct s_camera
@@ -110,6 +111,11 @@ typedef struct s_data {
 //init
 t_player		init_player(t_map *map);
 t_camera		init_camera();
+int	init_mlx(t_data	*data);
+
+//drawing
+unsigned int calc_pixel_colour(const t_data *data, const t_ray *ray, int cnt);
+void	draw_wall_segment(t_data *data, t_ray *ray);
 
 // parsing
 t_map			*new_map(int width, int height);
@@ -145,20 +151,16 @@ void calc_wall_dimensions_slice(t_data *data, int step, \
 				t_matrix *dir_cam_angle, t_ray *ray);
 void	clip_to_screen_limits(t_data *data, t_ray *ray);
 
-// drawing
-void			turn_all_pixels_black(t_data *data);
 void draw_line(t_point p0, t_point p1, t_data *img, int colour);
 void			draw_1px_to_img(t_data *data, int x, int y, unsigned int color);
 int				render_frame(void *void_img);
 
 // helper functions
 void			*free_map(t_map **map);
-void			set_point(t_point *pt, double x, double y, double z);
 float	calc_point_distance(t_matrix *from, t_matrix *to);
 
 
 t_matrix 		**new_grid(t_map *map);
-int				key_handler(int keycode, t_data *img);
 int				red_cross_handler(t_data *data);
 void			tear_down_mlx_session(t_data *img);
 
