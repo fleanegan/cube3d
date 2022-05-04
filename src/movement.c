@@ -19,7 +19,7 @@ void	move(t_data *data)
 	if (data->player.movements.forward)
 		waling_dir.mat[0][0] = 10;
 	multiply(&data->player.orientation, &waling_dir, &waling_dir);
-	if (is_colision(data, &waling_dir))
+	if (is_colision(data, &waling_dir) && data->player.admin_mode < 3)
 		return ;
 	data->player.pos.mat[0][0] += waling_dir.mat[0][0];
 	data->player.pos.mat[1][0] += waling_dir.mat[1][0];

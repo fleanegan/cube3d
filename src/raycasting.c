@@ -12,10 +12,6 @@ int	raycast_one_slice(t_data *data, int step, t_ray *ray)
 		* cosf(fabsf(cam_angle) * DEG2RAD);
 	calc_wall_dimensions_slice(data, step, &slice_dir, ray);
 	clip_to_screen_limits(data, ray);
-	if (step == data->camera.win_size.x_max / 2)
-	{
-//		printf("distance: %f\n", distance_wall);
-	}
 	return (0);
 }
 

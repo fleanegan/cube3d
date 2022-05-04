@@ -2,20 +2,22 @@
 
 void	ray_set_wall_orientation(int normal_direction_plane, int axis, t_ray *result);
 
-int	is_contact(t_matrix *intersection, \
+t_matrix * get_object_at_contact(t_matrix *intersection, \
 		int normal_direction_plane, int axis, t_data *data)
 {
-	int	x;
-	int	y;
+	int			x;
+	int			y;
+	t_matrix	*result;
 
+	result = NULL;
 	intersection->mat[axis][0] -= normal_direction_plane * 10;
 	x = ((int)(intersection->mat[0][0] / data->map->len_per_unit[axis]));
 	y = ((int)(intersection->mat[1][0] / data->map->len_per_unit[axis]));
 	if (x >= data->map->width || x < 0 || y >= data->map->height || y < 0)
-		return (0);
+		return (result);
 	if (data->map->grid[x][y].mat[2][0] > 0.1)
-		return (1);
-	return (0);
+		result = &data->map->grid[x][y];
+	return (result);
 }
 
 t_ray calc_distance_to_obstacle(t_data *data, t_matrix *dir)
@@ -90,7 +92,8 @@ t_ray	calc_distance_to_wall_matching_normal_vector(\
 		result.y_intersection_world_coordinates = intersection.mat[1][0];
 		ray_set_wall_orientation(normal_of_plane, axis, &result);
 		result.distance = calc_point_distance(&data->player.pos, &intersection);
-		if (is_contact(&intersection, normal_of_plane, axis, data))
+		result.object_at_contact = get_object_at_contact(&intersection,normal_of_plane, axis, data);
+		if (result.object_at_contact != NULL)
 			return (result);
 		distance_wall -= data->map->len_per_unit[axis] * normal_of_plane;
 	}

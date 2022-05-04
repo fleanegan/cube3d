@@ -53,15 +53,16 @@ typedef struct s_map
 
 typedef struct s_ray
 {
-	int		x_intersection_world_coordinates;
-	int		y_intersection_world_coordinates;
-	int		y_max_screen_coordinates;
-	int		y_min_clipped_screen_coordinates;
-	int		y_max_clipped_screen_coordinates;
-	int		x_clipped_screen_coordinates;
-	float	distance;
-	int		y_min_screen_coordinates;
-	char	wall_orientation;
+	int			x_intersection_world_coordinates;
+	int			y_intersection_world_coordinates;
+	int			y_max_screen_coordinates;
+	int			y_min_clipped_screen_coordinates;
+	int			y_max_clipped_screen_coordinates;
+	int			x_clipped_screen_coordinates;
+	float		distance;
+	int			y_min_screen_coordinates;
+	char		wall_orientation;
+	t_matrix	*object_at_contact;
 }	t_ray;
 
 typedef struct s_camera
@@ -89,6 +90,7 @@ typedef struct s_player
 	t_matrix	pos;
 	t_matrix	orientation;
 	t_movements	movements;
+	int			admin_mode;
 }	t_player;
 
 typedef struct s_mlx {

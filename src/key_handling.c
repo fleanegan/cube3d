@@ -1,5 +1,7 @@
 #include "../inc/cube3d.h"
 
+void remove_wall(t_data *data);
+
 #ifndef TESTING
 
 int	handle_key_press(int keycode, t_data *data)
@@ -23,10 +25,25 @@ int	handle_key_press(int keycode, t_data *data)
 		data->player.movements.rot_left = 1;
 	if (keycode == KEY_ARROW_RIGHT)
 		data->player.movements.rot_right = 1;
+	if (keycode == 47)
+		data->player.admin_mode++;
+	if (keycode == 32)
+		remove_wall(data);
 	move(data);
 	rotate(data);
 	render_frame(data);
 	return (0);
+}
+
+void remove_wall(t_data *data)
+{
+	t_matrix	dir;
+	t_ray		ray;
+
+	generate_direction_vector(&data->player.orientation, &dir);
+	ray = calc_distance_to_obstacle(data, &dir);
+	if(ray.object_at_contact)
+		ray.object_at_contact->mat[2][0] = 0;
 }
 
 int	handle_key_release(int keycode, t_data *data)
