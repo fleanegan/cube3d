@@ -46,3 +46,12 @@ void	draw_wall_segment(t_data *data, t_ray *ray)
 		i++;
 	}
 }
+
+void	draw_1px_to_img(t_data *data, int x, int y, unsigned int color)
+{
+	char	*dst;
+
+	dst = data->mlx.addr \
+		+ (y * data->mlx.line_length + x * (data->mlx.bits_per_pixel / 8));
+	*(unsigned int *)dst = color;
+}
