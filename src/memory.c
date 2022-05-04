@@ -6,7 +6,7 @@
 /*   By:  <>                                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 14:44:33 by                   #+#    #+#             */
-/*   Updated: 2022/05/04 16:11:21 by tsiguenz         ###   ########.fr       */
+/*   Updated: 2022/05/04 17:33:17 by tsiguenz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ t_map	*init_map(void)
 
 void	*free_map(t_map **map)
 {
+	if (*map == NULL)
+		return (NULL);
 	free((*map)->texture[TEXTURE_NO]);
 	free((*map)->texture[TEXTURE_SO]);
 	free((*map)->texture[TEXTURE_WE]);

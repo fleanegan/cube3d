@@ -86,7 +86,6 @@ fclean:	clean
 test: PRE $(OBJ) $(SRC) $(TEST_SRC) $(TEST_HEADER)
 	@make -C $(LIB_PATH)/libft/ --no-print-directory
 	$(CXX) -g -D TESTING -o $(NAME)_test $(OBJ) $(TEST_SRC) $(TEST_FLAGS) -I./$(SRC_PATH) $(LIBFT_FLAGS) $(TEST_FLAGS) -lm
-	./$(NAME)_test
 
 re:	fclean all
 

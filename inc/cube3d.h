@@ -21,19 +21,23 @@
 # define KEY_ARROW_RIGHT 65363
 # define KEY_ESC 65307
 
+// error
 # define BAD_FILE_NAME "Error\nBad file name (*.cub)\n"
 # define OPENING_FILE "Error\nOpening file fail\n"
 # define MALLOC_FAIL "Error\nMalloc fail\n"
 # define TEXTURE_ERROR "Error\nBad format for texture\n"
 # define TEXTURE_DUPLICATE "Error\nMultiple texture for same orientation\n"
+# define COLOR_FAIL "Error\nBad format for color\n"
+# define COLOR_DUPLICATE "Error\nMultiple color for same field\n"
+# define COLOR_OUT_OF_RANGE "Error\nColor is out of range\n"
+
+# define COLOR_UNINITIALISED -1
 
 # define TEXTURE_NO 0
 # define TEXTURE_SO 1
 # define TEXTURE_WE 2
 # define TEXTURE_EA 3
 
-# define COLOR_OUT_OF_RANGE -2
-# define COLOR_UNINITIALISED -1
 
 typedef struct s_point
 {
@@ -104,8 +108,8 @@ int				measure_map(const char *file_name, int *height, int *width);
 t_map			*parse_map(const char *string);
 t_map			*parse(const char *file_name);
 int				parse_line(char *line, t_map *map, int y_act);
-t_map			*parse_infos(t_map *result, char *line);
-void			*error_parsing(char *str);
+void			parse_infos(t_map **result, char *line);
+void			*error_parsing(t_map **result, char *str);
 
 int				is_cub_file(const char *file_name);
 

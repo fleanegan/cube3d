@@ -1,5 +1,15 @@
 #include "../inc/cube3d.h"
 
+int	line_is_only_space(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i] && ft_isspace(line[i]))
+		i++;
+	return (line[i] == '\0');
+}
+
 int	is_cub_file(const char *file_name)
 {
 	int	i;
@@ -33,55 +43,59 @@ int	parse_texture(char **dest, char *line)
 		y++;
 	if (y > i)
 		line[y] = '\0';
+	if (line[y + 1] != '\0')
+		return (write(2, TEXTURE_ERROR, ft_strlen(TEXTURE_ERROR)));
 	*dest = ft_strdup(line + i);
 	if (*dest == NULL)
 		return (write(2, MALLOC_FAIL, ft_strlen(MALLOC_FAIL)));
 	return (0);
 }
 
-// TODO: protect -1 if error
-int	parse_color(char *line)
+int	parse_color(int *dest, char *line)
 {
 	char	*tmp;
 	int		r;
 	int		g;
 	int		b;
 
+	if (*dest != COLOR_UNINITIALISED)
+		return (write(2, COLOR_DUPLICATE, ft_strlen(COLOR_DUPLICATE)));
 	r = ft_atoi(line);
 	if (r < 0 || r > 255)
-		return (COLOR_OUT_OF_RANGE);
+		return (write(2, COLOR_OUT_OF_RANGE, ft_strlen(COLOR_OUT_OF_RANGE)));
 	tmp = ft_strchr(line, ',');
 	tmp++;
 	g = ft_atoi(tmp);
 	if (g < 0 || g > 255)
-		return (COLOR_OUT_OF_RANGE);
+		return (write(2, COLOR_OUT_OF_RANGE, ft_strlen(COLOR_OUT_OF_RANGE)));
 	tmp = ft_strchr(tmp, ',');
 	tmp++;
 	b = ft_atoi(tmp);
+	while (*tmp && ft_isdigit(*tmp) == 1)
+		tmp++;
+	if (*tmp != '\n')
+		return (write(2, COLOR_FAIL, ft_strlen(COLOR_FAIL)));
 	if (b < 0 || b > 255)
-		return (COLOR_OUT_OF_RANGE);
-	return (r << 16 | g << 8 | b);
+		return (write(2, COLOR_OUT_OF_RANGE, ft_strlen(COLOR_OUT_OF_RANGE)));
+	*dest = r << 16 | g << 8 | b;
+	return (0);
 }
 
-t_map	*parse_infos(t_map *result, char *line)
+void	parse_infos(t_map **result, char *line)
 {
-	if (ft_strncmp(line, "NO", 2) == 0 \
-		&& parse_texture(&result->texture[TEXTURE_NO], line + 2) != 0)
-		free_map(&result);
-	if (ft_strncmp(line, "SO", 2) == 0 \
-		&& parse_texture(&result->texture[TEXTURE_SO], line + 2) != 0)
-		free_map(&result);
-	if (ft_strncmp(line, "WE", 2) == 0 \
-		&& parse_texture(&result->texture[TEXTURE_WE], line + 2) != 0)
-		free_map(&result);
-	if (ft_strncmp(line, "EA", 2) == 0 \
-		&& parse_texture(&result->texture[TEXTURE_EA], line + 2) != 0)
-		free_map(&result);
-	if (ft_strncmp(line, "F", 1) == 0 \
-		&& result->floor_color == COLOR_UNINITIALISED)
-		result->floor_color = parse_color(line + 1);
-	if (ft_strncmp(line, "C", 1) == 0 \
-		&& result->ceilling_color == COLOR_UNINITIALISED)
-		result->ceilling_color = parse_color(line + 1);
-	return (result);
+	if ((ft_strncmp(line, "NO", 2) == 0 \
+			&& parse_texture(&(*result)->texture[TEXTURE_NO], line + 2) == 0) \
+		|| (ft_strncmp(line, "SO", 2) == 0 \
+			&& parse_texture(&(*result)->texture[TEXTURE_SO], line + 2) == 0) \
+		|| (ft_strncmp(line, "WE", 2) == 0 \
+			&& parse_texture(&(*result)->texture[TEXTURE_WE], line + 2) == 0) \
+		|| (ft_strncmp(line, "EA", 2) == 0 \
+			&& parse_texture(&(*result)->texture[TEXTURE_EA], line + 2) == 0) \
+		|| (ft_strncmp(line, "F", 1) == 0 \
+			&& parse_color(&(*result)->floor_color, line + 1) == 0) \
+		|| (ft_strncmp(line, "C", 1) == 0 \
+			&& parse_color(&(*result)->ceilling_color, line + 1) == 0))
+		return ;
+	if (line_is_only_space(line) == 0)
+		free_map(result);
 }

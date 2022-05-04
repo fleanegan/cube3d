@@ -1,8 +1,9 @@
 #include "../inc/cube3d.h"
 
-void	*error_parsing(char *str)
+void	*error_parsing(t_map **result, char *str)
 {
 	ft_putstr_fd(str, 2);
+	free_map(result);
 	return (NULL);
 }
 
@@ -24,21 +25,32 @@ t_map	*parse(const char *file_name)
 	char	*line;
 	t_map	*result;
 
+	result = NULL;
 	if (is_cub_file(file_name) == 0)
-		return (error_parsing(BAD_FILE_NAME));
+		return (error_parsing(&result, BAD_FILE_NAME));
 	fd = open(file_name, O_RDONLY);
 	if (fd < 0)
-		return (error_parsing(OPENING_FILE));
+		return (error_parsing(&result, OPENING_FILE));
 	result = init_map();
 	if (result == NULL)
-		return (error_parsing(MALLOC_FAIL));
-	while (gnl(fd, &line))
+	{
+		close(fd);
+		return (error_parsing(&result, MALLOC_FAIL));
+	}
+	while (gnl(fd, &line) && result != NULL)
 	{
 		if (header_infos_are_set(result) == 0)
-			result = parse_infos(result, line);
+			parse_infos(&result, line);
 		free(line);
 		if (result == NULL)
+		{
+			close(fd);
+			gnl(-1, 0);
 			return (NULL);
+		}
 	}
+	close(fd);
+	if (header_infos_are_set(result) == 0)
+		free_map(&result);
 	return (result);
 }
