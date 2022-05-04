@@ -82,7 +82,8 @@ int	scalar_multiply(t_matrix *a, float b, t_matrix *result)
 	int			i;
 	int			j;
 
-	ft_bzero(result->mat, 9 * sizeof(float));
+	t_matrix	tmp;
+	ft_bzero(&tmp.mat, 9 * sizeof(float));
 	result->width = a->width;
 	result->height = a->height;
 	j = -1;
@@ -90,7 +91,8 @@ int	scalar_multiply(t_matrix *a, float b, t_matrix *result)
 	{
 		i = -1;
 		while (++i < a->height)
-			result->mat[i][j] = a->mat[i][j] * b;
+			tmp.mat[i][j] = a->mat[i][j] * b;
 	}
+	*result = tmp;
 	return (0);
 }

@@ -36,10 +36,7 @@ t_ray calc_distance_to_obstacle(t_data *data, t_matrix *dir)
 		tmp = calc_distance_to_wall_matching_normal_vector(\
 				dir, data, normal_direction_plane, axis);
 		if (tmp.distance < result.distance && tmp.distance > -0.001)
-		{
 			result = tmp;
-			ray_set_wall_orientation(normal_direction_plane, axis, &result);
-		}
 		axis++;
 	}
 	if (result.distance > FLT_MAX * 0.99)
@@ -91,6 +88,7 @@ t_ray	calc_distance_to_wall_matching_normal_vector(\
 		intersection = find_ray_end(dir, &data->player.pos, &intersection, t);
 		result.x_intersection_world_coordinates = intersection.mat[0][0];
 		result.y_intersection_world_coordinates = intersection.mat[1][0];
+		ray_set_wall_orientation(normal_of_plane, axis, &result);
 		result.distance = calc_point_distance(&data->player.pos, &intersection);
 		if (is_contact(&intersection, normal_of_plane, axis, data))
 			return (result);

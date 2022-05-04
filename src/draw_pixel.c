@@ -19,7 +19,7 @@ unsigned int calc_pixel_colour(const t_data *data, const t_ray *ray, int cnt)
 	tex = get_texture(data, ray);
 	x = calc_pixel_index_x(ray, tex, data);
 	y = calc_pixel_index_y(ray, cnt, tex);
-	if (x >= 0)
+	if (x >= 0 && y >= 0)
 		colour = get_pixel_color_from_texture(x, y, current, tex);
 	return colour;
 }

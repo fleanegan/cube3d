@@ -1,23 +1,39 @@
 #include "../inc/cube3d.h"
 
+int is_colision(t_data *data, t_matrix *waling_dir);
+
 void	move(t_data *data)
 {
 	t_matrix	tmp;
-	t_matrix	direction;
+	t_matrix	waling_dir;
 
-	zero_init_point(&direction);
+
+	zero_init_point(&waling_dir);
 	zero_init_point(&tmp);
 	if (data->player.movements.left)
-		direction.mat[1][0] = -10;
+		waling_dir.mat[1][0] = -10;
 	if (data->player.movements.right)
-		direction.mat[1][0] = 10;
+		waling_dir.mat[1][0] = 10;
 	if (data->player.movements.backward)
-		direction.mat[0][0] = -10;
+		waling_dir.mat[0][0] = -10;
 	if (data->player.movements.forward)
-		direction.mat[0][0] = 10;
-	multiply(&data->player.orientation, &direction, &tmp);
-	data->player.pos.mat[0][0] += tmp.mat[0][0];
-	data->player.pos.mat[1][0] += tmp.mat[1][0];
+		waling_dir.mat[0][0] = 10;
+	multiply(&data->player.orientation, &waling_dir, &waling_dir);
+	if (is_colision(data, &waling_dir))
+		return ;
+	data->player.pos.mat[0][0] += waling_dir.mat[0][0];
+	data->player.pos.mat[1][0] += waling_dir.mat[1][0];
+}
+
+int is_colision(t_data *data, t_matrix *waling_dir)
+{
+	t_ray		ray;
+	float		stride;
+	stride = sqrtf(powf(waling_dir->mat[0][0], 2) + powf(waling_dir->mat[1][0], 2));
+	ray = calc_distance_to_obstacle(data, waling_dir);
+	if (ray.distance < 10.f || ray.distance < stride)
+		return (1);
+	return (0);
 }
 
 // multiplication is inverse for rotations around z to rotate around the global axis
