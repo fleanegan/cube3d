@@ -35,6 +35,8 @@ void print_matrix(t_matrix *a)
 
 void	print_map_infos(t_map *map)
 {
+	if (map == NULL)
+		return ;
 	ft_putendl_fd("\n---------------------------------------------------", 1);
 	ft_putendl_fd("Maps infos :\n", 1);
 	ft_putstr_fd("north : ", 1);

@@ -25,6 +25,7 @@
 # define OPENING_FILE "Error\nOpening file fail\n"
 # define MALLOC_FAIL "Error\nMalloc fail\n"
 # define TEXTURE_ERROR "Error\nBad format for texture\n"
+# define TEXTURE_DUPLICATE "Error\nMultiple texture for same orientation\n"
 
 # define TEXTURE_NO 0
 # define TEXTURE_SO 1

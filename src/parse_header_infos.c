@@ -16,22 +16,27 @@ int	is_cub_file(const char *file_name)
 	return (0);
 }
 
-char	*parse_texture(t_map *result, char *line)
+int	parse_texture(char **dest, char *line)
 {
 	int		i;
 	int		y;
 
 	i = 0;
+	if (*dest != NULL)
+		return (write(2, TEXTURE_DUPLICATE, ft_strlen(TEXTURE_DUPLICATE)));
 	while (line[i] && ft_isspace(line[i]) == 1)
 		i++;
 	if (i == 0)
-		return (error_parsing(TEXTURE_ERROR));
+		return (write(2, TEXTURE_ERROR, ft_strlen(TEXTURE_ERROR)));
 	y = i;
 	while (line[y] && ft_isspace(line[y]) == 0)
 		y++;
 	if (y > i)
 		line[y] = '\0';
-	return (ft_strdup(line + i));
+	*dest = ft_strdup(line + i);
+	if (*dest == NULL)
+		return (write(2, MALLOC_FAIL, ft_strlen(MALLOC_FAIL)));
+	return (0);
 }
 
 // TODO: protect -1 if error
@@ -60,17 +65,23 @@ int	parse_color(char *line)
 
 t_map	*parse_infos(t_map *result, char *line)
 {
-	if (ft_strncmp(line, "NO", 2) == 0)
-		result->texture[TEXTURE_NO] = parse_texture(line + 2);
-	if (ft_strncmp(line, "SO", 2) == 0)
-		result->texture[TEXTURE_SO] = parse_texture(line + 2);
-	if (ft_strncmp(line, "WE", 2) == 0)
-		result->texture[TEXTURE_WE] = parse_texture(line + 2);
-	if (ft_strncmp(line, "EA", 2) == 0)
-		result->texture[TEXTURE_EA] = parse_texture(line + 2);
-	if (ft_strncmp(line, "F", 1) == 0)
+	if (ft_strncmp(line, "NO", 2) == 0 \
+		&& parse_texture(&result->texture[TEXTURE_NO], line + 2) != 0)
+		free_map(&result);
+	if (ft_strncmp(line, "SO", 2) == 0 \
+		&& parse_texture(&result->texture[TEXTURE_SO], line + 2) != 0)
+		free_map(&result);
+	if (ft_strncmp(line, "WE", 2) == 0 \
+		&& parse_texture(&result->texture[TEXTURE_WE], line + 2) != 0)
+		free_map(&result);
+	if (ft_strncmp(line, "EA", 2) == 0 \
+		&& parse_texture(&result->texture[TEXTURE_EA], line + 2) != 0)
+		free_map(&result);
+	if (ft_strncmp(line, "F", 1) == 0 \
+		&& result->floor_color == COLOR_UNINITIALISED)
 		result->floor_color = parse_color(line + 1);
-	if (ft_strncmp(line, "C", 1) == 0)
+	if (ft_strncmp(line, "C", 1) == 0 \
+		&& result->ceilling_color == COLOR_UNINITIALISED)
 		result->ceilling_color = parse_color(line + 1);
 	return (result);
 }

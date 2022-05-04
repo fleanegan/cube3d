@@ -35,8 +35,10 @@ t_map	*parse(const char *file_name)
 	while (gnl(fd, &line))
 	{
 		if (header_infos_are_set(result) == 0)
-			parse_infos(result, line);
+			result = parse_infos(result, line);
 		free(line);
+		if (result == NULL)
+			return (NULL);
 	}
 	return (result);
 }
