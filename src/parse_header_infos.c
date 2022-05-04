@@ -16,7 +16,7 @@ int	is_cub_file(const char *file_name)
 	return (0);
 }
 
-char	*parse_texture(char *line)
+char	*parse_texture(t_map *result, char *line)
 {
 	int		i;
 	int		y;
@@ -42,7 +42,6 @@ int	parse_color(char *line)
 	int		g;
 	int		b;
 
-	puts("test");
 	r = ft_atoi(line);
 	if (r < 0 || r > 255)
 		return (COLOR_OUT_OF_RANGE);

@@ -27,12 +27,25 @@ TEST(testParsing, return_NULL_error_opening_file)
 }
 
 
-TEST(testParsing, parse_textures)
+TEST(testParsing, parse_basic_textures)
 {
 	t_map *map1 = parse("test/assets/basic_file.cub");
 
-	print_map_infos(map1);
+	EXPECT_FALSE(strcmp(map1->texture[TEXTURE_SO], "./path_to_the_south_texture"));
+	EXPECT_FALSE(strcmp(map1->texture[TEXTURE_NO], "./path_to_the_north_texture"));
+	EXPECT_FALSE(strcmp(map1->texture[TEXTURE_WE], "./path_to_the_west_texture"));
+	EXPECT_FALSE(strcmp(map1->texture[TEXTURE_EA], "./path_to_the_east_texture"));
+	EXPECT_EQ(map1->floor_color, 0xFF8000);
+	EXPECT_EQ(map1->ceilling_color, 0x000040);
 	free_map(&map1);
+}
+
+TEST(testParsing, parse_duplicates_infos_error)
+{
+	t_map *map1 = parse("test/assets/duplicate_infos.cub");
+
+	EXPECT_EQ(map1, nullptr);
+	print_map_infos(map1);
 }
 
 //TEST(testParsing, return_NULL_if_no_valid_map_entered)
