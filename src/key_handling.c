@@ -29,9 +29,6 @@ int	handle_key_press(int keycode, t_data *data)
 		data->player.admin_mode++;
 	if (keycode == 32)
 		remove_wall(data);
-	move(data);
-	rotate(data);
-	render_frame(data);
 	return (0);
 }
 
@@ -42,8 +39,8 @@ void remove_wall(t_data *data)
 
 	generate_direction_vector(&data->player.orientation, &dir);
 	ray = calc_distance_to_obstacle(data, &dir);
-	if(ray.object_at_contact)
-		ray.object_at_contact->mat[2][0] = 0;
+	if(ray.object_at_contact != NULL)
+		ray.object_at_contact->mat[2][0] = 0.0;
 }
 
 int	handle_key_release(int keycode, t_data *data)

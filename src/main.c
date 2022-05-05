@@ -13,6 +13,14 @@ void	tear_down_mlx_session(t_data *data)
 	exit(0);
 }
 
+int	render_next_frame(void *data){
+	move(data);
+	rotate(data);
+	render_frame(data);
+	return 1;
+	(void) data;
+}
+
 int	main(int argc, char **argv)
 {
 	t_data	data;
@@ -36,6 +44,7 @@ int	main(int argc, char **argv)
 		mlx_hook(data.mlx.mlx_win, 2, 1L << 0, &handle_key_press, &data);
 		mlx_hook(data.mlx.mlx_win, 3, 1L << 1, &handle_key_release, &data);
 		mlx_hook(data.mlx.mlx_win, 33, 1L << 17, red_cross_handler, &data);
+		mlx_loop_hook(data.mlx.mlx, render_next_frame, &data);
 		mlx_loop(data.mlx.mlx);
 	}
 	return (0);

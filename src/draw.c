@@ -59,7 +59,7 @@ void draw_map(t_data *data)
 	int mini_map_scale = 5;
 
 	y = (data->camera.win_size.y_max - data->map->height * mini_map_scale) ;
-	while (y < data->camera.win_size.y_max)
+	while (y < data->camera.win_size.y_max && y > 0)
 	{
 		x = 0;
 		y_map =  (y - (data->camera.win_size.y_max - data->map->height * mini_map_scale))/mini_map_scale;
@@ -80,7 +80,6 @@ void draw_map(t_data *data)
 		}
 		y++;
 	}
-
 }
 
 void	draw_1px_to_img(t_data *data, int x, int y, unsigned int color)

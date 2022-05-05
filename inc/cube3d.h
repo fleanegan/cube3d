@@ -24,6 +24,13 @@
 # define KEY_ARROW_DOWN 65364
 # define KEY_ESC 65307
 
+typedef struct s_plane
+{
+	t_matrix	normal_vector;
+	int			parallel_axis;
+	t_matrix	distance_from_origin;
+}	t_plane;
+
 typedef struct s_point
 {
 	double	x;
@@ -143,10 +150,9 @@ int raycast_one_slice(t_data *data, int step,
 					  t_ray *ray);
 t_matrix	find_ray_end(\
 		t_matrix *dir, const t_matrix *base, t_matrix *result, float t);
-t_ray calc_distance_to_wall_matching_normal_vector(t_matrix *dir, \
-		t_data *data, int normal_of_plane, int axis);
-int			is_dir_parallel_to_obstacle_surface(\
-		t_data *data, int axis, float t);
+t_ray calc_distance_to_wall_matching_normal_vector(t_matrix *dir, t_data *data,
+												   t_plane *wall);
+int is_dir_parallel_to_obstacle_surface(t_data *data, t_matrix *intersection);
 int		prepare_slice_orientation(t_data *data, int step, \
 		t_matrix *slice_dir, float *cam_angle);
 void calc_wall_dimensions_slice(t_data *data, int step, \

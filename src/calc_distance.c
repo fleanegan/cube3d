@@ -1,18 +1,20 @@
 #include "../inc/cube3d.h"
 
-void	ray_set_wall_orientation(int normal_direction_plane, int axis, t_ray *result);
+void ray_set_wall_orientation(t_plane *wall, t_ray *result);
 
-t_matrix * get_object_at_contact(t_matrix *intersection, \
-		int normal_direction_plane, int axis, t_data *data)
+void
+update_ray(t_data *data, t_plane *wall, t_ray *result, t_matrix *intersection);
+
+t_matrix	*get_object_at_contact(t_matrix *intersection, t_data *data, t_plane *wall)
 {
 	int			x;
 	int			y;
 	t_matrix	*result;
 
 	result = NULL;
-	intersection->mat[axis][0] -= normal_direction_plane * 10;
-	x = ((int)(intersection->mat[0][0] / data->map->len_per_unit[axis]));
-	y = ((int)(intersection->mat[1][0] / data->map->len_per_unit[axis]));
+	intersection->mat[wall->parallel_axis][0] -= wall->normal_vector.mat[wall->parallel_axis][0] * 10;
+	x = ((int)(intersection->mat[0][0] / data->map->len_per_unit[wall->parallel_axis]));
+	y = ((int)(intersection->mat[1][0] / data->map->len_per_unit[wall->parallel_axis]));
 	if (x >= data->map->width || x < 0 || y >= data->map->height || y < 0)
 		return (result);
 	if (data->map->grid[x][y].mat[2][0] > 0.1)
@@ -22,50 +24,49 @@ t_matrix * get_object_at_contact(t_matrix *intersection, \
 
 t_ray calc_distance_to_obstacle(t_data *data, t_matrix *dir)
 {
-	int			normal_direction_plane;
-	int			axis;
+	t_plane		wall;
 	t_ray		result;
 	t_ray		tmp;
 
-	axis = 0;
+	wall.parallel_axis = 0;
+	ft_bzero(&result, sizeof(t_ray));
 	result.distance = FLT_MAX;
-	while (axis < 2)
+	while (wall.parallel_axis < 2)
 	{
-		if (dir->mat[axis][0] > 0)
-			normal_direction_plane = -1;
+		if (dir->mat[wall.parallel_axis][0] > 0)
+			wall.normal_vector.mat[wall.parallel_axis][0] = -1;
 		else
-			normal_direction_plane = 1;
-		tmp = calc_distance_to_wall_matching_normal_vector(\
-				dir, data, normal_direction_plane, axis);
+			wall.normal_vector.mat[wall.parallel_axis][0] = 1;
+		tmp = calc_distance_to_wall_matching_normal_vector(dir, data, &wall);
 		if (tmp.distance < result.distance && tmp.distance > -0.001)
 			result = tmp;
-		axis++;
+		wall.parallel_axis++;
 	}
 	if (result.distance > FLT_MAX * 0.99)
 		result.distance = -1;
 	return (result);
 }
 
-void	ray_set_wall_orientation(int normal_direction_plane, int axis, t_ray *result)
+void ray_set_wall_orientation(t_plane *wall, t_ray *result)
 {
-	if (axis == 0)
+	if (wall->parallel_axis == 0)
 	{
-		if (normal_direction_plane == 1)
+		if (wall->normal_vector.mat[wall->parallel_axis][0] == 1)
 			result->wall_orientation = 'E';
 		else
 			result->wall_orientation = 'W';
 	}
 	else
 	{
-		if (normal_direction_plane == 1)
+		if (wall->normal_vector.mat[wall->parallel_axis][0] == 1)
 			result->wall_orientation = 'S';
 		else
 			result->wall_orientation = 'N';
 	}
 }
 
-t_ray	calc_distance_to_wall_matching_normal_vector(\
-		t_matrix *dir, t_data *data, int normal_of_plane, int axis)
+t_ray calc_distance_to_wall_matching_normal_vector(t_matrix *dir, t_data *data,
+												   t_plane *wall)
 {
 	t_ray		result;
 	t_matrix	intersection;
@@ -74,38 +75,46 @@ t_ray	calc_distance_to_wall_matching_normal_vector(\
 
 	ft_bzero(&result, sizeof(t_ray));
 	zero_init_point(&intersection);
-	distance_wall = ((int)(data->player.pos.mat[axis][0] \
-				/ data->map->len_per_unit[axis])) * data->map->len_per_unit[axis];
-	if (normal_of_plane < 0)
-		distance_wall += data->map->len_per_unit[axis];
+	distance_wall = ((int)(data->player.pos.mat[wall->parallel_axis][0] \
+				/ data->map->len_per_unit[wall->parallel_axis])) * data->map->len_per_unit[wall->parallel_axis];
+	if (wall->normal_vector.mat[wall->parallel_axis][0] < 0)
+		distance_wall += data->map->len_per_unit[wall->parallel_axis];
 	while (1)
 	{
-		t = fabsf((float)(distance_wall - data->player.pos.mat[axis][0]) \
-		/ ((float) fabs(dir->mat[axis][0] * (float) normal_of_plane)));
-		if (is_dir_parallel_to_obstacle_surface(data, axis, t))
+		t = fabsf((float)(distance_wall - data->player.pos.mat[wall->parallel_axis][0]) \
+		/ ((float) fabs(dir->mat[wall->parallel_axis][0] * (float) wall->normal_vector.mat[wall->parallel_axis][0])));
+		intersection = find_ray_end(dir, &data->player.pos, &intersection, t);
+		if (is_dir_parallel_to_obstacle_surface(data, &intersection))
 		{
 			result.distance = -1;
 			return (result);
 		}
-		intersection = find_ray_end(dir, &data->player.pos, &intersection, t);
-		result.x_intersection_world_coordinates = intersection.mat[0][0];
-		result.y_intersection_world_coordinates = intersection.mat[1][0];
-		ray_set_wall_orientation(normal_of_plane, axis, &result);
-		result.distance = calc_point_distance(&data->player.pos, &intersection);
-		result.object_at_contact = get_object_at_contact(&intersection,normal_of_plane, axis, data);
+		update_ray(data, wall, &result, &intersection);
 		if (result.object_at_contact != NULL)
 			return (result);
-		distance_wall -= data->map->len_per_unit[axis] * normal_of_plane;
+		distance_wall -= data->map->len_per_unit[wall->parallel_axis] * wall->normal_vector.mat[wall->parallel_axis][0];
 	}
 }
 
-int	is_dir_parallel_to_obstacle_surface(\
-		t_data *data, int axis, float t)
+void	update_ray(t_data *data, t_plane *wall, t_ray *result, t_matrix *intersection)
 {
-	return ((axis == 0 && fabsf(t) > \
-				(float) 2.f * data->map->width * (float)data->map->len_per_unit[axis]) \
-			|| (axis == 1 && fabsf(t) > \
-				(float) 2.f * data->map->height * (float)data->map->len_per_unit[axis]));
+	(*result).x_intersection_world_coordinates = (*intersection).mat[0][0];
+	(*result).y_intersection_world_coordinates = (*intersection).mat[1][0];
+	ray_set_wall_orientation(wall, result);
+	(*result).distance = calc_point_distance(&data->player.pos, intersection);
+	(*result).object_at_contact = get_object_at_contact(intersection, data, wall);
+}
+
+int is_dir_parallel_to_obstacle_surface(t_data *data, t_matrix *intersection)
+{
+	int	x;
+	int	y;
+
+	x = ((int)(intersection->mat[0][0] / TILE_SIZE));
+	y = ((int)(intersection->mat[1][0] / TILE_SIZE));
+	if (x >= data->map->width || x < 0 || y >= data->map->height || y < 0)
+		return (1);
+	return (0);
 }
 
 t_matrix	find_ray_end(\
