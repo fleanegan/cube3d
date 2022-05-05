@@ -64,7 +64,7 @@ static int	initialize(const char *file_name, int *width, int *height, int *fd)
 {
 	*fd = open(file_name, O_RDONLY);
 	if (*fd < 0)
-		return (1);
+		return (write(2, OPENING_FILE, ft_strlen(OPENING_FILE)));
 	*height = 0;
 	*width = 0;
 	return (0);

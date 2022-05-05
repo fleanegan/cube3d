@@ -55,17 +55,17 @@ t_map	*init_map(const char *file_name)
 	result = malloc(sizeof(t_map));
 	if (result == NULL)
 		return (error_parsing(NULL, MALLOC_FAIL));
-	measure_map(file_name, &width, &height);
 	ft_bzero(result, sizeof(t_map));
+	if (measure_map(file_name, &width, &height) == 1)
+		return (free_map(&result));
 	result->width = width;
 	result->height = height;
-	printf("width %d height %d\n", result->width, result->height);
 	result->ceilling_color = COLOR_UNINITIALISED;
 	result->floor_color = COLOR_UNINITIALISED;
 	result->tile_size = TILE_SIZE;
 	result->grid = new_grid(result);
 	if (! result->grid)
-		return (free_map(&result));
+		return (NULL);
 	return (result);
 }
 
@@ -74,9 +74,13 @@ void	*free_map(t_map **map)
 	if (*map == NULL)
 		return (NULL);
 	free((*map)->texture[TEXTURE_NO]);
+	//(*map)->texture[TEXTURE_NO] = NULL;
 	free((*map)->texture[TEXTURE_SO]);
+	//(*map)->texture[TEXTURE_SO] = NULL;
 	free((*map)->texture[TEXTURE_WE]);
+	//(*map)->texture[TEXTURE_WE] = NULL;
 	free((*map)->texture[TEXTURE_EA]);
+	//(*map)->texture[TEXTURE_EA] = NULL;
 	if ((*map)->grid != NULL)
 		free_2d_array((void **)(*map)->grid);
 	free(*map);
