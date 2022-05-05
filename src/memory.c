@@ -6,7 +6,7 @@
 /*   By:  <>                                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 14:44:33 by                   #+#    #+#             */
-/*   Updated: 2022/05/04 17:33:17 by tsiguenz         ###   ########.fr       */
+/*   Updated: 2022/05/05 18:19:31 by tsiguenz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,10 @@ t_matrix	**new_grid(t_map *map)
 	int			width;
 
 	width = map->width;
+	printf("width = %d\n", width);
 	result = malloc((width + 1) * sizeof (t_matrix *));
 	if (! result)
-		return (NULL);
+		return (error_parsing(NULL, MALLOC_FAIL));
 	result[width] = NULL;
 	while (width--)
 	{
@@ -36,38 +37,35 @@ t_matrix	**new_grid(t_map *map)
 		if (! result[width])
 		{
 			free_2d_array((void **) result);
-			return (NULL);
+			return (error_parsing(NULL, MALLOC_FAIL));
 		}
 	}
+	//ft_memset(result, 1, (width * map->height + 1) * sizeof(t_matrix *));
 	return (result);
 }
 
-t_map	*new_map(int width, int height)
+t_map	*init_map(const char *file_name)
 {
 	t_map	*result;
+	int		width;
+	int		height;
 
-	result = malloc(sizeof(t_map));
-	if (! result)
-		return (NULL);
-	result->width = width;
-	result->height = height;
-	result->grid = new_grid(result);
-	if (! result->grid)
-		return (free_map(&result));
-	return (result);
-}
-
-t_map	*init_map(void)
-{
-	t_map	*result;
-
+	width = 0;
+	height = 0;
 	result = malloc(sizeof(t_map));
 	if (result == NULL)
-		return (NULL);
+		return (error_parsing(NULL, MALLOC_FAIL));
+	measure_map(file_name, &width, &height);
 	ft_bzero(result, sizeof(t_map));
+	result->width = width;
+	result->height = height;
+	printf("width %d height %d\n", result->width, result->height);
 	result->ceilling_color = COLOR_UNINITIALISED;
 	result->floor_color = COLOR_UNINITIALISED;
 	result->tile_size = TILE_SIZE;
+	result->grid = new_grid(result);
+	if (! result->grid)
+		return (free_map(&result));
 	return (result);
 }
 

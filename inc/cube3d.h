@@ -30,8 +30,8 @@
 # define COLOR_FAIL "Error\nBad format for color\n"
 # define COLOR_DUPLICATE "Error\nMultiple color for same field\n"
 # define COLOR_OUT_OF_RANGE "Error\nColor is out of range\n"
-
 # define COLOR_UNINITIALISED -1
+# define MAP_ERROR "Error\nBad format for the map\n"
 
 # define TEXTURE_NO 0
 # define TEXTURE_SO 1
@@ -100,17 +100,20 @@ typedef struct s_data {
 //init
 t_player		init_player(t_map *map);
 t_camera		init_camera(void);
-t_map			*init_map(void);
+t_map			*init_map(const char *file_name);
 
 // parsing
 t_map			*new_map(int width, int height);
 int				measure_map(const char *file_name, int *height, int *width);
-t_map			*parse_map(const char *string);
+int				is_line_of_map(char *line);
 t_map			*parse(const char *file_name);
 int				parse_line(char *line, t_map *map, int y_act);
 void			parse_infos(t_map **result, char *line);
 void			*error_parsing(t_map **result, char *str);
-
+int				is_spawn_point(char c);
+char			*clean_line(char *line);
+int				fill_map(t_map *map, int fd);
+int				header_infos_are_set(t_map *result);
 int				is_cub_file(const char *file_name);
 
 // raycasting

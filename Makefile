@@ -12,8 +12,9 @@ TEST_PATH = test/
 SRC_NAME =	main.c \
 			draw_line.c \
 			draw.c \
-			new_parsing.c \
+			parsing.c \
 			parse_header_infos.c \
+			parsing_utils.c \
 			utils.c \
 			math_extensions.c \
 			raycasting.c \

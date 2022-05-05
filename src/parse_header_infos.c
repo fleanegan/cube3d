@@ -50,10 +50,22 @@ int	parse_texture(char **dest, char *line)
 		return (write(2, MALLOC_FAIL, ft_strlen(MALLOC_FAIL)));
 	return (0);
 }
+char	*go_next_field(char *line)
+{
+	char	*tmp;
+
+	tmp = ft_strchr(line, ',');
+	if (tmp == NULL)
+	{
+		write(2, COLOR_FAIL, ft_strlen(COLOR_FAIL));
+		return (NULL);
+	}
+	tmp++;
+	return (tmp);
+}
 
 int	parse_color(int *dest, char *line)
 {
-	char	*tmp;
 	int		r;
 	int		g;
 	int		b;
@@ -63,17 +75,19 @@ int	parse_color(int *dest, char *line)
 	r = ft_atoi(line);
 	if (r < 0 || r > 255)
 		return (write(2, COLOR_OUT_OF_RANGE, ft_strlen(COLOR_OUT_OF_RANGE)));
-	tmp = ft_strchr(line, ',');
-	tmp++;
-	g = ft_atoi(tmp);
+	line = go_next_field(line);
+	if (line == NULL)
+		return (1);
+	g = ft_atoi(line);
 	if (g < 0 || g > 255)
 		return (write(2, COLOR_OUT_OF_RANGE, ft_strlen(COLOR_OUT_OF_RANGE)));
-	tmp = ft_strchr(tmp, ',');
-	tmp++;
-	b = ft_atoi(tmp);
-	while (*tmp && ft_isdigit(*tmp) == 1)
-		tmp++;
-	if (*tmp != '\n')
+	line = go_next_field(line);
+	if (line == NULL)
+		return (1);
+	b = ft_atoi(line);
+	while (*line && ft_isdigit(*line) == 1)
+		line++;
+	if (*line != '\n')
 		return (write(2, COLOR_FAIL, ft_strlen(COLOR_FAIL)));
 	if (b < 0 || b > 255)
 		return (write(2, COLOR_OUT_OF_RANGE, ft_strlen(COLOR_OUT_OF_RANGE)));
