@@ -2,8 +2,7 @@
 
 int calc_pixel_index_y(const t_ray *ray, int cnt, const t_img *tex);
 int calc_pixel_index_x(const t_ray *ray, const t_img *tex, const t_data *data);
-unsigned int get_pixel_color_from_texture(int x, int y, const char *current,
-										  const t_img *tex);
+unsigned int get_pixel_color_from_texture(int x, int y, const t_img *tex);
 
 t_img *get_texture(const t_data *data, const t_ray *ray);
 
@@ -12,7 +11,6 @@ unsigned int calc_pixel_colour(const t_data *data, const t_ray *ray, int cnt)
 	int				x;
 	int				y;
 	unsigned int	colour;
-	const char		*current;
 	t_img			*tex;
 
 	colour = 0;
@@ -20,7 +18,7 @@ unsigned int calc_pixel_colour(const t_data *data, const t_ray *ray, int cnt)
 	x = calc_pixel_index_x(ray, tex, data);
 	y = calc_pixel_index_y(ray, cnt, tex);
 	if (x >= 0 && y >= 0)
-		colour = get_pixel_color_from_texture(x, y, current, tex);
+		colour = get_pixel_color_from_texture(x, y, tex);
 	return colour;
 }
 
@@ -38,10 +36,11 @@ t_img *get_texture(const t_data *data, const t_ray *ray)
 	return tex;
 }
 
-unsigned int get_pixel_color_from_texture(int x, int y, const char *current,
-										  const t_img *tex)
+unsigned int get_pixel_color_from_texture(int x, int y, const t_img *tex)
 {
-	unsigned int colour;
+	unsigned int	colour;
+	char			*current;
+
 	current = &tex->data[x * tex->bpp / 8 + tex->width * y * tex->bpp / 8];
 	colour = current[0] << 24 | current[1] << 16 | current[2] << 8 | current[3];
 	return colour;

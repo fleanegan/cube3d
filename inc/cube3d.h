@@ -92,6 +92,16 @@ typedef struct s_movements
 	int	rot_left;
 }	t_movements;
 
+typedef struct s_mouse_gun
+{
+	t_matrix	pos;
+	t_matrix	*target;
+	t_matrix	velocity;
+	float		speed_factor;
+	int			is_activated;
+	t_img		*texture;
+}	t_mouse_gun;
+
 typedef struct s_player
 {
 	t_matrix	pos;
@@ -113,6 +123,7 @@ typedef struct s_mlx {
 typedef struct s_data {
 	t_mlx			mlx;
 	t_player		player;
+	t_mouse_gun		mouse_gun;
 	t_map			*map;
 	t_camera		camera;
 }	t_data;
@@ -125,6 +136,7 @@ int	init_mlx(t_data	*data);
 //drawing
 unsigned int calc_pixel_colour(const t_data *data, const t_ray *ray, int cnt);
 void	draw_wall_segment(t_data *data, t_ray *ray);
+unsigned int get_pixel_color_from_texture(int x, int y, const t_img *tex);
 
 // parsing
 t_map			*new_map(int width, int height);
@@ -167,6 +179,9 @@ int				render_frame(void *void_img);
 void			*free_map(t_map **map);
 float	calc_point_distance(t_matrix *from, t_matrix *to);
 
+// mouse gun
+void	update_mouse_gun(t_data *data);
+void	init_mouse_gun(t_data *data);
 
 t_matrix 		**new_grid(t_map *map);
 int				red_cross_handler(t_data *data);

@@ -40,7 +40,13 @@ void remove_wall(t_data *data)
 	generate_direction_vector(&data->player.orientation, &dir);
 	ray = calc_distance_to_obstacle(data, &dir);
 	if(ray.object_at_contact != NULL)
-		ray.object_at_contact->mat[2][0] = 0.0;
+	{
+		ft_bzero(&data->mouse_gun, sizeof(t_mouse_gun));
+		data->mouse_gun.target = ray.object_at_contact;
+		data->mouse_gun.pos = data->player.pos;
+		data->mouse_gun.is_activated = 1;
+		init_mouse_gun(data);
+	}
 }
 
 int	handle_key_release(int keycode, t_data *data)

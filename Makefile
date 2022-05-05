@@ -13,6 +13,7 @@ SRC_NAME =	main.c \
 			draw_pixel.c \
 			draw.c \
 			parsing.c \
+			mouse_gun.c \
 			utils.c \
 			math_extensions.c \
 			raycasting.c \

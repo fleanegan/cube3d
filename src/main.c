@@ -17,6 +17,7 @@ int	render_next_frame(void *data){
 	move(data);
 	rotate(data);
 	render_frame(data);
+	update_mouse_gun(data);
 	return 1;
 	(void) data;
 }
