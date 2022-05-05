@@ -43,21 +43,32 @@ void draw_mouse_pixel(t_data *data, t_matrix *mouse_position_on_screen,
 	int		y;
 	int		px_index_x;
 	int		px_index_y;
+	float	y_max;
+	float	x_max;
+	float	x_min;
+	float	y_min;
 
 	scale = data->camera.distance_screen / distance_player_mouse;
-	y = data->camera.win_size.y_max / 2.f - scale * dummy_size / 2.f;
-	px_index_y = 0;
-	while (y > 0 && y < data->camera.win_size.y_max && y < data->camera.win_size.y_max / 2.f + scale * dummy_size / 2.f)
+	y_max = data->camera.win_size.y_max / 2.f + scale * dummy_size / 2.f;
+	x_max = mouse_position_on_screen->mat[0][0] + scale * dummy_size / 2.f;
+	x_min = mouse_position_on_screen->mat[0][0] - scale * dummy_size / 2.f;
+	y_min = y_max - dummy_size * scale;
+	y = y_min;
+	while (y > 0 && y < data->camera.win_size.y_max && y < y_max)
 	{
-		px_index_x = 0;
-		x = mouse_position_on_screen->mat[0][0] - scale * dummy_size / 2.;
-		while (x < data->camera.win_size.x_max && x > 0 && x < mouse_position_on_screen->mat[0][0] + scale * dummy_size / 2.)
+		x = x_min;
+		while (x < data->camera.win_size.x_max && x > 0 && x < x_max)
 		{
-			draw_1px_to_img(data, x, y, 0x000000);
+			px_index_x = (int)(((float)x - x_min) / (x_max - x_min) * (float)data->map->mouse_texture->width);
+			px_index_y = (int)(((float)y - y_min) / (y_max - y_min) * (float)data->map->mouse_texture->height);
+//			printf("xm: %f, xma: %f, ym: %f, yma: %f, x: %d, y: %d, pxx: %d, pxy: %d\n", x_min, x_max, y_min, y_max, x, y, px_index_x, px_index_y);
+			if (px_index_x > 0 && px_index_x < data->map->mouse_texture->width && px_index_y > 0 && px_index_y < data->map->mouse_texture->height)
+				draw_1px_to_img(data, x, y, get_pixel_color_from_texture(px_index_x, px_index_y, data->map->mouse_texture));
 			x++;
 		}
 		y++;
 	}
+//	puts("new dist");
 	(void) scale;
 }
 

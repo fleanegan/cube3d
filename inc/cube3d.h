@@ -56,6 +56,7 @@ typedef struct s_map
 	t_img		*texture[4];
 	int			len_per_unit[3];
 	int 		wall_height;
+	t_img		*mouse_texture;
 }		t_map;
 
 typedef struct s_ray

@@ -34,7 +34,7 @@ int init_textures(t_data *data)
 	int		width;
 	int		height;
 
-	data->mouse_gun.texture = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/mouse.xpm", &width, &height);
+	data->map->mouse_texture = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/mouse.xpm", &width, &height);
 	data->map->texture[0] = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/t1.xpm", &width, &height);
 	data->map->texture[1] = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/vive_raclette.xpm", &width, &height);
 	data->map->texture[2] = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/metal-cogs-and-gears.xpm", &width, &height);
