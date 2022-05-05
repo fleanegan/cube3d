@@ -47,9 +47,9 @@ int	prepare_slice_orientation(\
 	t_matrix	orientation_slice;
 
 	zero_init_point(slice_dir);
-	*cam_angle = -1.f * (data->camera.angle_camera_horizontal \
- 		/ 2.f - (float) data->camera.angle_camera_horizontal * (float) step \
-		/ (float) data->camera.win_size.x_max);
+	*cam_angle = -1.f * (data->camera.angle_camera_horiz \
+ / 2.f - (float) data->camera.angle_camera_horiz * (float) step \
+ / (float) data->camera.win_size.x_max);
 	angle_as_rot = euler2rot(0., 0., *cam_angle);
 	multiply(&angle_as_rot, &data->player.orientation, &orientation_slice);
 	if (generate_direction_vector(&orientation_slice, slice_dir))

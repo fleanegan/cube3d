@@ -76,7 +76,7 @@ typedef struct s_ray
 typedef struct s_camera
 {
 	float			distance_screen;
-	float			angle_camera_horizontal;
+	float			angle_camera_horiz;
 	float			angle_camera_vertical;
 	t_dimension_2d	win_size;
 }	t_camera;
@@ -101,6 +101,7 @@ typedef struct s_mouse_gun
 	float		speed_factor;
 	int			is_activated;
 	t_img		*texture;
+	int			size_on_screen;
 }	t_mouse_gun;
 
 typedef struct s_player
