@@ -20,23 +20,27 @@ void	calc_wall_dimensions_slice(\
 {
 	float			tilt_angle;
 	float			y_upper_limit_view;
-	float 			gap_above_wall;
+	float			gap_above_wall;
 	float			k;
 	float			wall_height;
 
-	tilt_angle = atanf((float) (*dir_cam_angle).mat[2][0] /
-		sqrtf(powf((float) (*dir_cam_angle).mat[0][0], 2) +
-		powf((float) (*dir_cam_angle).mat[1][0], 2))) * RAD2DEG;
-	y_upper_limit_view = (float) (ray->distance * \
-		tanf((tilt_angle + data->camera.angle_camera_vertical / 2.f) \
-		* DEG2RAD) + data->player.pos.mat[2][0]);
+	tilt_angle = atanf((float)(*dir_cam_angle).mat[2][0] / \
+		sqrtf(powf((float)(*dir_cam_angle).mat[0][0], 2) + \
+		powf((float)(*dir_cam_angle).mat[1][0], 2))) * RAD2DEG;
+	y_upper_limit_view = (float)(ray->distance * \
+		tanf((tilt_angle + data->camera.angle_camera_vertical / 2.f) * \
+		DEG2RAD) + data->player.pos.mat[2][0]);
 	wall_height = data->map->wall_height;
 	if (ray->object_at_contact != NULL)
-		wall_height = data->map->wall_height * (ray->object_at_contact->mat[2][0]);
+		wall_height = data->map->wall_height; //\
+//		* (ray->object_at_contact->mat[2][0]);
+				if (step == data->camera.win_size.x_max / 2)
+					printf("wallheight: %f\n", wall_height);
 	gap_above_wall = y_upper_limit_view - wall_height;
-	k = cosf(tilt_angle * DEG2RAD) * data->camera.distance_screen / ray->distance;
+	k = cosf(tilt_angle * DEG2RAD) \
+		* data->camera.distance_screen / ray->distance;
 	ray->x_clipped_screen = step;
-	ray->y_min_screen = (float) gap_above_wall * k;
+	ray->y_min_screen = (float)gap_above_wall * k;
 	ray->y_max_screen_coordinates = ray->y_min_screen + wall_height * k;
 }
 
@@ -47,9 +51,9 @@ int	prepare_slice_orientation(\
 	t_matrix	orientation_slice;
 
 	zero_init_point(slice_dir);
-	*cam_angle = -1.f * (data->camera.angle_camera_horiz \
- / 2.f - (float) data->camera.angle_camera_horiz * (float) step \
- / (float) data->camera.win_size.x_max);
+	*cam_angle = -1.f * (data->camera.angle_camera_horiz / \
+	2.f - (float)data->camera.angle_camera_horiz * (float)step / \
+		(float)data->camera.win_size.x_max);
 	angle_as_rot = euler2rot(0., 0., *cam_angle);
 	multiply(&angle_as_rot, &data->player.orientation, &orientation_slice);
 	if (generate_direction_vector(&orientation_slice, slice_dir))

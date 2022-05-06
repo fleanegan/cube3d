@@ -12,7 +12,6 @@ TEST_PATH = test/
 SRC_NAME =	main.c \
 			draw_pixel.c \
 			draw.c \
-			parsing.c \
 			mouse_gun.c \
 			mouse_gun_utils.c \
 			map.c \
@@ -22,7 +21,11 @@ SRC_NAME =	main.c \
 			movement.c \
 			calc_distance.c \
 			calc_distance_utils.c \
-			parsing_measure_map.c \
+			parsing/parsing.c \
+			parsing/clean_line.c \
+			parsing/measure_map.c \
+			parsing/parse_header_infos.c \
+			parsing/utils.c \
 			debug.c \
 			init.c \
 			memory.c \
@@ -75,7 +78,7 @@ $(NAME): PRE $(OBJ)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT_FLAGS) $(MLXFLAGS) -o $(NAME)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
-	@mkdir -p $(OBJ_PATH)
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -I$(SRC_PATH) -o $@ -c $<
 
 clean:
@@ -91,7 +94,6 @@ fclean:	clean
 test: PRE $(OBJ) $(SRC) $(TEST_SRC) $(TEST_HEADER)
 	@make -C $(LIB_PATH)/libft/ --no-print-directory
 	$(CXX) -g -D TESTING -o $(NAME)_test $(OBJ) $(TEST_SRC) $(TEST_FLAGS) -I./$(SRC_PATH) $(LIBFT_FLAGS) $(TEST_FLAGS) -lm
-
 
 re:	fclean all
 

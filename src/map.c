@@ -35,8 +35,8 @@ int	is_pixel_at_player_pos(const t_data *data, int y_map, int x_map)
 	int	x_own;
 	int	y_own;
 
-	x_own = (int)(data->player.pos.mat[0][0] / data->map->len_per_unit[0]);
-	y_own = (int)(data->player.pos.mat[1][0] / data->map->len_per_unit[0]);
+	x_own = (int)(data->player.pos.mat[0][0] / TILE_SIZE);
+	y_own = (int)(data->player.pos.mat[1][0] / TILE_SIZE);
 	if (x_own == x_map && y_own == y_map)
 		return (1);
 	return (0);
