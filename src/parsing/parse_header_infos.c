@@ -39,6 +39,16 @@ char	*go_next_field(char *line)
 	return (tmp);
 }
 
+int	set_color(int *color, char *line)
+{
+	if (line == NULL)
+		return (1);
+	*color = ft_atoi(line);
+	if (*color < 0 || *color > 255)
+		return (write(2, COLOR_OUT_OF_RANGE, ft_strlen(COLOR_OUT_OF_RANGE)));
+	return (0);
+}
+
 int	parse_color(int *dest, char *line)
 {
 	int		r;
@@ -47,25 +57,19 @@ int	parse_color(int *dest, char *line)
 
 	if (*dest != COLOR_UNINITIALISED)
 		return (write(2, COLOR_DUPLICATE, ft_strlen(COLOR_DUPLICATE)));
-	r = ft_atoi(line);
-	if (r < 0 || r > 255)
-		return (write(2, COLOR_OUT_OF_RANGE, ft_strlen(COLOR_OUT_OF_RANGE)));
-	line = go_next_field(line);
-	if (line == NULL)
+	if (set_color(&r, line))
 		return (1);
-	g = ft_atoi(line);
-	if (g < 0 || g > 255)
-		return (write(2, COLOR_OUT_OF_RANGE, ft_strlen(COLOR_OUT_OF_RANGE)));
 	line = go_next_field(line);
-	if (line == NULL)
+	if (set_color(&g, line))
+		return (1);
+	line = go_next_field(line);
+	if (set_color(&b, line))
 		return (1);
 	b = ft_atoi(line);
 	while (*line && ft_isdigit(*line) == 1)
 		line++;
 	if (*line != '\n')
 		return (write(2, COLOR_FAIL, ft_strlen(COLOR_FAIL)));
-	if (b < 0 || b > 255)
-		return (write(2, COLOR_OUT_OF_RANGE, ft_strlen(COLOR_OUT_OF_RANGE)));
 	*dest = r << 16 | g << 8 | b;
 	return (0);
 }
