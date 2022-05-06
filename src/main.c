@@ -32,11 +32,9 @@ int	main(int argc, char **argv)
 	{
 		ft_bzero(&data, sizeof(t_data));
 		data.map = parse(argv[1]);
-		if (! data.map)
-		{
-			ft_putendl_fd("error in map", 1);
+		print_map_infos(data.map);
+		if (!data.map)
 			return (1);
-		}
 		data.camera = init_camera();
 		data.player = init_player(data.map);
 		if (init_mlx(&data))
@@ -52,6 +50,7 @@ int	main(int argc, char **argv)
 		mlx_loop_hook(data.mlx.mlx, render_next_frame, &data);
 		mlx_loop(data.mlx.mlx);
 	}
+	ft_putendl_fd("Error\nBad number of arguments (./cub3d [map_name.cub]", 2);
 	return (0);
 }
 

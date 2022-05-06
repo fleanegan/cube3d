@@ -46,6 +46,16 @@ t_matrix	*set_up_point(t_map *const *map, int y_act, \
 	return (point_tmp);
 }
 
+int	spawn_is_set(t_map *result)
+{
+	if (result->spawn_orientation == 0)
+	{
+		ft_putendl_fd("Error\nNo spawn point in map", 2);
+		return (0);
+	}
+	return (1);
+}
+
 t_map	*parse(const char *file_name)
 {
 	int		fd;
@@ -69,7 +79,7 @@ t_map	*parse(const char *file_name)
 		free(line);
 	}
 	close(fd);
-	if (result && header_infos_are_set(result) == 0)
+	if ((result && header_infos_are_set(result) == 0) || !spawn_is_set(result))
 		free_map(&result);
 	return (result);
 }

@@ -57,5 +57,7 @@ void	print_map_infos(t_map *map)
 	ft_putnbr_fd(map->height, 1);
 	ft_putstr_fd("\nwidth : ", 1);
 	ft_putnbr_fd(map->width, 1);
+	ft_putstr_fd("\nspawn orientation : ", 1);
+	ft_putchar_fd(map->spawn_orientation, 1);
 	ft_putendl_fd("\n---------------------------------------------------\n", 1);
 }
