@@ -1,6 +1,7 @@
 #include "../inc/cube3d.h"
 
 t_player	init_player_pose(t_map *map, t_player *result);
+
 t_player	init_player(t_map *map)
 {
 	t_player	result;

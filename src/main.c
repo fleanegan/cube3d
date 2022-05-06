@@ -45,7 +45,6 @@ int	main(int argc, char **argv)
 			exit(1);
 		remove_interior_walls(&data);
 		data.mouse_gun.is_activated = 0;
-		ft_putendl_fd("init done", 1);
 		render_frame(&data);
 		mlx_hook(data.mlx.mlx_win, 2, 1L << 0, &handle_key_press, &data);
 		mlx_hook(data.mlx.mlx_win, 3, 1L << 1, &handle_key_release, &data);
