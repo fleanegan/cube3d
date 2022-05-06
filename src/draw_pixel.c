@@ -42,7 +42,7 @@ unsigned int get_pixel_color_from_texture(int x, int y, const t_img *tex)
 	char			*current;
 
 	current = &tex->data[x * tex->bpp / 8 + tex->width * y * tex->bpp / 8];
-	colour = current[0] << 24 | current[1] << 16 | current[2] << 8 | current[3];
+	colour = current[3] << 24 | current[2] << 16 | current[1] << 8 | current[0];
 	return colour;
 }
 

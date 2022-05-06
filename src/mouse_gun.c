@@ -65,7 +65,8 @@ void	draw_mouse_pixel(t_data *data, \
 				* (float)data->map->mouse_texture->width);
 			px_index_y = (int)(((float)y - da.y_min) / (da.y_max - da.y_min) \
 				* (float)data->map->mouse_texture->height);
-			draw_1px_to_img(data, x, y, get_pixel_color_from_texture(\
+			if ((get_pixel_color_from_texture(px_index_x, px_index_y, data->map->mouse_texture) & 0xFF000000) == 0)
+				draw_1px_to_img(data, x, y, get_pixel_color_from_texture(\
 				px_index_x, px_index_y, data->map->mouse_texture));
 			x++;
 		}

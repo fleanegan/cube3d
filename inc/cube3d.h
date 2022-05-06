@@ -139,6 +139,10 @@ int	init_mlx(t_data	*data);
 unsigned int calc_pixel_colour(const t_data *data, const t_ray *ray, int cnt);
 void	draw_wall_segment(t_data *data, t_ray *ray);
 unsigned int get_pixel_color_from_texture(int x, int y, const t_img *tex);
+int calc_pixel_index_y(const t_ray *ray, int cnt, const t_img *tex);
+int calc_pixel_index_x(const t_ray *ray, const t_img *tex, const t_data *data);
+unsigned int get_pixel_color_from_texture(int x, int y, const t_img *tex);
+t_img *get_texture(const t_data *data, const t_ray *ray);
 
 // parsing
 t_map			*new_map(int width, int height);
@@ -191,4 +195,5 @@ void			tear_down_mlx_session(t_data *img);
 
 //debug
 void			print_matrix(t_matrix *a);
+char * int2bin(int i);
 #endif //CUBE3D_H
