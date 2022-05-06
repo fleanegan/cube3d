@@ -1,13 +1,13 @@
 #ifndef CUBE3D_H
 # define CUBE3D_H
 # include "../lib/libft/libft.h"
-# include "../lib/mlx/mlx.h"
 # include "../lib/libft/get_next_line_bonus.h"
 # include "math.h"
 # include <stdio.h>
 # include <float.h>
 # include <fcntl.h>
 # include <../lib/mlx/mlx_int.h>
+# include <../lib/mlx/mlx.h>
 # define TILE_SIZE	64.0f
 # define DEG2RAD 0.017453293f
 # define RAD2DEG 57.295779513f
@@ -40,6 +40,7 @@
 # define TEXTURE_WE 2
 # define TEXTURE_EA 3
 
+#define ERROR_MULTIPLE_SPAWNPOINT "Error\nMultiple spawn points"
 typedef struct s_plane
 {
 	t_matrix	normal_vector;
@@ -213,6 +214,8 @@ t_matrix	find_intersection_with_wall_candidate(t_matrix *dir, \
 			const t_data *data, const t_plane *wall, int distance_wall);
 void			draw_1px_to_img(t_data *data, int x, int y, unsigned int color);
 int				render_frame(void *void_img);
+void	init_points_to_wall(const t_map *map, t_matrix *const *result);
+
 
 // helper functions
 void			*free_map(t_map **map);

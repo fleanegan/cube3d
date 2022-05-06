@@ -10,15 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "../inc/cube3d.h"
-
-void	set_point(t_point *pt, double x, double y, double z)
-{
-	pt->x = x;
-	pt->y = y;
-	pt->z = z;
-}
 
 t_matrix	**new_grid(t_map *map)
 {
@@ -29,7 +21,7 @@ t_matrix	**new_grid(t_map *map)
 	result = malloc((width + 1) * sizeof (t_matrix *));
 	if (! result)
 		return (error_parsing(NULL, MALLOC_FAIL));
-	result[width] = NULL;
+	result[map->width] = NULL;
 	while (width--)
 	{
 		result[width] = malloc((map->height) * sizeof(t_matrix));
@@ -38,8 +30,8 @@ t_matrix	**new_grid(t_map *map)
 			free_2d_array((void **) result);
 			return (error_parsing(NULL, MALLOC_FAIL));
 		}
-		ft_bzero(result[width], map->height * sizeof(t_matrix *));
 	}
+	init_points_to_wall(map, result);
 	return (result);
 }
 
@@ -83,31 +75,20 @@ void	*free_map(t_map **map)
 	return (NULL);
 }
 
+#ifndef TESTING
+
 void	free_textures(t_data *data)
 {
 	if (data->map->mouse_texture)
-	{
 		mlx_destroy_image(data->mlx.mlx, data->map->mouse_texture);
-		free(data->map->mouse_texture);
-	}
 	if (data->map->texture[0])
-	{
 		mlx_destroy_image(data->mlx.mlx, data->map->texture[0]);
-		free(data->map->texture[0]);
-	}
 	if (data->map->texture[1])
-	{
 		mlx_destroy_image(data->mlx.mlx, data->map->texture[1]);
-		free(data->map->texture[1]);
-	}
 	if (data->map->texture[2])
-	{
 		mlx_destroy_image(data->mlx.mlx, data->map->texture[2]);
-		free(data->map->texture[2]);
-	}
 	if (data->map->texture[3])
-	{
 		mlx_destroy_image(data->mlx.mlx, data->map->texture[3]);
-		free(data->map->texture[3]);
-	}
 }
+
+#endif

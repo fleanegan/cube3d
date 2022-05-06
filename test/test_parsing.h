@@ -33,10 +33,10 @@ TEST(testParsing, parse_basic_textures)
 
 	if (map1 != NULL)
 	{
-		EXPECT_FALSE(strcmp(map1->texture[TEXTURE_SO], "./path_to_the_south_texture"));
-		EXPECT_FALSE(strcmp(map1->texture[TEXTURE_NO], "./path_to_the_north_texture"));
-		EXPECT_FALSE(strcmp(map1->texture[TEXTURE_WE], "./path_to_the_west_texture"));
-		EXPECT_FALSE(strcmp(map1->texture[TEXTURE_EA], "./path_to_the_east_texture"));
+		EXPECT_FALSE(strcmp(map1->texture_name[TEXTURE_SO], "./path_to_the_south_texture"));
+		EXPECT_FALSE(strcmp(map1->texture_name[TEXTURE_NO], "./path_to_the_north_texture"));
+		EXPECT_FALSE(strcmp(map1->texture_name[TEXTURE_WE], "./path_to_the_west_texture"));
+		EXPECT_FALSE(strcmp(map1->texture_name[TEXTURE_EA], "./path_to_the_east_texture"));
 		EXPECT_EQ(map1->floor_color, 0xFF8000);
 		EXPECT_EQ(map1->ceilling_color, 0x000040);
 		print_map_infos(map1);
@@ -109,8 +109,25 @@ TEST(testParsing, map_with_empty_line)
 
 TEST(testParsing, crash_test)
 {
-	t_map *map1 = parse("test/assets/crash.cub");
+t_map *map1 = parse("test/assets/crash.cub");
 
-	print_map_infos(map1);
-	free_map(&map1);
+print_map_infos(map1);
+free_map(&map1);
+}
+
+
+TEST(testParsing, multiple_spawnpoints_are_not_allowed)
+{
+t_map *map1 = parse("test/assets/multiple_spawnpoints.cub");
+
+EXPECT_EQ(map1, nullptr);
+free_map(&map1);
+}
+
+TEST(testParsing, no_spawnpoint_is_not_allowed)
+{
+t_map *map1 = parse("test/assets/no_spawnpoints.cub");
+
+EXPECT_EQ(map1, nullptr);
+free_map(&map1);
 }

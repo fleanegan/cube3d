@@ -29,6 +29,8 @@ t_player	init_player_pose(t_map *map, t_player *result)
 	return (*result);
 }
 
+#ifndef TESTING
+
 int	init_textures(t_data *data)
 {
 	int		width;
@@ -78,6 +80,7 @@ int	init_mlx(t_data	*d)
 			&d->mlx.bits_per_pixel, &d->mlx.line_length, &d->mlx.endian);
 	return (0);
 }
+#endif
 
 t_camera	init_camera(void)
 {
