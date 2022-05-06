@@ -36,7 +36,7 @@ t_dimension_2d	determine_drawing_area(const t_data *data, \
 {
 	float	scale;
 
-	scale = data->camera.distance_screen / dist_to_player;
+	scale = data->camera.distance_screen / (dist_to_player / 20);
 	drawing_area->y_max = center_on_screen->mat[1][0] + \
 	scale * data->mouse_gun.size_on_screen / 2.f;
 	drawing_area->x_max = center_on_screen->mat[0][0] + \
@@ -54,8 +54,8 @@ void	set_idle_mouse_position(t_data *data, t_mouse_gun *mg)
 
 	mg->pos = data->player.pos;
 	zero_init_point(&idle_pos);
-	idle_pos.mat[0][0] = 50.f;
-	idle_pos.mat[1][0] = 10.f;
+	idle_pos.mat[0][0] = 850.f;
+	idle_pos.mat[1][0] = 250.f;
 	multiply(&data->player.orientation, &idle_pos, &idle_pos);
 	mg->pos.mat[0][0] += idle_pos.mat[0][0];
 	mg->pos.mat[1][0] += idle_pos.mat[1][0];

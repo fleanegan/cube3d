@@ -56,9 +56,9 @@ void	update_mouse_gun(t_data *data)
 			mg->is_activated = 0;
 			mg->target->mat[2][0] = 0;
 		}
-		mg->pos.mat[0][0] += mg->velocity.mat[0][0] * 10;
-		mg->pos.mat[1][0] += mg->velocity.mat[1][0] * 10;
-		mg->pos.mat[2][0] += mg->velocity.mat[2][0] * 10;
+		mg->pos.mat[0][0] += mg->velocity.mat[0][0] * 100;
+		mg->pos.mat[1][0] += mg->velocity.mat[1][0] * 100;
+		mg->pos.mat[2][0] += mg->velocity.mat[2][0] * 100;
 	}
 	else
 		set_idle_mouse_position(data, mg);

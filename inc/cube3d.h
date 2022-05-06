@@ -8,7 +8,8 @@
 # include <float.h>
 # include <fcntl.h>
 # include <../lib/mlx/mlx_int.h>
-# define TILE_SIZE	64.0
+# include <../lib/mlx/mlx.h>
+# define TILE_SIZE 1024.0f
 # define DEG2RAD 0.017453293f
 # define RAD2DEG 57.295779513f
 

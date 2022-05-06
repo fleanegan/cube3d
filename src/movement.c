@@ -11,13 +11,13 @@ void	move(t_data *data)
 	zero_init_point(&waling_dir);
 	zero_init_point(&tmp);
 	if (data->player.movements.left)
-		waling_dir.mat[1][0] = -10;
+		waling_dir.mat[1][0] = -200;
 	if (data->player.movements.right)
-		waling_dir.mat[1][0] = 10;
+		waling_dir.mat[1][0] = 200;
 	if (data->player.movements.backward)
-		waling_dir.mat[0][0] = -10;
+		waling_dir.mat[0][0] = -200;
 	if (data->player.movements.forward)
-		waling_dir.mat[0][0] = 10;
+		waling_dir.mat[0][0] = 200;
 	multiply(&data->player.orientation, &waling_dir, &waling_dir);
 	if (is_colision(data, &waling_dir) && data->player.admin_mode < 3)
 		return ;
@@ -47,8 +47,8 @@ void	rotate(t_data *data)
 
 	zero_init_rotation_matrix(&tmp);
 	tmp = euler2rot(0, 0, 0);
-	rot_left = euler2rot(0, 0, -5.);
-	rot_right = euler2rot(0, 0, 5.);
+	rot_left = euler2rot(0, 0, -4);
+	rot_right = euler2rot(0, 0, 4.);
 	rot_up = euler2rot(0, 5, 0);
 	rot_down = euler2rot(0, -5, 0);
 	if (data->player.movements.rot_down)
