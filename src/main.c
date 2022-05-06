@@ -32,7 +32,6 @@ int	main(int argc, char **argv)
 	{
 		ft_bzero(&data, sizeof(t_data));
 		data.map = parse(argv[1]);
-		print_map_infos(data.map);
 		if (!data.map)
 			return (1);
 		data.camera = init_camera();

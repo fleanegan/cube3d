@@ -20,14 +20,13 @@ t_img	*get_texture(const t_data *data, const t_ray *ray)
 {
 	t_img	*tex;
 
-	//todo: incorporate defines after merge
-	tex = data->map->texture[0];
+	tex = data->map->texture[TEXTURE_NO];
 	if (ray->wall_orientation == 'E')
-		tex = data->map->texture[1];
+		tex = data->map->texture[TEXTURE_EA];
 	if (ray->wall_orientation == 'W')
-		tex = data->map->texture[2];
+		tex = data->map->texture[TEXTURE_WE];
 	if (ray->wall_orientation == 'S')
-		tex = data->map->texture[3];
+		tex = data->map->texture[TEXTURE_SO];
 	return (tex);
 }
 

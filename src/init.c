@@ -87,8 +87,8 @@ t_camera	init_camera(void)
 {
 	t_camera	result;
 
-	result.win_size.x_max = 800;
-	result.win_size.y_max = 600;
+	result.win_size.x_max = 1000;
+	result.win_size.y_max = 800;
 	result.angle_camera_horiz = 60.f;
 	result.distance_screen = \
 		result.win_size.x_max / 2.f \

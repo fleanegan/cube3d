@@ -13,10 +13,7 @@ int	parse_map_line(char *line, t_map **map, int y_act)
 	i = 0;
 	line_clean = clean_line(line);
 	if (!line_clean)
-	{
-		free_map(map);
-		return (1);
-	}
+		return (free_map(map) == NULL);
 	while (line_clean[i])
 	{
 		point_tmp = set_up_point(map, y_act, i, point_tmp);
