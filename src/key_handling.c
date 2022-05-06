@@ -39,13 +39,14 @@ void remove_wall(t_data *data)
 
 	generate_direction_vector(&data->player.orientation, &dir);
 	ray = calc_distance_to_obstacle(data, &dir);
-	if(ray.object_at_contact != NULL)
+	if(ray.object_at_contact != NULL && data->mouse_gun.is_activated == 0)
 	{
-		ft_bzero(&data->mouse_gun, sizeof(t_mouse_gun));
-		data->mouse_gun.target = ray.object_at_contact;
-		data->mouse_gun.pos = data->player.pos;
-		data->mouse_gun.is_activated = 1;
-		init_mouse_gun(data);
+		init_mouse_gun(data, &ray);
+		if ((data->mouse_gun.target->mat[0][0] == 0 \
+			|| data->mouse_gun.target->mat[0][0] == data->map->width - 1 \
+			|| data->mouse_gun.target->mat[1][0] == 0 \
+			|| data->mouse_gun.target->mat[1][0] == data->map->height - 1))
+			data->mouse_gun.is_activated = 0;
 	}
 }
 

@@ -40,6 +40,8 @@ int	main(int argc, char **argv)
 		if (init_mlx(&data))
 			return (free_map(&data.map) == NULL);
 		init_textures(&data);
+		remove_wall(&data);
+		data.mouse_gun.is_activated = 0;
 		ft_putendl_fd("init done", 1);
 		render_frame(&data);
 		mlx_hook(data.mlx.mlx_win, 2, 1L << 0, &handle_key_press, &data);

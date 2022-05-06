@@ -98,9 +98,8 @@ typedef struct s_mouse_gun
 	t_matrix	pos;
 	t_matrix	*target;
 	t_matrix	velocity;
-	float		speed_factor;
+	float		distance;
 	int			is_activated;
-	t_img		*texture;
 	int			size_on_screen;
 }	t_mouse_gun;
 
@@ -143,6 +142,7 @@ int calc_pixel_index_y(const t_ray *ray, int cnt, const t_img *tex);
 int calc_pixel_index_x(const t_ray *ray, const t_img *tex, const t_data *data);
 unsigned int get_pixel_color_from_texture(int x, int y, const t_img *tex);
 t_img *get_texture(const t_data *data, const t_ray *ray);
+void	draw_map(t_data * data);
 
 // parsing
 t_map			*new_map(int width, int height);
@@ -187,7 +187,17 @@ float	calc_point_distance(t_matrix *from, t_matrix *to);
 
 // mouse gun
 void	update_mouse_gun(t_data *data);
-void	init_mouse_gun(t_data *data);
+void init_mouse_gun(t_data *data, t_ray *ray);
+void remove_wall(t_data *data);
+void			put_texture_on_screen(t_data *data, \
+				t_matrix *center_on_screen, float dist_to_player);
+t_dimension_2d	determine_drawing_area(const t_data *data, \
+				const t_matrix *center_on_screen, \
+				float dist_to_player, t_dimension_2d *drawing_area);
+float			calc_angle_player_mouse(float d_x, float d_y, t_matrix *dir);
+void			set_idle_mouse_position(t_data *data, t_mouse_gun *mg);
+int				is_mouse_at_target(t_data *data);
+int	is_non_transparent_pixel(const t_data *data, int px_index_x, int px_index_y);
 
 t_matrix 		**new_grid(t_map *map);
 int				red_cross_handler(t_data *data);

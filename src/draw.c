@@ -1,7 +1,5 @@
 #include "../inc/cube3d.h"
 
-void	draw_map(t_data * data);
-
 int	render_frame(void *void_img)
 {
 	int		i;
@@ -16,8 +14,8 @@ int	render_frame(void *void_img)
 		draw_wall_segment(data, &ray);
 		i++;
 	}
-//	printf("x: %f, y: %f\n", data->player.pos.mat[0][0], data->player.pos.mat[1][0]);
-//	print_matrix(&data->player.orientation);
+	printf("x: %f, y: %f\n", data->player.pos.mat[0][0], data->player.pos.mat[1][0]);
+	print_matrix(&data->player.orientation);
 	draw_map(data);
 	mlx_put_image_to_window(\
 			data->mlx.mlx, data->mlx.mlx_win, data->mlx.img, 0, 0);
@@ -56,9 +54,12 @@ void draw_map(t_data *data)
 	int	y;
 	int y_map;
 	int x_map;
-	int mini_map_scale = 5;
+	float mini_map_scale;
 
-	y = (data->camera.win_size.y_max - data->map->height * mini_map_scale) ;
+//	mini_map_scale = ((float) data->camera.win_size.x_max * 0.2f) / data->map->width;
+	mini_map_scale = ((float) data->camera.win_size.y_max * 0.2f) / data->map->height;
+	y = (data->camera.win_size.y_max - data->map->height * mini_map_scale);
+	printf("sclae: %f, y: %d\n", mini_map_scale, y);
 	while (y < data->camera.win_size.y_max && y > 0)
 	{
 		x = 0;

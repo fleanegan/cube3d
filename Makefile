@@ -14,6 +14,7 @@ SRC_NAME =	main.c \
 			draw.c \
 			parsing.c \
 			mouse_gun.c \
+			mouse_gun_utils.c \
 			utils.c \
 			math_extensions.c \
 			raycasting.c \

@@ -7,6 +7,7 @@ t_player	init_player(t_map *map)
 	t_player	result;
 
 	ft_bzero(&result, sizeof(t_player));
+	zero_init_point(&result.pos);
 	result = init_player_pose(map, &result);
 	return (result);
 }
@@ -34,7 +35,7 @@ int init_textures(t_data *data)
 	int		width;
 	int		height;
 
-	data->map->mouse_texture = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/mouse_transparent.xpm", &width, &height);
+	data->map->mouse_texture = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/mt.xpm", &width, &height);
 	data->map->texture[0] = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/t.xpm", &width, &height);
 	data->map->texture[1] = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/vive_raclette.xpm", &width, &height);
 	data->map->texture[2] = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/metal-cogs-and-gears.xpm", &width, &height);

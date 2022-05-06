@@ -1,25 +1,5 @@
 #include "../inc/cube3d.h"
 
-void			draw_mouse_pixel(t_data *data, \
-				t_matrix *center_on_screen, float dist_to_player);
-t_dimension_2d	determin_drawing_area(const t_data *data, \
-				const t_matrix *center_on_screen, \
-				float dist_to_player, t_dimension_2d *drawing_area);
-float			calc_angle_player_mouse(float d_x, float d_y, t_matrix *dir);
-
-int	is_mouse_at_target(t_data *data)
-{
-	int	x;
-	int	y;
-
-	x = ((int)(data->mouse_gun.pos.mat[0][0] / TILE_SIZE));
-	y = ((int)(data->mouse_gun.pos.mat[1][0] / TILE_SIZE));
-	if (x >= data->map->width || x < 0 || y >= data->map->height || y < 0 \
-		|| data->mouse_gun.target == &data->map->grid[x][y])
-		return (1);
-	return (0);
-}
-
 void	draw_mouse_gun(t_data *data)
 {
 	float		d_x;
@@ -35,83 +15,31 @@ void	draw_mouse_gun(t_data *data)
 	mouse_position_on_screen.mat[0][0] = data->camera.win_size.x_max \
 		* (.5f + (calc_angle_player_mouse(d_x, d_y, &dir) \
 		/ (data->camera.angle_camera_horiz)));
-	mouse_position_on_screen.mat[1][0] = data->camera.win_size.y_max / 2.f;
-	draw_mouse_pixel(data, &mouse_position_on_screen, distance_player_mouse);
+	mouse_position_on_screen.mat[1][0] = data->camera.win_size.y_max \
+			/ (1.2f + (.5f * distance_player_mouse / data->mouse_gun.distance));
+	put_texture_on_screen(\
+	data, &mouse_position_on_screen, distance_player_mouse);
 }
 
-float	calc_angle_player_mouse(float d_x, float d_y, t_matrix *dir)
-{
-	return ((atan2f(d_y, d_x) \
-	- atan2f((*dir).mat[1][0], (*dir).mat[0][0])) * RAD2DEG);
-}
-
-void	draw_mouse_pixel(t_data *data, \
-		t_matrix *center_on_screen, float dist_to_player)
-{
-	int				x;
-	int				y;
-	int				px_index_x;
-	int				px_index_y;
-	t_dimension_2d	da;
-
-	da = determin_drawing_area(data, center_on_screen, dist_to_player, &da);
-	y = da.y_min;
-	while (y > 0 && y < data->camera.win_size.y_max && y < da.y_max)
-	{
-		x = da.x_min;
-		while (x < data->camera.win_size.x_max && x > 0 && x < da.x_max)
-		{
-			px_index_x = (int)(((float)x - da.x_min) / (da.x_max - da.x_min) \
-				* (float)data->map->mouse_texture->width);
-			px_index_y = (int)(((float)y - da.y_min) / (da.y_max - da.y_min) \
-				* (float)data->map->mouse_texture->height);
-			if ((get_pixel_color_from_texture(px_index_x, px_index_y, data->map->mouse_texture) & 0xFF000000) == 0)
-				draw_1px_to_img(data, x, y, get_pixel_color_from_texture(\
-				px_index_x, px_index_y, data->map->mouse_texture));
-			x++;
-		}
-		y++;
-	}
-}
-
-t_dimension_2d	determin_drawing_area(const t_data *data, \
-				const t_matrix *center_on_screen, \
-				float dist_to_player, t_dimension_2d *drawing_area)
-{
-	float	scale;
-
-	scale = data->camera.distance_screen / dist_to_player;
-	drawing_area->y_max = center_on_screen->mat[1][0] + \
-	scale * data->mouse_gun.size_on_screen / 2.f;
-	drawing_area->x_max = center_on_screen->mat[0][0] + \
-	scale * data->mouse_gun.size_on_screen / 2.f;
-	drawing_area->x_min = \
-		drawing_area->x_max - data->mouse_gun.size_on_screen * scale;
-	drawing_area->y_min = \
-		drawing_area->y_max - data->mouse_gun.size_on_screen * scale;
-	return (*drawing_area);
-}
-
-void	init_mouse_gun(t_data *data)
+void	init_mouse_gun(t_data *data, t_ray *ray)
 {
 	t_mouse_gun	*mg;
-	float		distance;
-	t_matrix	player_mouse_vector;
+	t_matrix	tm;
 
 	mg = &data->mouse_gun;
+	mg->is_activated = 1;
 	mg->size_on_screen = 15;
-	zero_init_point(&player_mouse_vector);
-	player_mouse_vector.mat[0][0] = \
+	mg->target = ray->object_at_contact;
+	zero_init_point(&tm);
+	tm.mat[0][0] = \
 	(mg->target->mat[0][0] * TILE_SIZE + TILE_SIZE / 2.f - mg->pos.mat[0][0]);
-	player_mouse_vector.mat[1][0] = \
+	tm.mat[1][0] = \
 	(mg->target->mat[1][0] * TILE_SIZE + TILE_SIZE / 2.f - mg->pos.mat[1][0]);
-	player_mouse_vector.mat[2][0] = \
+	tm.mat[2][0] = \
 	(mg->target->mat[2][0] * TILE_SIZE + TILE_SIZE / 2.f - mg->pos.mat[2][0]);
-	distance = sqrtf(\
-		powf(player_mouse_vector.mat[0][0], 2) \
-		+ powf(player_mouse_vector.mat[1][0], 2) \
-		+ powf(player_mouse_vector.mat[2][0], 2));
-	scalar_multiply(&player_mouse_vector, 1.f / distance, &mg->velocity);
+	mg->distance = sqrtf(\
+	powf(tm.mat[0][0], 2) + powf(tm.mat[1][0], 2) + powf(tm.mat[2][0], 2));
+	scalar_multiply(&tm, 1.f / mg->distance, &mg->velocity);
 }
 
 void	update_mouse_gun(t_data *data)
@@ -125,15 +53,43 @@ void	update_mouse_gun(t_data *data)
 	{
 		if (is_mouse_at_target(data))
 		{
-			puts("arrived");
 			mg->is_activated = 0;
 			mg->target->mat[2][0] = 0;
 		}
 		mg->pos.mat[0][0] += mg->velocity.mat[0][0] * 10;
 		mg->pos.mat[1][0] += mg->velocity.mat[1][0] * 10;
 		mg->pos.mat[2][0] += mg->velocity.mat[2][0] * 10;
-		draw_mouse_gun(data);
 	}
 	else
-		mg->pos = data->player.pos;
+		set_idle_mouse_position(data, mg);
+	draw_mouse_gun(data);
+}
+
+void	put_texture_on_screen(t_data *data, \
+		t_matrix *center_on_screen, float dist_to_player)
+{
+	int				x;
+	int				y;
+	int				px_index_x;
+	int				px_index_y;
+	t_dimension_2d	da;
+
+	da = determine_drawing_area(data, center_on_screen, dist_to_player, &da);
+	y = da.y_min;
+	while (y > 0 && y < data->camera.win_size.y_max && y < da.y_max)
+	{
+		x = da.x_min;
+		while (x < data->camera.win_size.x_max && x > 0 && x < da.x_max)
+		{
+			px_index_x = (int)(((float)x - da.x_min) / (da.x_max - da.x_min) \
+				* (float)data->map->mouse_texture->width);
+			px_index_y = (int)(((float)y - da.y_min) / (da.y_max - da.y_min) \
+				* (float)data->map->mouse_texture->height);
+			if (is_non_transparent_pixel(data, px_index_x, px_index_y))
+				draw_1px_to_img(data, x, y, get_pixel_color_from_texture(\
+					px_index_x, px_index_y, data->map->mouse_texture));
+			x++;
+		}
+		y++;
+	}
 }
