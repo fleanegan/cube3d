@@ -15,7 +15,7 @@ void	print_coordinates(t_point *pt)
 	ft_putstr_fd("\n", 1);
 }
 
-void print_matrix(t_matrix *a)
+void	print_matrix(t_matrix *a)
 {
 	int					x;
 	int					y;
@@ -35,20 +35,29 @@ void print_matrix(t_matrix *a)
 	}
 }
 
-
-
-char * int2bin(int i)
+void	print_map_infos(t_map *map)
 {
-	size_t bits = sizeof(int) * CHAR_BIT;
-
-	char * str = malloc(bits + 1);
-	if(!str) return NULL;
-	str[bits] = 0;
-
-	// type punning because signed shift is implementation-defined
-	unsigned u = *(unsigned *)&i;
-	for(; bits--; u >>= 1)
-		str[bits] = u & 1 ? '1' : '0';
-
-	return str;
+	if (map == NULL)
+		return ;
+	ft_putendl_fd("\n---------------------------------------------------", 1);
+	ft_putendl_fd("Maps infos :\n", 1);
+	ft_putstr_fd("north : ", 1);
+	ft_putendl_fd(map->texture_name[TEXTURE_NO], 1);
+	ft_putstr_fd("south : ", 1);
+	ft_putendl_fd(map->texture_name[TEXTURE_SO], 1);
+	ft_putstr_fd("west : ", 1);
+	ft_putendl_fd(map->texture_name[TEXTURE_WE], 1);
+	ft_putstr_fd("east : ", 1);
+	ft_putendl_fd(map->texture_name[TEXTURE_EA], 1);
+	ft_putstr_fd("ceilling : ", 1);
+	ft_putnbr_fd(map->ceilling_color, 1);
+	ft_putstr_fd("\nfloor : ", 1);
+	ft_putnbr_fd(map->floor_color, 1);
+	ft_putstr_fd("\nheight : ", 1);
+	ft_putnbr_fd(map->height, 1);
+	ft_putstr_fd("\nwidth : ", 1);
+	ft_putnbr_fd(map->width, 1);
+	ft_putstr_fd("\nspawn orientation : ", 1);
+	ft_putchar_fd(map->spawn_orientation, 1);
+	ft_putendl_fd("\n---------------------------------------------------\n", 1);
 }

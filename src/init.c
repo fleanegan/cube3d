@@ -30,57 +30,70 @@ t_player	init_player_pose(t_map *map, t_player *result)
 	return (*result);
 }
 
-int init_textures(t_data *data)
+#ifndef TESTING
+
+int	init_textures(t_data *data)
 {
 	int		width;
 	int		height;
 
-	data->map->mouse_texture = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/mt.xpm", &width, &height);
-	data->map->texture[0] = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/t.xpm", &width, &height);
-	data->map->texture[1] = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/vive_raclette.xpm", &width, &height);
-	data->map->texture[2] = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/metal-cogs-and-gears.xpm", &width, &height);
-	data->map->texture[3] = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/texture.xpm", &width, &height);
-	if (data->map->texture[0] || data->map->texture[1] || data->map->texture[2] || data->map->texture[3])
-		return (1);
-	return (0);
+	data->map->mouse_texture = mlx_xpm_file_to_image(data->mlx.mlx, \
+	"test/assets/mt.xpm", &width, &height);
+	data->map->texture[0] = mlx_xpm_file_to_image(data->mlx.mlx, \
+	data->map->texture_name[0], &width, &height);
+	data->map->texture[1] = mlx_xpm_file_to_image(data->mlx.mlx, \
+	data->map->texture_name[1], &width, &height);
+	data->map->texture[2] = mlx_xpm_file_to_image(data->mlx.mlx, \
+	data->map->texture_name[2], &width, &height);
+	data->map->texture[3] = mlx_xpm_file_to_image(data->mlx.mlx, \
+	data->map->texture_name[3], &width, &height);
+	if (data->map->texture[0] && data->map->texture[1] && \
+		data->map->texture[2] && data->map->texture[3] \
+	&& data->map->mouse_texture)
+		return (0);
+	ft_putendl_fd("Error\nInit of textures failed", 2);
+	free_textures(data);
+	return (1);
 }
 
-int	init_mlx(t_data	*data)
+int	init_mlx(t_data	*d)
 {
-	data->mlx.mlx = mlx_init();
-	if (! data->mlx.mlx)
+	d->mlx.mlx = mlx_init();
+	if (! d->mlx.mlx)
 		return (1);
-	data->mlx.mlx_win = mlx_new_window(\
-			data->mlx.mlx, data->camera.win_size.x_max, data->camera.win_size.y_max, "3D");
-	if (! data->mlx.mlx_win)
+	d->mlx.mlx_win = mlx_new_window(\
+			d->mlx.mlx, d->camera.win_size.x_max, d->camera.win_size.y_max, "");
+	if (! d->mlx.mlx_win)
 	{
-		free(data->mlx.mlx);
+		free(d->mlx.mlx);
 		return (1);
 	}
-	data->mlx.img = mlx_new_image(\
-			data->mlx.mlx, data->camera.win_size.x_max, data->camera.win_size.y_max);
-	if (! data->mlx.mlx_win)
+	d->mlx.img = mlx_new_image(\
+			d->mlx.mlx, d->camera.win_size.x_max, d->camera.win_size.y_max);
+	if (! d->mlx.mlx_win)
 	{
-		mlx_destroy_window(data->mlx.mlx, data->mlx.mlx_win);
-		mlx_destroy_display(data->mlx.mlx);
-		free(data->mlx.mlx);
+		mlx_destroy_window(d->mlx.mlx, d->mlx.mlx_win);
+		mlx_destroy_display(d->mlx.mlx);
+		free(d->mlx.mlx);
 		return (1);
 	}
-	data->mlx.addr = mlx_get_data_addr(data->mlx.img, \
-			&data->mlx.bits_per_pixel, &data->mlx.line_length, &data->mlx.endian);
+	d->mlx.addr = mlx_get_data_addr(d->mlx.img, \
+			&d->mlx.bits_per_pixel, &d->mlx.line_length, &d->mlx.endian);
 	return (0);
 }
+#endif
 
 t_camera	init_camera(void)
 {
 	t_camera	result;
 
-	result.win_size.x_max = 800;
-	result.win_size.y_max = 600;
+	result.win_size.x_max = 1000;
+	result.win_size.y_max = 800;
 	result.angle_camera_horiz = 60.f;
 	result.distance_screen = \
-		result.win_size.x_max / 2.f / tanf(result.angle_camera_horiz / 2.f * DEG2RAD);
-	result.angle_camera_vertical = 2 * atan((result.win_size.y_max / 2.f) / result.distance_screen) * 180.f / M_PI;
-	printf("screen distance: %f, vertical angle: %f, g/a: %f\n", result.distance_screen, result.angle_camera_vertical, result.win_size.y_max / 2.f / result.distance_screen);
+		result.win_size.x_max / 2.f \
+		/ tanf(result.angle_camera_horiz / 2.f * DEG2RAD);
+	result.angle_camera_vertical = 2.f * atanf((result.win_size.y_max / 2.f) \
+		/ result.distance_screen) * 180.f / M_PI;
 	return (result);
 }

@@ -1,12 +1,9 @@
 #include "../inc/cube3d.h"
 
-void remove_wall(t_data *data);
-
 #ifndef TESTING
 
 int	handle_key_press(int keycode, t_data *data)
 {
-	printf("pressed: %d\n", keycode);
 	if (keycode == KEY_ESC)
 		tear_down_mlx_session(data);
 	if (keycode == KEY_DOWN)
@@ -28,31 +25,12 @@ int	handle_key_press(int keycode, t_data *data)
 	if (keycode == 47)
 		data->player.admin_mode++;
 	if (keycode == 32)
-		remove_wall(data);
+		remove_interior_walls(data);
 	return (0);
-}
-
-void remove_wall(t_data *data)
-{
-	t_matrix	dir;
-	t_ray		ray;
-
-	generate_direction_vector(&data->player.orientation, &dir);
-	ray = calc_distance_to_obstacle(data, &dir);
-	if(ray.object_at_contact != NULL && data->mouse_gun.is_activated == 0)
-	{
-		init_mouse_gun(data, &ray);
-		if ((data->mouse_gun.target->mat[0][0] == 0 \
-			|| data->mouse_gun.target->mat[0][0] == data->map->width - 1 \
-			|| data->mouse_gun.target->mat[1][0] == 0 \
-			|| data->mouse_gun.target->mat[1][0] == data->map->height - 1))
-			data->mouse_gun.is_activated = 0;
-	}
 }
 
 int	handle_key_release(int keycode, t_data *data)
 {
-	printf("released: %d\n", keycode);
 	if (keycode == KEY_ESC)
 		tear_down_mlx_session(data);
 	if (keycode == KEY_DOWN)

@@ -5,11 +5,11 @@
 void	tear_down_mlx_session(t_data *data)
 {
 	mlx_loop_end(data->mlx.mlx);
-	free_textures(data);
 	mlx_destroy_image(data->mlx.mlx, data->mlx.img);
 	mlx_destroy_window(data->mlx.mlx, data->mlx.mlx_win);
 	mlx_destroy_display(data->mlx.mlx);
 	free(data->mlx.mlx);
+	free_textures(data);
 	free_map(&data->map);
 	exit(0);
 }
@@ -32,8 +32,11 @@ int	main(int argc, char **argv)
 	{
 		ft_bzero(&data, sizeof(t_data));
 		data.map = parse(argv[1]);
-		if (!data.map)
+		if (! data.map)
+		{
+			ft_putendl_fd("error in map", 1);
 			return (1);
+		}
 		data.camera = init_camera();
 		data.player = init_player(data.map);
 		if (init_mlx(&data))
@@ -42,6 +45,7 @@ int	main(int argc, char **argv)
 			exit(1);
 		remove_interior_walls(&data);
 		data.mouse_gun.is_activated = 0;
+		ft_putendl_fd("init done", 1);
 		render_frame(&data);
 		mlx_hook(data.mlx.mlx_win, 2, 1L << 0, &handle_key_press, &data);
 		mlx_hook(data.mlx.mlx_win, 3, 1L << 1, &handle_key_release, &data);
@@ -49,7 +53,6 @@ int	main(int argc, char **argv)
 		mlx_loop_hook(data.mlx.mlx, render_next_frame, &data);
 		mlx_loop(data.mlx.mlx);
 	}
-	ft_putendl_fd("Error\nBad number of arguments (./cub3d [map_name.cub]", 2);
 	return (0);
 }
 

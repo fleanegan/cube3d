@@ -1,157 +1,133 @@
 #include "test_utils.h"
 
-TEST(testParsing, return_NULL_if_no_valid_map_entered)
+TEST(testParsing, return_NULL_bad_file_name)
 {
-	t_map *map = parse_map("invalid_file_name");
+	t_map *map1 = parse("");
+	t_map *map2 = parse("invalid_file_name");
+	t_map *map3 = parse("map.cubbad");
+	t_map *map4 = parse(".cub");
+	t_map *map5 = parse("  .cub    ");
 
-	EXPECT_EQ(map, nullptr);
-}
-
-TEST(test_parsing, get_map_dimensions_for_invalid_file_returns_1)
-{
-	int result = measure_map("invalid_file_name", NULL, NULL);
-
-	EXPECT_EQ(result, -1);
-}
-
-TEST(test_parsing, get_map_dimensions_for_file_with_one_entry)
-{
-	int	width;
-	int	height;
-
-	measure_map("test/assets/dummy_map_one_point", &width, &height);
-	
-	EXPECT_EQ(width, 1);
-	EXPECT_EQ(height, 1);
-}
-
-TEST(test_parsing, get_map_dimensions_for_file_with_one_row_and_two_columns)
-{
-	int	width;
-	int	height;
-
-	measure_map("test/assets/dummy_map_two_points", &width, &height);
-
-	EXPECT_EQ(width, 2);
-	EXPECT_EQ(height, 1);
-}
-
-TEST(test_parsing, create_empty_grid)
-{
-	t_map	*map = (t_map *) malloc(sizeof(t_map));
-	int		width = 2;
-	int		height = 2;
-	map->width = width;
-	map->height = height;
-
-	t_matrix	**res = new_grid(map);
-
-	EXPECT_NE(res, nullptr);
-	free_2d_array((void **) res);
-	free(map);
+	EXPECT_EQ(map1, nullptr);
+	EXPECT_EQ(map2, nullptr);
+	EXPECT_EQ(map3, nullptr);
+	EXPECT_EQ(map4, nullptr);
+	EXPECT_EQ(map5, nullptr);
 }
 
 
-TEST(test_parsing, create_empty_map)
+TEST(testParsing, return_NULL_error_opening_file)
 {
-	int	width = 2;
-	int	height = 2;
+	t_map *map1 = parse("test/assets/file_not_exist.cub");
+	t_map *map2 = parse("test/assets/file_not_readable.cub");
 
-	t_map *res = new_map(width, height);
 
-	EXPECT_NE(res, nullptr);
-	free_map(&res);
+	EXPECT_EQ(map1, nullptr);
+	EXPECT_EQ(map2, nullptr);
 }
 
 
-TEST(test_parsing, creating_map_NULL_terminates_width)
+TEST(testParsing, parse_basic_textures)
 {
-	int	width = 2;
-	int	height = 2;
+	t_map *map1 = parse("test/assets/basic_file.cub");
 
-	t_map *res = new_map(width, height);
-
-	EXPECT_NE(res, nullptr);
-	EXPECT_EQ(res->grid[width], nullptr);
-	free_map(&res);
+	if (map1 != NULL)
+	{
+		EXPECT_FALSE(strcmp(map1->texture_name[TEXTURE_SO], "./path_to_the_south_texture"));
+		EXPECT_FALSE(strcmp(map1->texture_name[TEXTURE_NO], "./path_to_the_north_texture"));
+		EXPECT_FALSE(strcmp(map1->texture_name[TEXTURE_WE], "./path_to_the_west_texture"));
+		EXPECT_FALSE(strcmp(map1->texture_name[TEXTURE_EA], "./path_to_the_east_texture"));
+		EXPECT_EQ(map1->floor_color, 0xFF8000);
+		EXPECT_EQ(map1->ceilling_color, 0x000040);
+		print_map_infos(map1);
+		free_map(&map1);
+	}
 }
 
-TEST(test_parsing, return_minus_one_if_not_all_columns_equal_len)
+TEST(testParsing, duplicates_textures_error)
 {
-	int	width;
-	int	height;
+	t_map *map1 = parse("test/assets/duplicate_textures.cub");
 
-	int 	result = measure_map("test/assets/dummy_map_malformed", &width, &height);
-
-	EXPECT_EQ(result, -1);
+	EXPECT_EQ(map1, nullptr);
 }
 
-TEST(test_parsing, parse_map_with_one_point)
+TEST(testParsing, duplicates_colors_error)
 {
-	t_map *map = parse_map("test/assets/dummy_map_one_point");
-	t_matrix *only_point = (*map->grid);
+	t_map *map1 = parse("test/assets/duplicate_colors.cub");
 
-	EXPECT_NE(map, nullptr);
-	EXPECT_NE(only_point, nullptr);
-	free_map(&map);
+	EXPECT_EQ(map1, nullptr);
 }
 
-TEST(test_parsing, parse_one_line_with_one_column)
+TEST(testParsing, texture_with_too_many_word)
 {
-	char	*line = (char *) "1";
-	t_map	*map = new_map(1, 1);
+	t_map *map1 = parse("test/assets/texture_with_too_many_word.cub");
 
-	parse_line(line, map, 0);
-
-	EXPECT_EQ(map->grid[0][0].mat[0][0], 0);
-	EXPECT_EQ(map->grid[0][0].mat[1][0], 0);
-	EXPECT_EQ(map->grid[0][0].mat[2][0], 1);
-	free_map(&map);
+	EXPECT_EQ(map1, nullptr);
 }
 
-TEST(test_parsing, parse_one_line_with_two_columns)
+TEST(testParsing, color_with_too_many_fields)
 {
-	char	*line = (char *) "1 2";
-	t_map	*map = new_map(2, 1);
+	t_map *map1 = parse("test/assets/color_with_too_many_fields.cub");
 
-	parse_line(line, map, 0);
-
-	EXPECT_EQ(map->grid[0][0].mat[0][0], 0);
-	EXPECT_EQ(map->grid[0][0].mat[1][0], 0);
-	EXPECT_EQ(map->grid[0][0].mat[2][0], 1);
-	EXPECT_EQ(map->grid[1][0].mat[0][0], 1);
-	EXPECT_EQ(map->grid[1][0].mat[1][0], 0);
-	EXPECT_EQ(map->grid[1][0].mat[2][0], 2);
-	free_map(&map);
+	EXPECT_EQ(map1, nullptr);
 }
 
-TEST(test_parsing, parse_map_two_by_two)
+TEST(testParsing, line_with_bad_infos)
 {
-	t_map *map = parse_map("test/assets/dummy_map_two_by_two");
+	t_map *map1 = parse("test/assets/bad_info_line.cub");
 
-	EXPECT_NE(map, nullptr);
-	EXPECT_EQ(map->grid[0][0].mat[2][0], 0);
-	EXPECT_EQ(map->grid[1][0].mat[2][0], 1);
-	EXPECT_EQ(map->grid[0][1].mat[2][0], 2);
-	EXPECT_EQ(map->grid[1][1].mat[2][0], 3);
-	EXPECT_EQ(map->grid[0][0].mat[0][0], 0);
-	EXPECT_EQ(map->grid[1][0].mat[0][0], 1);
-	EXPECT_EQ(map->grid[0][1].mat[0][0], 0);
-	EXPECT_EQ(map->grid[1][1].mat[0][0], 1);
-	EXPECT_EQ(map->grid[0][0].mat[1][0], 0);
-	EXPECT_EQ(map->grid[1][0].mat[1][0], 0);
-	EXPECT_EQ(map->grid[0][1].mat[1][0], 1);
-	EXPECT_EQ(map->grid[1][1].mat[1][0], 1);
-
-	EXPECT_EQ(map->width, 2);
-	EXPECT_EQ(map->height, 2);
-	free_map(&map);
+	EXPECT_EQ(map1, nullptr);
 }
 
-TEST(test_parsing, set_spawn_point)
+TEST(testParsing, color_with_bad_format)
 {
-	t_map *map = parse_map("test/assets/dummy_map_minimal_north");
+	t_map *map1 = parse("test/assets/color_with_bad_format.cub");
 
-	EXPECT_EQ(map->spawn_point, &map->grid[1][1]);
-	free_map(&map);
+	EXPECT_EQ(map1, nullptr);
+}
+
+TEST(testParsing, invalid_value_in_map)
+{
+	t_map *map1 = parse("test/assets/invalid_value_in_map.cub");
+
+	EXPECT_EQ(map1, nullptr);
+}
+
+TEST(testParsing, not_closed_with_wall)
+{
+	t_map *map1 = parse("test/assets/not_close_with_wall.cub");
+
+	EXPECT_EQ(map1, nullptr);
+}
+
+TEST(testParsing, map_with_empty_line)
+{
+	t_map *map1 = parse("test/assets/map_with_empty_line.cub");
+
+	EXPECT_EQ(map1, nullptr);
+}
+
+TEST(testParsing, crash_test)
+{
+t_map *map1 = parse("test/assets/crash.cub");
+
+print_map_infos(map1);
+free_map(&map1);
+}
+
+
+TEST(testParsing, multiple_spawnpoints_are_not_allowed)
+{
+t_map *map1 = parse("test/assets/multiple_spawnpoints.cub");
+
+EXPECT_EQ(map1, nullptr);
+free_map(&map1);
+}
+
+TEST(testParsing, no_spawnpoint_is_not_allowed)
+{
+t_map *map1 = parse("test/assets/no_spawnpoints.cub");
+
+EXPECT_EQ(map1, nullptr);
+free_map(&map1);
 }
