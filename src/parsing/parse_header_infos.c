@@ -76,14 +76,14 @@ int	parse_color(int *dest, char *line)
 
 void	parse_infos(t_map **result, char *line)
 {
-	if ((ft_strncmp(line, "NO", 2) == 0 \
-			&& parse_texture(&(*result)->texture[TEXTURE_NO], line + 2) == 0) \
-		|| (ft_strncmp(line, "SO", 2) == 0 \
-			&& parse_texture(&(*result)->texture[TEXTURE_SO], line + 2) == 0) \
-		|| (ft_strncmp(line, "WE", 2) == 0 \
-			&& parse_texture(&(*result)->texture[TEXTURE_WE], line + 2) == 0) \
-		|| (ft_strncmp(line, "EA", 2) == 0 \
-			&& parse_texture(&(*result)->texture[TEXTURE_EA], line + 2) == 0) \
+	if ((ft_strncmp(line, "NO", 2) == 0 && parse_texture(\
+	&(*result)->texture_name[TEXTURE_NO], line + 2) == 0) \
+		|| (ft_strncmp(line, "SO", 2) == 0 && parse_texture(\
+		&(*result)->texture_name[TEXTURE_SO], line + 2) == 0) \
+		|| (ft_strncmp(line, "WE", 2) == 0 && parse_texture(\
+		&(*result)->texture_name[TEXTURE_WE], line + 2) == 0) \
+		|| (ft_strncmp(line, "EA", 2) == 0 && parse_texture(\
+		&(*result)->texture_name[TEXTURE_EA], line + 2) == 0) \
 		|| (ft_strncmp(line, "F", 1) == 0 \
 			&& parse_color(&(*result)->floor_color, line + 1) == 0) \
 		|| (ft_strncmp(line, "C", 1) == 0 \

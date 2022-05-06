@@ -10,16 +10,22 @@ TEST_PATH = test/
 # Names
 
 SRC_NAME =	main.c \
-			draw_line.c \
+			draw_pixel.c \
 			draw.c \
+			mouse_gun.c \
+			mouse_gun_utils.c \
+			map.c \
+			utils.c \
+			math_extensions.c \
+			raycasting.c \
+			movement.c \
+			calc_distance.c \
+			calc_distance_utils.c \
 			parsing/parsing.c \
 			parsing/clean_line.c \
 			parsing/measure_map.c \
 			parsing/parse_header_infos.c \
 			parsing/utils.c \
-			utils.c \
-			math_extensions.c \
-			raycasting.c \
 			debug.c \
 			init.c \
 			memory.c \
@@ -39,7 +45,7 @@ TEST_HEADER = $(addprefix $(TEST_PATH), $(TEST_HEADER_NAME))
 
 # Flags
 
-CC = gcc
+CXX = g++
 CFLAGS = -Wall -Wextra -Werror -g
 LIBFT_FLAGS = $(LIB_PATH)libft/libft.a -I$(LIB_PATH)/libft
 TEST_FLAGS	= -pthread -lgtest
@@ -72,8 +78,8 @@ $(NAME): PRE $(OBJ)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT_FLAGS) $(MLXFLAGS) -o $(NAME)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
-	mkdir -p $(@D)
-	$(CC) $(CFLAGS) -I$(SRC_PATH) -o $@ -c $<  -lm
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -I$(SRC_PATH) -o $@ -c $<
 
 clean:
 	@make clean -C $(LIB_PATH)libft/ --no-print-directory

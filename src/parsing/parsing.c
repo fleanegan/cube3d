@@ -13,19 +13,20 @@ int	parse_map_line(char *line, t_map **map, int y_act)
 	i = 0;
 	line_clean = clean_line(line);
 	if (!line_clean)
-	{
-		free_map(map);
-		return (1);
-	}
+		return (free_map(map) == NULL);
 	while (line_clean[i])
 	{
 		point_tmp = set_up_point(map, y_act, i, point_tmp);
+		point_tmp->mat[2][0] = line_clean[i] - '0';
 		if (is_spawn_point(line_clean[i]))
 		{
+			if ((*map)->spawn_point != 0)
+				return (write(2, ERROR_MULTIPLE_SPAWNPOINT, \
+				ft_strlen(ERROR_MULTIPLE_SPAWNPOINT)));
 			(*map)->spawn_point = point_tmp;
+			point_tmp->mat[2][0] = 0;
 			(*map)->spawn_orientation = line_clean[i];
 		}
-		point_tmp->mat[2][0] = line_clean[i] - 48;
 		i++;
 	}
 	free(line_clean);
@@ -40,6 +41,16 @@ t_matrix	*set_up_point(t_map *const *map, int y_act, \
 	point_tmp->mat[0][0] = i;
 	point_tmp->mat[1][0] = y_act;
 	return (point_tmp);
+}
+
+int	spawn_is_set(t_map *result)
+{
+	if (result->spawn_orientation == 0)
+	{
+		ft_putendl_fd("Error\nNo spawn point in map", 2);
+		return (0);
+	}
+	return (1);
 }
 
 t_map	*parse(const char *file_name)
@@ -65,7 +76,7 @@ t_map	*parse(const char *file_name)
 		free(line);
 	}
 	close(fd);
-	if (result && header_infos_are_set(result) == 0)
+	if ((result && header_infos_are_set(result) == 0) || !spawn_is_set(result))
 		free_map(&result);
 	return (result);
 }
@@ -76,7 +87,8 @@ t_map	*parse_line_(char *line, t_map **result, int *y_act)
 		parse_infos(result, line);
 	else
 	{
-		parse_map_line(line, result, *y_act);
+		if (parse_map_line(line, result, *y_act))
+			return (error_parsing(result, NULL));
 		if (line && is_line_of_map(line) == 1)
 			(*y_act)++;
 	}

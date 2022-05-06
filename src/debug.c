@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <limits.h>
 #include "../inc/cube3d.h"
 
 void	print_coordinates(t_point *pt)
@@ -13,7 +15,7 @@ void	print_coordinates(t_point *pt)
 	ft_putstr_fd("\n", 1);
 }
 
-void print_matrix(t_matrix *a)
+void	print_matrix(t_matrix *a)
 {
 	int					x;
 	int					y;
@@ -33,25 +35,6 @@ void print_matrix(t_matrix *a)
 	}
 }
 
-void	print_grid(t_matrix **m)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (i < 5)
-	{
-		j = 0;
-		while (j < 5)
-		{
-			printf("%f ", m[i][j].mat[1][0]);
-			j++;
-		}
-		i++;
-	}
-
-}
-
 void	print_map_infos(t_map *map)
 {
 	if (map == NULL)
@@ -59,13 +42,13 @@ void	print_map_infos(t_map *map)
 	ft_putendl_fd("\n---------------------------------------------------", 1);
 	ft_putendl_fd("Maps infos :\n", 1);
 	ft_putstr_fd("north : ", 1);
-	ft_putendl_fd(map->texture[TEXTURE_NO], 1);
+	ft_putendl_fd(map->texture_name[TEXTURE_NO], 1);
 	ft_putstr_fd("south : ", 1);
-	ft_putendl_fd(map->texture[TEXTURE_SO], 1);
+	ft_putendl_fd(map->texture_name[TEXTURE_SO], 1);
 	ft_putstr_fd("west : ", 1);
-	ft_putendl_fd(map->texture[TEXTURE_WE], 1);
+	ft_putendl_fd(map->texture_name[TEXTURE_WE], 1);
 	ft_putstr_fd("east : ", 1);
-	ft_putendl_fd(map->texture[TEXTURE_EA], 1);
+	ft_putendl_fd(map->texture_name[TEXTURE_EA], 1);
 	ft_putstr_fd("ceilling : ", 1);
 	ft_putnbr_fd(map->ceilling_color, 1);
 	ft_putstr_fd("\nfloor : ", 1);
@@ -74,6 +57,7 @@ void	print_map_infos(t_map *map)
 	ft_putnbr_fd(map->height, 1);
 	ft_putstr_fd("\nwidth : ", 1);
 	ft_putnbr_fd(map->width, 1);
-//	print_grid(map->grid);
+	ft_putstr_fd("\nspawn orientation : ", 1);
+	ft_putchar_fd(map->spawn_orientation, 1);
 	ft_putendl_fd("\n---------------------------------------------------\n", 1);
 }

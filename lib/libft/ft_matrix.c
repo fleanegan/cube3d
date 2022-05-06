@@ -55,12 +55,13 @@ int	multiply(t_matrix *a, t_matrix *b, t_matrix *result)
 	int			i;
 	int			j;
 	int			n;
+	t_matrix	tmp;
 
 	if (a->width != b->height)
 		return (-1);
-	ft_bzero(result->mat, 9 * sizeof(float));
-	result->width = b->width;
-	result->height = a->height;
+	zero_init_rotation_matrix(&tmp);
+	tmp.width = b->width;
+	tmp.height = a->height;
 	j = -1;
 	while (++j < a->width)
 	{
@@ -69,9 +70,10 @@ int	multiply(t_matrix *a, t_matrix *b, t_matrix *result)
 		{
 			n = -1;
 			while (++n < a->width)
-				result->mat[i][j] += a->mat[i][n] * b->mat[n][j];
+				tmp.mat[i][j] += a->mat[i][n] * b->mat[n][j];
 		}
 	}
+	*result = tmp;
 	return (0);
 }
 
@@ -80,7 +82,8 @@ int	scalar_multiply(t_matrix *a, float b, t_matrix *result)
 	int			i;
 	int			j;
 
-	ft_bzero(result->mat, 9 * sizeof(float));
+	t_matrix	tmp;
+	ft_bzero(&tmp.mat, 9 * sizeof(float));
 	result->width = a->width;
 	result->height = a->height;
 	j = -1;
@@ -88,7 +91,8 @@ int	scalar_multiply(t_matrix *a, float b, t_matrix *result)
 	{
 		i = -1;
 		while (++i < a->height)
-			result->mat[i][j] = a->mat[i][j] * b;
+			tmp.mat[i][j] = a->mat[i][j] * b;
 	}
+	*result = tmp;
 	return (0);
 }
