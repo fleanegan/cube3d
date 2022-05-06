@@ -8,7 +8,7 @@
 # include <float.h>
 # include <fcntl.h>
 # include <../lib/mlx/mlx_int.h>
-# define TILE_SIZE	64.0
+# define TILE_SIZE	64.0f
 # define DEG2RAD 0.017453293f
 # define RAD2DEG 57.295779513f
 
@@ -55,20 +55,20 @@ typedef struct s_map
 	char		spawn_orientation;
 	t_img		*texture[4];
 	int			len_per_unit[3];
-	int 		wall_height;
+	int			wall_height;
 	t_img		*mouse_texture;
 }		t_map;
 
 typedef struct s_ray
 {
-	int			x_intersection_world_coordinates;
-	int			y_intersection_world_coordinates;
+	int			x_intersection_world;
+	int			y_intersection_world;
 	int			y_max_screen_coordinates;
-	int			y_min_clipped_screen_coordinates;
-	int			y_max_clipped_screen_coordinates;
-	int			x_clipped_screen_coordinates;
+	int			y_min_clipped_screen;
+	int			y_max_clipped_screen;
+	int			x_clipped_screen;
 	float		distance;
-	int			y_min_screen_coordinates;
+	int			y_min_screen;
 	char		wall_orientation;
 	t_matrix	*object_at_contact;
 }	t_ray;
@@ -132,7 +132,7 @@ typedef struct s_data {
 //init
 t_player		init_player(t_map *map);
 t_camera		init_camera();
-int	init_mlx(t_data	*data);
+int	init_mlx(t_data	*d);
 
 //drawing
 unsigned int calc_pixel_colour(const t_data *data, const t_ray *ray, int cnt);
@@ -163,21 +163,25 @@ int				red_cross_handler(t_data *data);
 // raycasting
 int				generate_direction_vector(\
 				t_matrix *orientation, t_matrix *result);
-t_ray calc_distance_to_obstacle(t_data *data, t_matrix *dir);
+t_ray calc_distance_to_nearest_wall(t_data *data, t_matrix *dir);
 int raycast_one_slice(t_data *data, int step,
 					  t_ray *ray);
 t_matrix	find_ray_end(\
 		t_matrix *dir, const t_matrix *base, t_matrix *result, float t);
-t_ray calc_distance_to_wall_matching_normal_vector(t_matrix *dir, t_data *data,
-												   t_plane *wall);
+t_ray calc_distance_to_wall(t_matrix *dir, t_data *data,
+							t_plane *wall);
 int is_dir_parallel_to_obstacle_surface(t_data *data, t_matrix *intersection);
 int		prepare_slice_orientation(t_data *data, int step, \
 		t_matrix *slice_dir, float *cam_angle);
 void calc_wall_dimensions_slice(t_data *data, int step, \
 				t_matrix *dir_cam_angle, t_ray *ray);
 void	clip_to_screen_limits(t_data *data, t_ray *ray);
-
-void draw_line(t_point p0, t_point p1, t_data *img, int colour);
+t_matrix	*get_object_at_contact(\
+			t_matrix *intersection, t_data *data, t_plane *wall);
+void		update_ray(t_data *data, t_plane *wall, \
+			t_ray *result, t_matrix *intersection);
+t_matrix	find_intersection_with_wall_candidate(t_matrix *dir, \
+			const t_data *data, const t_plane *wall, int distance_wall);
 void			draw_1px_to_img(t_data *data, int x, int y, unsigned int color);
 int				render_frame(void *void_img);
 
@@ -188,7 +192,7 @@ float	calc_point_distance(t_matrix *from, t_matrix *to);
 // mouse gun
 void	update_mouse_gun(t_data *data);
 void init_mouse_gun(t_data *data, t_ray *ray);
-void remove_wall(t_data *data);
+void remove_interior_walls(t_data *data);
 void			put_texture_on_screen(t_data *data, \
 				t_matrix *center_on_screen, float dist_to_player);
 t_dimension_2d	determine_drawing_area(const t_data *data, \

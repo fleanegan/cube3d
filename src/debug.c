@@ -15,7 +15,7 @@ void	print_coordinates(t_point *pt)
 	ft_putstr_fd("\n", 1);
 }
 
-void print_matrix(t_matrix *a)
+void	print_matrix(t_matrix *a)
 {
 	int					x;
 	int					y;
@@ -33,22 +33,4 @@ void print_matrix(t_matrix *a)
 		printf("\n");
 		y++;
 	}
-}
-
-
-
-char * int2bin(int i)
-{
-	size_t bits = sizeof(int) * CHAR_BIT;
-
-	char * str = malloc(bits + 1);
-	if(!str) return NULL;
-	str[bits] = 0;
-
-	// type punning because signed shift is implementation-defined
-	unsigned u = *(unsigned *)&i;
-	for(; bits--; u >>= 1)
-		str[bits] = u & 1 ? '1' : '0';
-
-	return str;
 }

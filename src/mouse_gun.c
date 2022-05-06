@@ -1,5 +1,23 @@
 #include "../inc/cube3d.h"
 
+void	remove_interior_walls(t_data *data)
+{
+	t_matrix	dir;
+	t_ray		ray;
+
+	generate_direction_vector(&data->player.orientation, &dir);
+	ray = calc_distance_to_nearest_wall(data, &dir);
+	if (ray.object_at_contact != NULL && data->mouse_gun.is_activated == 0)
+	{
+		init_mouse_gun(data, &ray);
+		if ((data->mouse_gun.target->mat[0][0] == 0 \
+			|| data->mouse_gun.target->mat[0][0] == data->map->width - 1 \
+			|| data->mouse_gun.target->mat[1][0] == 0 \
+			|| data->mouse_gun.target->mat[1][0] == data->map->height - 1))
+			data->mouse_gun.is_activated = 0;
+	}
+}
+
 void	draw_mouse_gun(t_data *data)
 {
 	float		d_x;

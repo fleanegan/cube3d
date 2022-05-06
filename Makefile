@@ -15,11 +15,13 @@ SRC_NAME =	main.c \
 			parsing.c \
 			mouse_gun.c \
 			mouse_gun_utils.c \
+			map.c \
 			utils.c \
 			math_extensions.c \
 			raycasting.c \
 			movement.c \
 			calc_distance.c \
+			calc_distance_utils.c \
 			parsing_measure_map.c \
 			debug.c \
 			init.c \

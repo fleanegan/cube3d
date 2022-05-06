@@ -1,12 +1,11 @@
 #include "../inc/cube3d.h"
 
-int is_colision(t_data *data, t_matrix *waling_dir);
+int	is_colision(t_data *data, t_matrix *waling_dir);
 
 void	move(t_data *data)
 {
 	t_matrix	tmp;
 	t_matrix	waling_dir;
-
 
 	zero_init_point(&waling_dir);
 	zero_init_point(&tmp);
@@ -25,18 +24,21 @@ void	move(t_data *data)
 	data->player.pos.mat[1][0] += waling_dir.mat[1][0];
 }
 
-int is_colision(t_data *data, t_matrix *waling_dir)
+int	is_colision(t_data *data, t_matrix *waling_dir)
 {
 	t_ray		ray;
 	float		stride;
-	stride = sqrtf(powf(waling_dir->mat[0][0], 2) + powf(waling_dir->mat[1][0], 2));
-	ray = calc_distance_to_obstacle(data, waling_dir);
+
+	stride = sqrtf(powf(waling_dir->mat[0][0], 2) + \
+	powf(waling_dir->mat[1][0], 2));
+	ray = calc_distance_to_nearest_wall(data, waling_dir);
 	if (ray.distance < 10.f || ray.distance < stride)
 		return (1);
 	return (0);
 }
 
-// multiplication is inverse for rotations around z to rotate around the global axis
+// multiplication is inverse for rotations
+// around z to rotate around the global axis
 void	rotate(t_data *data)
 {
 	t_matrix	rot_left;
@@ -52,7 +54,7 @@ void	rotate(t_data *data)
 	rot_up = euler2rot(0, 5, 0);
 	rot_down = euler2rot(0, -5, 0);
 	if (data->player.movements.rot_down)
-		multiply(&data->player.orientation, &rot_down , &tmp);
+		multiply(&data->player.orientation, &rot_down, &tmp);
 	if (data->player.movements.rot_up)
 		multiply(&data->player.orientation, &rot_up, &tmp);
 	if (data->player.movements.rot_left)

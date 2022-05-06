@@ -1,12 +1,6 @@
 #include "../inc/cube3d.h"
 
-int calc_pixel_index_y(const t_ray *ray, int cnt, const t_img *tex);
-int calc_pixel_index_x(const t_ray *ray, const t_img *tex, const t_data *data);
-unsigned int get_pixel_color_from_texture(int x, int y, const t_img *tex);
-
-t_img *get_texture(const t_data *data, const t_ray *ray);
-
-unsigned int calc_pixel_colour(const t_data *data, const t_ray *ray, int cnt)
+unsigned int	calc_pixel_colour(const t_data *data, const t_ray *ray, int cnt)
 {
 	int				x;
 	int				y;
@@ -19,13 +13,14 @@ unsigned int calc_pixel_colour(const t_data *data, const t_ray *ray, int cnt)
 	y = calc_pixel_index_y(ray, cnt, tex);
 	if (x >= 0 && y >= 0)
 		colour = get_pixel_color_from_texture(x, y, tex);
-	return colour;
+	return (colour);
 }
 
-t_img *get_texture(const t_data *data, const t_ray *ray)
+t_img	*get_texture(const t_data *data, const t_ray *ray)
 {
+	t_img	*tex;
+
 	//todo: incorporate defines after merge
-	t_img *tex;
 	tex = data->map->texture[0];
 	if (ray->wall_orientation == 'E')
 		tex = data->map->texture[1];
@@ -33,49 +28,52 @@ t_img *get_texture(const t_data *data, const t_ray *ray)
 		tex = data->map->texture[2];
 	if (ray->wall_orientation == 'S')
 		tex = data->map->texture[3];
-	return tex;
+	return (tex);
 }
 
-unsigned int get_pixel_color_from_texture(int x, int y, const t_img *tex)
+unsigned int	get_pixel_color_from_texture(int x, int y, const t_img *tex)
 {
 	unsigned int	colour;
 	char			*current;
 
 	current = &tex->data[x * tex->bpp / 8 + tex->width * y * tex->bpp / 8];
 	colour = current[3] << 24 | current[2] << 16 | current[1] << 8 | current[0];
-	return colour;
+	return (colour);
 }
 
-int calc_pixel_index_x(const t_ray *ray, const t_img *tex, const t_data *data)
+int	calc_pixel_index_x(const t_ray *ray, const t_img *tex, const t_data *data)
 {
 	int	x;
 
 	if (ray->wall_orientation == 'S')
-		x = (int) ((float) (ray->x_intersection_world_coordinates \
-		% (int) TILE_SIZE) / TILE_SIZE * ((float) tex->width));
+		x = (int)((float)(ray->x_intersection_world % \
+		(int)TILE_SIZE) / TILE_SIZE * ((float) tex->width));
 	if (ray->wall_orientation == 'N')
-		x = (int) ((float) ((int)((float)data->map->width * TILE_SIZE - ray->x_intersection_world_coordinates) \
-		% (int) TILE_SIZE) / TILE_SIZE * ((float) tex->width));
+		x = (int)((float)((int)((float)data->map->width \
+		* TILE_SIZE - ray->x_intersection_world) % \
+		(int)TILE_SIZE) / TILE_SIZE * ((float) tex->width));
 	if (ray->wall_orientation == 'W')
-		x = (int) ((float) (ray->y_intersection_world_coordinates \
-		% (int) TILE_SIZE) / TILE_SIZE * ((float) tex->width));
+		x = (int)((float)(ray->y_intersection_world % \
+		(int)TILE_SIZE) / TILE_SIZE * ((float) tex->width));
 	if (ray->wall_orientation == 'E')
-		x = (int) ((float) ((int)((float)data->map->height * TILE_SIZE - ray->y_intersection_world_coordinates) \
-		% (int) TILE_SIZE) / TILE_SIZE * ((float) tex->width));
-	return x;
+		x = (int)((float)((int)((float)data->map->height \
+		* TILE_SIZE - ray->y_intersection_world) % \
+		(int) TILE_SIZE) / TILE_SIZE * ((float) tex->width));
+	return (x);
 }
 
-int calc_pixel_index_y(const t_ray *ray, int cnt, const t_img *tex)
+int	calc_pixel_index_y(const t_ray *ray, int cnt, const t_img *tex)
 {
-	int y;
+	int	y;
 	int	clipped_headroom;
 	int	wall_height_screen_coordinates;
+
 	wall_height_screen_coordinates = \
-		ray->y_max_screen_coordinates - ray->y_min_screen_coordinates;
+		ray->y_max_screen_coordinates - ray->y_min_screen;
 	clipped_headroom = \
-		ray->y_min_clipped_screen_coordinates - ray->y_min_screen_coordinates;
+		ray->y_min_clipped_screen - ray->y_min_screen;
 	y = (int)((float)tex->height \
 		/ (float)wall_height_screen_coordinates \
 		* ((float)cnt + (float) clipped_headroom));
-	return y;
+	return (y);
 }

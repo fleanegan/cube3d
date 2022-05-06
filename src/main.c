@@ -13,12 +13,13 @@ void	tear_down_mlx_session(t_data *data)
 	exit(0);
 }
 
-int	render_next_frame(void *data){
+int	render_next_frame(void *data)
+{
 	move(data);
 	rotate(data);
 	render_frame(data);
 	update_mouse_gun(data);
-	return 1;
+	return (1);
 	(void) data;
 }
 
@@ -39,8 +40,9 @@ int	main(int argc, char **argv)
 		data.player = init_player(data.map);
 		if (init_mlx(&data))
 			return (free_map(&data.map) == NULL);
-		init_textures(&data);
-		remove_wall(&data);
+		if (init_textures(&data))
+			exit(1);
+		remove_interior_walls(&data);
 		data.mouse_gun.is_activated = 0;
 		ft_putendl_fd("init done", 1);
 		render_frame(&data);
