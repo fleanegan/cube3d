@@ -90,5 +90,8 @@ void	parse_infos(t_map **result, char *line)
 			&& parse_color(&(*result)->ceilling_color, line + 1) == 0))
 		return ;
 	if (line_is_only_space(line) == 0)
+	{
+		ft_putendl_fd("Error\nBad format for infos", 2);
 		free_map(result);
+	}
 }

@@ -45,6 +45,8 @@ t_matrix	*set_up_point(t_map *const *map, int y_act, \
 
 int	spawn_is_set(t_map *result)
 {
+	if (result == NULL)
+		return (0);
 	if (result->spawn_orientation == 0)
 	{
 		ft_putendl_fd("Error\nNo spawn point in map", 2);
@@ -92,5 +94,7 @@ t_map	*parse_line_(char *line, t_map **result, int *y_act)
 		if (line && is_line_of_map(line) == 1)
 			(*y_act)++;
 	}
+	if (*result == NULL)
+		gnl(-1, NULL);
 	return (*result);
 }

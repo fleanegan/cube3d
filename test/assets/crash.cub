@@ -5,8 +5,9 @@ SO ./test/assets/texture.xpm
 WE ./test/assets/texture.xpm
 EA ./test/assets/texture.xpm
 
-F    255,	 128,0
+F    255,	 128,0 sdafasdfas;;
 C 0,0,64
+
 1
 1  1
 1
