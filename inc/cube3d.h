@@ -115,6 +115,7 @@ char			*clean_line(char *line);
 int				fill_map(t_map *map, int fd);
 int				header_infos_are_set(t_map *result);
 int				is_cub_file(const char *file_name);
+int				line_is_only_space(char *line);
 
 // raycasting
 int 			generate_direction_vector(\

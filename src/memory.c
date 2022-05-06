@@ -6,7 +6,7 @@
 /*   By:  <>                                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 14:44:33 by                   #+#    #+#             */
-/*   Updated: 2022/05/05 18:19:31 by tsiguenz         ###   ########.fr       */
+/*   Updated: 2022/05/06 10:58:46 by tsiguenz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ t_matrix	**new_grid(t_map *map)
 	int			width;
 
 	width = map->width;
-	printf("width = %d\n", width);
 	result = malloc((width + 1) * sizeof (t_matrix *));
 	if (! result)
 		return (error_parsing(NULL, MALLOC_FAIL));
@@ -39,8 +38,8 @@ t_matrix	**new_grid(t_map *map)
 			free_2d_array((void **) result);
 			return (error_parsing(NULL, MALLOC_FAIL));
 		}
+		ft_bzero(result[width], map->height * sizeof(t_matrix *));
 	}
-	//ft_memset(result, 1, (width * map->height + 1) * sizeof(t_matrix *));
 	return (result);
 }
 
@@ -74,13 +73,9 @@ void	*free_map(t_map **map)
 	if (*map == NULL)
 		return (NULL);
 	free((*map)->texture[TEXTURE_NO]);
-	//(*map)->texture[TEXTURE_NO] = NULL;
 	free((*map)->texture[TEXTURE_SO]);
-	//(*map)->texture[TEXTURE_SO] = NULL;
 	free((*map)->texture[TEXTURE_WE]);
-	//(*map)->texture[TEXTURE_WE] = NULL;
 	free((*map)->texture[TEXTURE_EA]);
-	//(*map)->texture[TEXTURE_EA] = NULL;
 	if ((*map)->grid != NULL)
 		free_2d_array((void **)(*map)->grid);
 	free(*map);

@@ -1,31 +1,5 @@
 #include "../inc/cube3d.h"
 
-int	line_is_only_space(char *line)
-{
-	int	i;
-
-	i = 0;
-	while (line[i] && ft_isspace(line[i]))
-		i++;
-	return (line[i] == '\0');
-}
-
-int	is_cub_file(const char *file_name)
-{
-	int	i;
-
-	i = 0;
-	while (file_name[i])
-	{
-		if (i > 0 \
-				&& file_name[i] == '.' \
-				&& ft_strncmp(file_name + i, ".cub", 5) == 0)
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
 int	parse_texture(char **dest, char *line)
 {
 	int		i;
@@ -50,6 +24,7 @@ int	parse_texture(char **dest, char *line)
 		return (write(2, MALLOC_FAIL, ft_strlen(MALLOC_FAIL)));
 	return (0);
 }
+
 char	*go_next_field(char *line)
 {
 	char	*tmp;

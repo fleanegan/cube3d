@@ -12,13 +12,14 @@ TEST_PATH = test/
 SRC_NAME =	main.c \
 			draw_line.c \
 			draw.c \
-			parsing.c \
-			parse_header_infos.c \
-			parsing_utils.c \
+			parsing/parsing.c \
+			parsing/clean_line.c \
+			parsing/measure_map.c \
+			parsing/parse_header_infos.c \
+			parsing/utils.c \
 			utils.c \
 			math_extensions.c \
 			raycasting.c \
-			parsing_measure_map.c \
 			debug.c \
 			init.c \
 			memory.c \
@@ -71,7 +72,7 @@ $(NAME): PRE $(OBJ)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT_FLAGS) $(MLXFLAGS) -o $(NAME)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
-	@mkdir -p $(OBJ_PATH)
+	mkdir -p $(@D)
 	$(CC) $(CFLAGS) -I$(SRC_PATH) -o $@ -c $<  -lm
 
 clean:

@@ -2,7 +2,7 @@
 
 static int	initialize(const char *file_name, int *width, int *height, int *fd);
 int			calc_width(char *line);
-int			prepare_exit(int fd, int status);
+int			prepare_exit(int fd, char **line, int status);
 
 int	is_line_of_map(char *line)
 {
@@ -16,18 +16,37 @@ int	is_line_of_map(char *line)
 	while (line[i] == '0' || line[i] == '1' || ft_isspace(line[i]) \
 			|| is_spawn_point(line[i]))
 		i++;
-	if (line[i] == '\0')
+	if (line[i] != '\0')
+		return (0);
+	while (ft_isdigit(line[i]) == 0)
+		i--;
+	if (line[i] != '1')
+		return (0);
+	return (1);
+}
+
+int	set_dimensions(char *line, int *height, int *width)
+{
+	char	*line_clean;
+	int		tmp_height;
+
+	tmp_height = 0;
+	line_clean = clean_line(line);
+	if (line_clean == NULL)
 		return (1);
-	return (-1);
+	tmp_height = ft_strlen(line_clean);
+	free(line_clean);
+	if (tmp_height > *height)
+		*height = tmp_height;
+	(*width)++;
+	return (0);
 }
 
 int	measure_map(const char *file_name, int *height, int *width)
 {
 	int		fd;
 	char	*line;
-	int		tmp_height;
 	int		in_map;
-	char	*line_clean;
 
 	in_map = 0;
 	if (initialize(file_name, height, width, &fd))
@@ -37,27 +56,17 @@ int	measure_map(const char *file_name, int *height, int *width)
 		if (is_line_of_map(line) == 1)
 		{
 			in_map = 1;
-			line_clean = clean_line(line);
-			tmp_height = ft_strlen(line_clean);
-			free(line_clean);
-			if (tmp_height < 0)
-			{
-				free(line);
-				return (prepare_exit(fd, 1));
-			}
-			if (tmp_height > *height)
-				*height = tmp_height;
-			(*width)++;
+			if (set_dimensions(line, height, width) == 1)
+				return (prepare_exit(fd, &line, 1));
 		}
-		if (is_line_of_map(line) == -1 && in_map == 1)
+		if (is_line_of_map(line) == 0 && in_map == 1)
 		{
-			free(line);
 			write(2, MAP_ERROR, ft_strlen(MAP_ERROR));
-			return (prepare_exit(fd, 1));
+			return (prepare_exit(fd, &line, 1));
 		}
 		free(line);
 	}
-	return (prepare_exit(fd, 0));
+	return (prepare_exit(fd, &line, 0));
 }
 
 static int	initialize(const char *file_name, int *width, int *height, int *fd)
@@ -70,9 +79,11 @@ static int	initialize(const char *file_name, int *width, int *height, int *fd)
 	return (0);
 }
 
-int	prepare_exit(int fd, int status)
+int	prepare_exit(int fd, char **line, int status)
 {
 	gnl(-1, NULL);
+	free(*line);
+	*line = NULL;
 	close(fd);
 	return (status);
 }

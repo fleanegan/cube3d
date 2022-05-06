@@ -92,6 +92,21 @@ TEST(testParsing, invalid_value_in_map)
 
 	EXPECT_EQ(map1, nullptr);
 }
+
+TEST(testParsing, not_closed_with_wall)
+{
+	t_map *map1 = parse("test/assets/not_close_with_wall.cub");
+
+	EXPECT_EQ(map1, nullptr);
+}
+
+TEST(testParsing, map_with_empty_line)
+{
+	t_map *map1 = parse("test/assets/map_with_empty_line.cub");
+
+	EXPECT_EQ(map1, nullptr);
+}
+
 TEST(testParsing, crash_test)
 {
 	t_map *map1 = parse("test/assets/crash.cub");
