@@ -69,7 +69,7 @@ int	main(int argc, char **argv)
 
 	if (argc == 2)
 	{
-		data.map = parse_map(argv[1]);
+		data.map = parse_map_line(argv[1]);
 		if (! data.map)
 		{
 			ft_putendl_fd("error in map", 1);

@@ -107,7 +107,7 @@ t_map			*new_map(int width, int height);
 int				measure_map(const char *file_name, int *height, int *width);
 int				is_line_of_map(char *line);
 t_map			*parse(const char *file_name);
-int				parse_line(char *line, t_map **map, int y_act);
+int				parse_map_line(char *line, t_map **map, int y_act);
 void			parse_infos(t_map **result, char *line);
 void			*error_parsing(t_map **result, char *str);
 int				is_spawn_point(char c);
