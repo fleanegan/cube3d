@@ -5,6 +5,7 @@
 void	tear_down_mlx_session(t_data *data)
 {
 	mlx_loop_end(data->mlx.mlx);
+	free_textures(data);
 	mlx_destroy_image(data->mlx.mlx, data->mlx.img);
 	mlx_destroy_window(data->mlx.mlx, data->mlx.mlx_win);
 	mlx_destroy_display(data->mlx.mlx);

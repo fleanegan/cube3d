@@ -217,6 +217,7 @@ int				render_frame(void *void_img);
 // helper functions
 void			*free_map(t_map **map);
 float	calc_point_distance(t_matrix *from, t_matrix *to);
+void	free_textures(t_data *data);
 
 // mouse gun
 void	update_mouse_gun(t_data *data);

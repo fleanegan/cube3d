@@ -32,10 +32,8 @@ void	calc_wall_dimensions_slice(\
 		DEG2RAD) + data->player.pos.mat[2][0]);
 	wall_height = data->map->wall_height;
 	if (ray->object_at_contact != NULL)
-		wall_height = data->map->wall_height; //\
-//		* (ray->object_at_contact->mat[2][0]);
-				if (step == data->camera.win_size.x_max / 2)
-					printf("wallheight: %f\n", wall_height);
+		wall_height = data->map->wall_height \
+		* (ray->object_at_contact->mat[2][0]);
 	gap_above_wall = y_upper_limit_view - wall_height;
 	k = cosf(tilt_angle * DEG2RAD) \
 		* data->camera.distance_screen / ray->distance;

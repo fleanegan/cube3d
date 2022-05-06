@@ -1,7 +1,6 @@
 #include "../inc/cube3d.h"
 
 t_player	init_player_pose(t_map *map, t_player *result);
-
 t_player	init_player(t_map *map)
 {
 	t_player	result;
@@ -30,18 +29,27 @@ t_player	init_player_pose(t_map *map, t_player *result)
 	return (*result);
 }
 
-int init_textures(t_data *data)
+int	init_textures(t_data *data)
 {
 	int		width;
 	int		height;
 
-	data->map->mouse_texture = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/mt.xpm", &width, &height);
-	data->map->texture[0] = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/t.xpm", &width, &height);
-	data->map->texture[1] = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/vive_raclette.xpm", &width, &height);
-	data->map->texture[2] = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/metal-cogs-and-gears.xpm", &width, &height);
-	data->map->texture[3] = mlx_xpm_file_to_image(data->mlx.mlx, "test/assets/texture.xpm", &width, &height);
-	if (data->map->texture[0] && data->map->texture[1] && data->map->texture[2] && data->map->texture[3] && data->map->mouse_texture)
+	data->map->mouse_texture = mlx_xpm_file_to_image(data->mlx.mlx, \
+	"test/assets/mt.xpm", &width, &height);
+	data->map->texture[0] = mlx_xpm_file_to_image(data->mlx.mlx, \
+	data->map->texture_name[0], &width, &height);
+	data->map->texture[1] = mlx_xpm_file_to_image(data->mlx.mlx, \
+	data->map->texture_name[1], &width, &height);
+	data->map->texture[2] = mlx_xpm_file_to_image(data->mlx.mlx, \
+	data->map->texture_name[2], &width, &height);
+	data->map->texture[3] = mlx_xpm_file_to_image(data->mlx.mlx, \
+	data->map->texture_name[3], &width, &height);
+	if (data->map->texture[0] && data->map->texture[1] && \
+		data->map->texture[2] && data->map->texture[3] \
+	&& data->map->mouse_texture)
 		return (0);
+	ft_putendl_fd("Error\nInit of textures failed", 2);
+	free_textures(data);
 	return (1);
 }
 

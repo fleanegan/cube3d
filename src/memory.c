@@ -72,13 +72,42 @@ void	*free_map(t_map **map)
 {
 	if (*map == NULL)
 		return (NULL);
-	free((*map)->texture[TEXTURE_NO]);
-	free((*map)->texture[TEXTURE_SO]);
-	free((*map)->texture[TEXTURE_WE]);
-	free((*map)->texture[TEXTURE_EA]);
+	free((*map)->texture_name[TEXTURE_NO]);
+	free((*map)->texture_name[TEXTURE_SO]);
+	free((*map)->texture_name[TEXTURE_WE]);
+	free((*map)->texture_name[TEXTURE_EA]);
 	if ((*map)->grid != NULL)
 		free_2d_array((void **)(*map)->grid);
 	free(*map);
 	*map = NULL;
 	return (NULL);
+}
+
+void	free_textures(t_data *data)
+{
+	if (data->map->mouse_texture)
+	{
+		mlx_destroy_image(data->mlx.mlx, data->map->mouse_texture);
+		free(data->map->mouse_texture);
+	}
+	if (data->map->texture[0])
+	{
+		mlx_destroy_image(data->mlx.mlx, data->map->texture[0]);
+		free(data->map->texture[0]);
+	}
+	if (data->map->texture[1])
+	{
+		mlx_destroy_image(data->mlx.mlx, data->map->texture[1]);
+		free(data->map->texture[1]);
+	}
+	if (data->map->texture[2])
+	{
+		mlx_destroy_image(data->mlx.mlx, data->map->texture[2]);
+		free(data->map->texture[2]);
+	}
+	if (data->map->texture[3])
+	{
+		mlx_destroy_image(data->mlx.mlx, data->map->texture[3]);
+		free(data->map->texture[3]);
+	}
 }
