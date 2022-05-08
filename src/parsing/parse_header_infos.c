@@ -65,7 +65,8 @@ int	parse_color(int *dest, char *line)
 	line = go_next_field(line);
 	if (set_color(&b, line))
 		return (1);
-	b = ft_atoi(line);
+	while (*line && ft_isspace(*line) == 1)
+		line++;
 	while (*line && ft_isdigit(*line) == 1)
 		line++;
 	if (*line != '\n')

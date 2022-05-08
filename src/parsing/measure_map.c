@@ -66,7 +66,8 @@ int	measure_map(const char *file_name, int *height, int *width)
 		}
 		free(line);
 	}
-	return (prepare_exit(fd, &line, 0));
+	close(fd);
+	return (in_map == 0);
 }
 
 static int	initialize(const char *file_name, int *width, int *height, int *fd)

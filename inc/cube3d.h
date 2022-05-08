@@ -7,7 +7,9 @@
 # include <float.h>
 # include <fcntl.h>
 # include <../lib/mlx/mlx_int.h>
-# include <../lib/mlx/mlx.h>
+# ifndef TESTING
+#  include <../lib/mlx/mlx.h>
+# endif
 # define TILE_SIZE 64.0f
 # define DEG2RAD 0.017453293f
 # define RAD2DEG 57.295779513f
@@ -34,7 +36,7 @@
 # define COLOR_OUT_OF_RANGE "Error\nColor is out of range\n"
 # define COLOR_UNINITIALISED -1
 # define MAP_ERROR "Error\nBad format for the map\n"
-# define ERROR_MULTIPLE_SPAWNPOINT "Error\nMultiple spawn points"
+# define ERROR_MULTIPLE_SPAWNPOINT "Error\nMultiple spawn points\n"
 
 # define TEXTURE_NO 0
 # define TEXTURE_SO 1
@@ -171,6 +173,7 @@ t_map			*init_map(const char *file_name);
 int				measure_map(const char *file_name, int *height, int *width);
 t_map			*parse_map(const char *string);
 int				init_textures(t_data *data);
+int				check_map(t_map *map);
 
 // movements
 void			move(t_data *data);

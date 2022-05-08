@@ -18,3 +18,25 @@ void	init_points_to_wall(const t_map *map, t_matrix *const *result)
 		y++;
 	}
 }
+
+int	check_map(t_map *map)
+{
+	int	x;
+
+	x = 0;
+	if (map != NULL)
+		return (1);
+	while (x < map->width)
+	{
+		if (map->grid[x][0].mat[2][0] == 0)
+			return (1);
+		x++;
+	}
+	while (x < map->width)
+	{
+		if (map->grid[x][map->height - 1].mat[2][0] == 0)
+			return (1);
+		x++;
+	}
+	return (0);
+}
