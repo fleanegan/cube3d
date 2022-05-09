@@ -23,17 +23,17 @@ int	parse_texture(char **dest, char *line)
 	while (line[i] && ft_isspace(line[i]) == 1)
 		i++;
 	if (i == 0)
-		return (write(2, TEXTURE_ERROR, ft_strlen(TEXTURE_ERROR)));
+		return (print_error(TEXTURE_ERROR));
 	y = i;
 	while (line[y] && ft_isspace(line[y]) == 0)
 		y++;
 	if (y > i)
 		line[y] = '\0';
 	if (line[y + 1] != '\0')
-		return (write(2, TEXTURE_ERROR, ft_strlen(TEXTURE_ERROR)));
+		return (print_error(TEXTURE_ERROR));
 	*dest = ft_strdup(line + i);
 	if (*dest == NULL)
-		return (write(2, MALLOC_FAIL, ft_strlen(MALLOC_FAIL)));
+		return (print_error(MALLOC_FAIL));
 	return (0);
 }
 
@@ -44,7 +44,7 @@ char	*go_next_field(char *line)
 	tmp = ft_strchr(line, ',');
 	if (tmp == NULL)
 	{
-		write(2, COLOR_FAIL, ft_strlen(COLOR_FAIL));
+		print_error(COLOR_FAIL);
 		return (NULL);
 	}
 	tmp++;
@@ -57,7 +57,7 @@ int	set_color(int *color, char *line)
 		return (1);
 	*color = ft_atoi(line);
 	if (*color < 0 || *color > 255)
-		return (write(2, COLOR_OUT_OF_RANGE, ft_strlen(COLOR_OUT_OF_RANGE)));
+		return (print_error(COLOR_OUT_OF_RANGE));
 	return (0);
 }
 
@@ -68,7 +68,7 @@ int	parse_color(int *dest, char *line)
 	int		b;
 
 	if (*dest != COLOR_UNINITIALISED)
-		return (write(2, COLOR_DUPLICATE, ft_strlen(COLOR_DUPLICATE)));
+		return (print_error(COLOR_DUPLICATE));
 	if (set_color(&r, line))
 		return (1);
 	line = go_next_field(line);
@@ -77,11 +77,12 @@ int	parse_color(int *dest, char *line)
 	line = go_next_field(line);
 	if (set_color(&b, line))
 		return (1);
-	b = ft_atoi(line);
+	while (*line && ft_isspace(*line) == 1)
+		line++;
 	while (*line && ft_isdigit(*line) == 1)
 		line++;
 	if (*line != '\n')
-		return (write(2, COLOR_FAIL, ft_strlen(COLOR_FAIL)));
+		return (print_error(COLOR_FAIL));
 	*dest = r << 16 | g << 8 | b;
 	return (0);
 }
@@ -103,7 +104,7 @@ void	parse_infos(t_map **result, char *line)
 		return ;
 	if (line_is_only_space(line) == 0)
 	{
-		write(2, MAP_ERROR, ft_strlen(MAP_ERROR));
+		print_error(MAP_ERROR);
 		free_map(result);
 	}
 }

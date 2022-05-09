@@ -48,7 +48,7 @@
 # define COLOR_OUT_OF_RANGE "Error\nColor is out of range\n"
 # define COLOR_UNINITIALISED -1
 # define MAP_ERROR "Error\nBad format for the map\n"
-# define ERROR_MULTIPLE_SPAWNPOINT "Error\nMultiple spawn points"
+# define ERROR_MULTIPLE_SPAWNPOINT "Error\nMultiple spawn points\n"
 
 # define TEXTURE_NO 0
 # define TEXTURE_SO 1
@@ -185,6 +185,7 @@ t_map			*init_map(const char *file_name);
 int				measure_map(const char *file_name, int *height, int *width);
 t_map			*parse_map(const char *string);
 int				init_textures(t_data *data);
+int				check_map(t_map *map);
 
 // movements
 void			move(t_data *data);
@@ -201,7 +202,6 @@ void			parse_infos(t_map **result, char *line);
 void			*error_parsing(t_map **result, char *str);
 int				is_spawn_point(char c);
 char			*clean_line(char *line);
-int				fill_map(t_map *map, int fd);
 int				header_infos_are_set(t_map *result);
 int				is_cub_file(const char *file_name);
 int				line_is_only_space(char *line);
@@ -236,6 +236,7 @@ void			init_points_to_wall(const t_map *map, t_matrix *const *result);
 void			*free_map(t_map **map);
 float			calc_point_distance(t_matrix *from, t_matrix *to);
 void			free_textures(t_data *data);
+int				print_error(char *msg);
 
 // mouse gun
 void			update_mouse_gun(t_data *data);

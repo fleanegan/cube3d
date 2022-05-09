@@ -105,27 +105,31 @@ TEST(testParsing, map_with_empty_line)
 	EXPECT_EQ(map1, nullptr);
 }
 
-TEST(testParsing, crash_test)
-{
-t_map *map1 = parse("test/assets/crash.cub");
-
-print_map_infos(map1);
-free_map(&map1);
-}
-
-
 TEST(testParsing, multiple_spawnpoints_are_not_allowed)
 {
-t_map *map1 = parse("test/assets/multiple_spawnpoints.cub");
+	t_map *map1 = parse("test/assets/multiple_spawnpoints.cub");
 
-EXPECT_EQ(map1, nullptr);
-free_map(&map1);
+	EXPECT_EQ(map1, nullptr);
 }
 
 TEST(testParsing, no_spawnpoint_is_not_allowed)
 {
-t_map *map1 = parse("test/assets/no_spawnpoints.cub");
+	t_map *map1 = parse("test/assets/no_spawnpoints.cub");
 
-EXPECT_EQ(map1, nullptr);
-free_map(&map1);
+	EXPECT_EQ(map1, nullptr);
+}
+
+TEST(testParsing, only_spawn_point_is_not_allowed)
+{
+	t_map *map1 = parse("test/assets/only_spawn_point.cub");
+
+	EXPECT_EQ(map1, nullptr);
+}
+
+TEST(testParsing, crash_test)
+{
+	t_map *map1 = parse("test/assets/crash.cub");
+
+	print_map_infos(map1);
+	free_map(&map1);
 }

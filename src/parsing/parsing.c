@@ -12,7 +12,7 @@
 
 #include "../../inc/cube3d.h"
 
-static t_map	*parse_line_(char *line, t_map **result, int *y_act);
+static t_map	*parse_line(char *line, t_map **result, int *y_act);
 static t_matrix	*set_up_point(t_map *const *map, int y_act, \
 				int i, t_matrix *point_tmp);
 
@@ -97,16 +97,17 @@ t_map	*parse(const char *file_name)
 		return (error_parsing(&result, OPENING_FILE));
 	while (result != NULL && gnl(fd, &line) != 0)
 	{
-		result = parse_line_(line, &result, &y_act);
+		result = parse_line(line, &result, &y_act);
 		free(line);
 	}
 	close(fd);
-	if ((result && header_infos_are_set(result) == 0) || !spawn_is_set(result))
+	if ((result && header_infos_are_set(result) == 0) || !spawn_is_set(result) \
+		|| check_map(result) == 1)
 		free_map(&result);
 	return (result);
 }
 
-t_map	*parse_line_(char *line, t_map **result, int *y_act)
+t_map	*parse_line(char *line, t_map **result, int *y_act)
 {
 	if (header_infos_are_set((*result)) == 0)
 		parse_infos(result, line);

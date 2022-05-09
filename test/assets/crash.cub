@@ -1,9 +1,9 @@
 
-NO ./test/assets/texture.xpm
+NO ./path_to_the_north_texture
 
-SO ./test/assets/texture.xpm
-WE ./test/assets/texture.xpm
-EA ./test/assets/texture.xpm
+SO ./path_to_the_south_texture
+WE ./path_to_the_west_texture
+EA ./path_to_the_east_texture
 
 F    255,	 128,0 sdafasdfas;;
 C 0,0,64

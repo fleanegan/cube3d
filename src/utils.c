@@ -30,3 +30,13 @@ void	init_points_to_wall(const t_map *map, t_matrix *const *result)
 		y++;
 	}
 }
+
+int	print_error(char *msg)
+{
+	static int	is_first_error = 1;
+
+	if (is_first_error == 1)
+		ft_putstr_fd(msg, 2);
+	is_first_error--;
+	return (1);
+}
