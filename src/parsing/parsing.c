@@ -16,6 +16,9 @@ static t_map	*parse_line_(char *line, t_map **result, int *y_act);
 static t_matrix	*set_up_point(t_map *const *map, int y_act, \
 				int i, t_matrix *point_tmp);
 
+int	init_spawn_point(t_map *const *map, \
+	const char *line_clean, int i, t_matrix *point_tmp);
+
 int	parse_map_line(char *line, t_map **map, int y_act)
 {
 	char		*line_clean;
@@ -30,18 +33,26 @@ int	parse_map_line(char *line, t_map **map, int y_act)
 	{
 		point_tmp = set_up_point(map, y_act, i, point_tmp);
 		point_tmp->mat[2][0] = line_clean[i] - '0';
-		if (is_spawn_point(line_clean[i]))
-		{
-			if ((*map)->spawn_point != 0)
-				return (write(2, ERROR_MULTIPLE_SPAWNPOINT, \
-				ft_strlen(ERROR_MULTIPLE_SPAWNPOINT)));
-			(*map)->spawn_point = point_tmp;
-			point_tmp->mat[2][0] = 0;
-			(*map)->spawn_orientation = line_clean[i];
-		}
+		if (init_spawn_point(map, line_clean, i, point_tmp))
+			return (1);
 		i++;
 	}
 	free(line_clean);
+	return (0);
+}
+
+int	init_spawn_point(t_map *const *map, \
+	const char *line_clean, int i, t_matrix *point_tmp)
+{
+	if (is_spawn_point(line_clean[i]))
+	{
+		if ((*map)->spawn_point != 0)
+			return (write(2, ERROR_MULTIPLE_SPAWNPOINT, \
+			ft_strlen(ERROR_MULTIPLE_SPAWNPOINT)));
+		(*map)->spawn_point = point_tmp;
+		point_tmp->mat[2][0] = 0;
+		(*map)->spawn_orientation = line_clean[i];
+	}
 	return (0);
 }
 
