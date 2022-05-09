@@ -6,7 +6,7 @@
 /*   By: tsiguenz <tsiguenz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 12:01:12 by tsiguenz          #+#    #+#             */
-/*   Updated: 2022/05/09 12:01:14 by tsiguenz         ###   ########.fr       */
+/*   Updated: 2022/05/09 12:59:08 by tsiguenz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,17 @@ int	print_error(char *msg)
 	if (is_first_error == 1)
 		ft_putstr_fd(msg, 2);
 	is_first_error--;
+	return (1);
+}
+
+int	spawn_is_set(t_map *result)
+{
+	if (result == NULL)
+		return (0);
+	if (result->spawn_orientation == 0)
+	{
+		ft_putendl_fd("Error\nNo spawn point in map", 2);
+		return (0);
+	}
 	return (1);
 }
