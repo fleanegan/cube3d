@@ -6,7 +6,7 @@
 /*   By: tsiguenz <tsiguenz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 12:00:24 by tsiguenz          #+#    #+#             */
-/*   Updated: 2022/05/09 12:10:12 by tsiguenz         ###   ########.fr       */
+/*   Updated: 2022/05/09 12:58:52 by tsiguenz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 static t_map	*parse_line(char *line, t_map **result, int *y_act);
 static t_matrix	*set_up_point(t_map *const *map, int y_act, \
 				int i, t_matrix *point_tmp);
-
-int	init_spawn_point(t_map *const *map, \
+int				init_spawn_point(t_map *const *map, \
 	const char *line_clean, int i, t_matrix *point_tmp);
 
 int	parse_map_line(char *line, t_map **map, int y_act)
@@ -34,7 +33,10 @@ int	parse_map_line(char *line, t_map **map, int y_act)
 		point_tmp = set_up_point(map, y_act, i, point_tmp);
 		point_tmp->mat[2][0] = line_clean[i] - '0';
 		if (init_spawn_point(map, line_clean, i, point_tmp))
+		{
+			free(line_clean);
 			return (1);
+		}
 		i++;
 	}
 	free(line_clean);
@@ -64,18 +66,6 @@ t_matrix	*set_up_point(t_map *const *map, int y_act, \
 	point_tmp->mat[0][0] = i;
 	point_tmp->mat[1][0] = y_act;
 	return (point_tmp);
-}
-
-int	spawn_is_set(t_map *result)
-{
-	if (result == NULL)
-		return (0);
-	if (result->spawn_orientation == 0)
-	{
-		ft_putendl_fd("Error\nNo spawn point in map", 2);
-		return (0);
-	}
-	return (1);
 }
 
 t_map	*parse(const char *file_name)
@@ -114,7 +104,10 @@ t_map	*parse_line(char *line, t_map **result, int *y_act)
 	else
 	{
 		if (parse_map_line(line, result, *y_act))
+		{
+			gnl(-1, NULL);
 			return (error_parsing(result, NULL));
+		}
 		if (line && is_line_of_map(line) == 1)
 			(*y_act)++;
 	}

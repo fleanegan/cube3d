@@ -6,7 +6,7 @@
 /*   By: tsiguenz <tsiguenz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 12:01:19 by tsiguenz          #+#    #+#             */
-/*   Updated: 2022/05/09 12:15:23 by tsiguenz         ###   ########.fr       */
+/*   Updated: 2022/05/09 13:01:58 by tsiguenz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,7 @@ int				measure_map(const char *file_name, int *height, int *width);
 t_map			*parse_map(const char *string);
 int				init_textures(t_data *data);
 int				check_map(t_map *map);
+int				spawn_is_set(t_map *result);
 
 // movements
 void			move(t_data *data);
