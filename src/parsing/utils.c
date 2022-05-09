@@ -22,11 +22,11 @@ void	*error_parsing(t_map **result, char *str)
 int	header_infos_are_set(t_map *result)
 {
 	if (result->texture_name[TEXTURE_NO] == NULL \
-		|| result->texture_name[TEXTURE_SO] == NULL \
-		|| result->texture_name[TEXTURE_WE] == NULL \
-		|| result->texture_name[TEXTURE_EA] == NULL \
-		|| result->ceilling_color == COLOR_UNINITIALISED \
-		|| result->floor_color == COLOR_UNINITIALISED)
+ || result->texture_name[TEXTURE_SO] == NULL \
+ || result->texture_name[TEXTURE_WE] == NULL \
+ || result->texture_name[TEXTURE_EA] == NULL \
+ || result->c_color == COLOR_UNINITIALISED \
+ || result->f_color == COLOR_UNINITIALISED)
 		return (0);
 	return (1);
 }

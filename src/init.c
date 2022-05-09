@@ -38,7 +38,7 @@ int	init_textures(t_data *data)
 	int		height;
 
 	data->map->mouse_texture = mlx_xpm_file_to_image(data->mlx.mlx, \
-	"test/assets/mt.xpm", &width, &height);
+	"assets/mouse.xpm", &width, &height);
 	data->map->texture[0] = mlx_xpm_file_to_image(data->mlx.mlx, \
 	data->map->texture_name[0], &width, &height);
 	data->map->texture[1] = mlx_xpm_file_to_image(data->mlx.mlx, \

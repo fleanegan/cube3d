@@ -41,8 +41,8 @@ t_map	*init_map(const char *file_name)
 	result->width = width;
 	result->wall_height = TILE_SIZE;
 	result->height = height;
-	result->ceilling_color = COLOR_UNINITIALISED;
-	result->floor_color = COLOR_UNINITIALISED;
+	result->c_color = COLOR_UNINITIALISED;
+	result->f_color = COLOR_UNINITIALISED;
 	result->grid = new_grid(result);
 	if (! result->grid)
 		return (NULL);

@@ -50,9 +50,9 @@ void	print_map_infos(t_map *map)
 	ft_putstr_fd("east : ", 1);
 	ft_putendl_fd(map->texture_name[TEXTURE_EA], 1);
 	ft_putstr_fd("ceilling : ", 1);
-	ft_putnbr_fd(map->ceilling_color, 1);
+	ft_putnbr_fd(map->c_color, 1);
 	ft_putstr_fd("\nfloor : ", 1);
-	ft_putnbr_fd(map->floor_color, 1);
+	ft_putnbr_fd(map->f_color, 1);
 	ft_putstr_fd("\nheight : ", 1);
 	ft_putnbr_fd(map->height, 1);
 	ft_putstr_fd("\nwidth : ", 1);

@@ -88,8 +88,8 @@ typedef struct s_map
 	char		*texture_name[4];
 	int			wall_height;
 	t_img		*mouse_texture;
-	int			ceilling_color;
-	int			floor_color;
+	int			c_color;
+	int			f_color;
 }		t_map;
 
 typedef struct s_ray

@@ -34,7 +34,7 @@ void	draw_wall_segment(t_data *data, t_ray *ray)
 	cnt = 0;
 	while (i < ray->y_min_clipped_screen && i < data->camera.win_size.y_max)
 	{
-		draw_1px_to_img(data, ray->x_clipped_screen, i, 0xFF2Fa);
+		draw_1px_to_img(data, ray->x_clipped_screen, i, data->map->c_color);
 		i++;
 	}
 	while (i < ray->y_max_clipped_screen && i < data->camera.win_size.y_max)
@@ -46,7 +46,7 @@ void	draw_wall_segment(t_data *data, t_ray *ray)
 	}
 	while (i < data->camera.win_size.y_max)
 	{
-		draw_1px_to_img(data, ray->x_clipped_screen, i, 0xf1c40f);
+		draw_1px_to_img(data, ray->x_clipped_screen, i, data->map->f_color);
 		i++;
 	}
 }
