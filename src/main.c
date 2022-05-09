@@ -2,7 +2,7 @@
 
 #ifndef TESTING
 
-void	tear_down_mlx_session(t_data *data)
+void	tear_down_mlx_session(t_data *data, int exit_code)
 {
 	mlx_loop_end(data->mlx.mlx);
 	free_textures(data);
@@ -11,7 +11,7 @@ void	tear_down_mlx_session(t_data *data)
 	mlx_destroy_display(data->mlx.mlx);
 	free(data->mlx.mlx);
 	free_map(&data->map);
-	exit(0);
+	exit(exit_code);
 }
 
 int	render_next_frame(void *data)
@@ -39,7 +39,7 @@ int	main(int argc, char **argv)
 		if (init_mlx(&data))
 			return (free_map(&data.map) == NULL);
 		if (init_textures(&data))
-			exit(1);
+			tear_down_mlx_session(&data, 1);
 		remove_interior_walls(&data);
 		data.mouse_gun.is_activated = 0;
 		render_frame(&data);

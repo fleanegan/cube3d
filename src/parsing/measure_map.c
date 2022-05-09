@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   measure_map.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tsiguenz <tsiguenz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/09 12:00:07 by tsiguenz          #+#    #+#             */
+/*   Updated: 2022/05/09 12:14:21 by tsiguenz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cube3d.h"
 
 static int	initialize(const char *file_name, int *width, int *height, int *fd);
@@ -66,7 +78,8 @@ int	measure_map(const char *file_name, int *height, int *width)
 		}
 		free(line);
 	}
-	return (prepare_exit(fd, &line, 0));
+	close(fd);
+	return (in_map == 0 && write(2, MAP_ERROR, ft_strlen(MAP_ERROR)));
 }
 
 static int	initialize(const char *file_name, int *width, int *height, int *fd)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_header_infos.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tsiguenz <tsiguenz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/09 12:00:11 by tsiguenz          #+#    #+#             */
+/*   Updated: 2022/05/09 12:14:03 by tsiguenz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/cube3d.h"
 
 int	parse_texture(char **dest, char *line)
@@ -7,7 +19,7 @@ int	parse_texture(char **dest, char *line)
 
 	i = 0;
 	if (*dest != NULL)
-		return (write(2, TEXTURE_DUPLICATE, ft_strlen(TEXTURE_DUPLICATE)));
+		return (1);
 	while (line[i] && ft_isspace(line[i]) == 1)
 		i++;
 	if (i == 0)
@@ -91,7 +103,7 @@ void	parse_infos(t_map **result, char *line)
 		return ;
 	if (line_is_only_space(line) == 0)
 	{
-		ft_putendl_fd("Error\nBad format for infos", 2);
+		write(2, MAP_ERROR, ft_strlen(MAP_ERROR));
 		free_map(result);
 	}
 }

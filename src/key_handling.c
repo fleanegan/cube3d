@@ -5,7 +5,7 @@
 int	handle_key_press(int keycode, t_data *data)
 {
 	if (keycode == KEY_ESC)
-		tear_down_mlx_session(data);
+		tear_down_mlx_session(data, 0);
 	if (keycode == KEY_DOWN)
 		data->player.movements.backward = 1;
 	if (keycode == KEY_UP)
@@ -32,7 +32,7 @@ int	handle_key_press(int keycode, t_data *data)
 int	handle_key_release(int keycode, t_data *data)
 {
 	if (keycode == KEY_ESC)
-		tear_down_mlx_session(data);
+		tear_down_mlx_session(data, 0);
 	if (keycode == KEY_DOWN)
 		data->player.movements.backward = 0;
 	if (keycode == KEY_UP)
@@ -54,7 +54,7 @@ int	handle_key_release(int keycode, t_data *data)
 
 int	red_cross_handler(t_data *data)
 {
-	tear_down_mlx_session(data);
+	tear_down_mlx_session(data, 0);
 	return (0);
 }
 #endif

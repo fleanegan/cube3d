@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cube3d.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tsiguenz <tsiguenz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/09 12:01:19 by tsiguenz          #+#    #+#             */
+/*   Updated: 2022/05/09 12:15:23 by tsiguenz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUBE3D_H
 # define CUBE3D_H
 # include "../lib/libft/libft.h"
@@ -7,7 +19,9 @@
 # include <float.h>
 # include <fcntl.h>
 # include <../lib/mlx/mlx_int.h>
-# include <../lib/mlx/mlx.h>
+# ifndef TESTING
+#  include <../lib/mlx/mlx.h>
+# endif
 # define TILE_SIZE 64.0f
 # define DEG2RAD 0.017453293f
 # define RAD2DEG 57.295779513f
@@ -239,7 +253,7 @@ int				is_non_transparent_pixel(\
 					const t_data *data, int px_index_x, int px_index_y);
 t_matrix		**new_grid(t_map *map);
 int				red_cross_handler(t_data *data);
-void			tear_down_mlx_session(t_data *img);
+void			tear_down_mlx_session(t_data *img, int exit_code);
 
 //debug
 void			print_matrix(t_matrix *a);

@@ -1,32 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   check_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsiguenz <tsiguenz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/09 12:01:12 by tsiguenz          #+#    #+#             */
-/*   Updated: 2022/05/09 12:01:14 by tsiguenz         ###   ########.fr       */
+/*   Created: 2022/05/09 12:01:06 by tsiguenz          #+#    #+#             */
+/*   Updated: 2022/05/09 12:01:09 by tsiguenz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cube3d.h"
 
-void	init_points_to_wall(const t_map *map, t_matrix *const *result)
+int	check_line_is_only_wall(t_map *map, int height)
 {
-	int	y;
 	int	x;
 
-	y = 0;
-	while (y < map->height)
+	x = 0;
+	while (x < map->width)
 	{
-		x = 0;
-		while (x < map->width)
-		{
-			zero_init_point(&result[x][y]);
-			result[x][y].mat[2][0] = 1;
-			x++;
-		}
-		y++;
+		if (map->grid[x][height].mat[2][0] == 0)
+			return (0);
+		x++;
 	}
+	return (1);
+}
+
+int	check_map(t_map *map)
+{
+	if (map == NULL)
+		return (1);
+	if (check_line_is_only_wall(map, 0) == 0 \
+		|| check_line_is_only_wall(map, map->height - 1) == 0)
+	{
+		write(2, MAP_ERROR, ft_strlen(MAP_ERROR));
+		return (1);
+	}
+	return (0);
 }

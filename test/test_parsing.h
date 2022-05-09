@@ -19,11 +19,9 @@ TEST(testParsing, return_NULL_bad_file_name)
 TEST(testParsing, return_NULL_error_opening_file)
 {
 	t_map *map1 = parse("test/assets/file_not_exist.cub");
-	t_map *map2 = parse("test/assets/file_not_readable.cub");
 
 
 	EXPECT_EQ(map1, nullptr);
-	EXPECT_EQ(map2, nullptr);
 }
 
 

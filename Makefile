@@ -25,6 +25,7 @@ SRC_NAME =	main.c \
 			parsing/clean_line.c \
 			parsing/measure_map.c \
 			parsing/parse_header_infos.c \
+			parsing/check_map.c \
 			parsing/utils.c \
 			debug.c \
 			init.c \

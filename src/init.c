@@ -52,7 +52,6 @@ int	init_textures(t_data *data)
 	&& data->map->mouse_texture)
 		return (0);
 	ft_putendl_fd("Error\nInit of textures failed", 2);
-	free_textures(data);
 	return (1);
 }
 
