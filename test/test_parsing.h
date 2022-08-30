@@ -35,8 +35,6 @@ TEST(testParsing, parse_basic_textures)
 		EXPECT_FALSE(strcmp(map1->texture_name[TEXTURE_NO], "./path_to_the_north_texture"));
 		EXPECT_FALSE(strcmp(map1->texture_name[TEXTURE_WE], "./path_to_the_west_texture"));
 		EXPECT_FALSE(strcmp(map1->texture_name[TEXTURE_EA], "./path_to_the_east_texture"));
-		EXPECT_EQ(map1->floor_color, 0xFF8000);
-		EXPECT_EQ(map1->ceilling_color, 0x000040);
 		print_map_infos(map1);
 		free_map(&map1);
 	}
